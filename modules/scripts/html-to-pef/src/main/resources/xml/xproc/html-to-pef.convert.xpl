@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="px:html-to-pef.convert" version="1.0"
+<p:declare-step type="px:html-to-pef" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:pef="http://www.daisy.org/ns/2008/pef"
@@ -9,8 +9,11 @@
                 exclude-inline-prefixes="#all"
                 name="main">
     
-    <p:input port="source">
-        <p:documentation>HTML</p:documentation>
+    <p:input port="source.fileset" primary="true">
+        <p:documentation>HTML fileset</p:documentation>
+    </p:input>
+    <p:input port="source.in-memory" sequence="true">
+        <p:empty/>
     </p:input>
     <p:output port="result" primary="true">
         <p:documentation>PEF</p:documentation>
@@ -34,12 +37,33 @@
     <!-- Empty temporary directory dedicated to this conversion -->
     <p:option name="temp-dir" required="true"/>
     
-    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
-    
-    <p:variable name="lang" select="(/*/@xml:lang,'und')[1]"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl">
+        <p:documentation>
+            px:message
+            px:assert
+        </p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl">
+        <p:documentation>
+            px:fileset-load
+        </p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl">
+        <p:documentation>
+            px:transform
+            px:merge-parameters
+        </p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl">
+        <p:documentation>
+            px:apply-stylesheets
+        </p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl">
+        <p:documentation>
+            pef:add-metadata
+        </p:documentation>
+    </p:import>
     
     <!-- Ensure that there's exactly one c:param-set -->
     <px:merge-parameters name="parameters">
@@ -48,11 +72,19 @@
         </p:input>
     </px:merge-parameters>
     
-    <p:identity>
-        <p:input port="source">
-            <p:pipe port="source" step="main"/>
+    <!-- Load HTML -->
+    <px:fileset-load media-types="application/xhtml+xml">
+        <p:input port="fileset">
+            <p:pipe step="main" port="source.fileset"/>
         </p:input>
-    </p:identity>
+        <p:input port="in-memory">
+            <p:pipe step="main" port="source.in-memory"/>
+        </p:input>
+    </px:fileset-load>
+    <px:assert message="No XHTML documents found." test-count-min="1" error-code="PEZE00"/>
+    <px:assert message="More than one XHTML documents found." test-count-max="1" error-code="PEZE00"/>
+    <p:identity name="html"/>
+    
     <px:message message="Generating table of contents"/>
     <p:xslt>
         <p:input port="stylesheet">
@@ -85,7 +117,9 @@
     <px:message message="Transforming MathML"/>
     <p:viewport match="math:math">
         <px:transform>
-            <p:with-option name="query" select="concat('(input:mathml)(locale:',$lang,')')"/>
+            <p:with-option name="query" select="concat('(input:mathml)(locale:',(/*/@xml:lang,'und')[1],')')">
+                <p:pipe step="html" port="result"/>
+            </p:with-option>
             <p:with-option name="temp-dir" select="$temp-dir"/>
             <p:input port="parameters">
                 <!-- px:transform uses the 'duplex' parameter -->
@@ -95,6 +129,7 @@
     </p:viewport>
     
     <p:choose name="transform">
+        <p:variable name="lang" select="(/*/@xml:lang,'und')[1]"/>
         <p:when test="$include-obfl='true'">
             <p:output port="pef" primary="true"/>
             <p:output port="obfl">
@@ -136,7 +171,7 @@
     
     <p:identity>
         <p:input port="source">
-            <p:pipe step="main" port="source"/>
+            <p:pipe step="html" port="result"/>
         </p:input>
     </p:identity>
     <px:message message="Adding metadata from HTML to PEF"/>

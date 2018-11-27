@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step type="px:html-to-pef" version="1.0"
+<p:declare-step type="px:html-to-pef.script" version="1.0"
                 xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
@@ -134,13 +134,17 @@
     <px:html-load name="html">
         <p:with-option name="href" select="$html"/>
     </px:html-load>
+    <px:html-to-fileset/>
     
     <!-- ============ -->
     <!-- HTML TO PEF -->
     <!-- ============ -->
     <px:message message="Done loading HTML, starting conversion to PEF"/>
-    <px:html-to-pef.convert default-stylesheet="http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/default.css"
-                            name="convert">
+    <px:html-to-pef default-stylesheet="http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/default.css"
+                    name="convert">
+        <p:input port="source.in-memory">
+            <p:pipe step="html" port="result"/>
+        </p:input>
         <p:with-option name="temp-dir" select="concat(string(/c:result),'convert/')">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
@@ -150,7 +154,7 @@
         <p:input port="parameters">
             <p:pipe port="result" step="input-options"/>
         </p:input>
-    </px:html-to-pef.convert>
+    </px:html-to-pef>
     
     <!-- ========= -->
     <!-- STORE PEF -->
