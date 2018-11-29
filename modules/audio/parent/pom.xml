@@ -17,6 +17,10 @@
   <name>DAISY Pipeline 2 :: Audio Modules Parent POM</name>
   <description>Parent POM for modules providing audio-related functionality</description>
 
+  <properties>
+    <java.version>1.8</java.version>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
