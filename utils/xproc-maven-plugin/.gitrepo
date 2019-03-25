@@ -7,5 +7,5 @@
 	remote = git@github.com:daisy/xproc-maven-plugin
 	branch = master
 	commit = 66ae1b7e22e85b3f00df30586378b1c9b70ff439
-	parent = 1169a09006945cdc923cff0c6b6c180e56c6f072
+	parent = 20b603277dab4423c819a7942593a99e72511d31
 	cmdver = 0.3.1
