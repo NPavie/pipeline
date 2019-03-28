@@ -20,7 +20,6 @@
                 >Online documentation</a></p>
     </p:documentation>
 
-
     <!--=========================================================================-->
     <!-- STEP SIGNATURE                                                          -->
     <!--=========================================================================-->
@@ -57,7 +56,7 @@
             <p px:role="desc">Whether to stop processing and raise an error on validation issues.</p>
         </p:documentation>
     </p:option>
-    
+
     <p:option name="chunk-size" required="false" px:type="integer" select="'-1'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Chunk size</h2>
@@ -67,7 +66,7 @@ Top-level sections in the DAISY 3 become separate HTML files in the resulting EP
 split up if they exceed the given maximum size.</p>
         </p:documentation>
     </p:option>
-    
+
     <!--<p:option name="compatibility-mode" required="false" select="'true'" px:type="boolean">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Compatibility Mode</h2>
@@ -76,7 +75,12 @@ split up if they exceed the given maximum size.</p>
         </p:documentation>
     </p:option>-->
 
-    <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/daisy3-utils/library.xpl">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            For reading DAISY3 books.
+            (see scripts-utils/daisy3-utils/src/main/resources/xml/daisy3-library.xpl)
+        </p:documentation>
+    </p:import>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p px:role="desc">For putting it all into a ZIP container.</p>
@@ -87,6 +91,8 @@ split up if they exceed the given maximum size.</p>
     <p:variable name="output-dir-checked" select="resolve-uri(replace($output-dir,'(.+?)/?$','$1/'))"/>
     <p:variable name="epub-file" select="concat($output-dir-checked,'result.epub')"/>
 
+    <!-- Loading the daisy3 book 
+        See the load.xpl script imported from script-->
     <px:daisy3-load name="load"/>
 
     <px:daisy3-to-epub3 name="convert">

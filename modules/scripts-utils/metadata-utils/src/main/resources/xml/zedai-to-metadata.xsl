@@ -93,13 +93,22 @@
       select="ancestor::z:head//z:meta[@property='z3998:meta-record-type' and @about=$this/@resource][1]/@content"/>
     <xsl:choose>
       <xsl:when test="$record-type='z3998:mods'">
-        <link rel="mods-record" href="{@resource}"/>
+        <!--TODO : rel=mods-record is deprecated
+          should be replaced by rel="record" media-type="application/mods+xml" -->
+        <!--<link rel="mods-record" href="{@resource}"/>-->
+        <link rel="record" href="{@resource}" media-type="application/mods+xml"/>
       </xsl:when>
       <xsl:when test="$record-type='z3998:onix-books'">
-        <link rel="onix-record" href="{@resource}"/>
+        <!--TODO : rel=onyx-record is deprecated
+          should be replaced by rel="record" media-type="application/xml" properties="onyx" -->
+        <!-- <link rel="onix-record" href="{@resource}"/> -->
+        <link rel="record" href="{@resource}" media-type="application/xml" properties="onyx"/>
       </xsl:when>
       <xsl:when test="$record-type='z3998:marc21-xml'">
-        <link rel="marc21xml-record" href="{@resource}"/>
+        <!--TODO : rel=onyx-record is deprecated
+          should be replaced by rel="record" media-type="application/marcxml+xml" -->
+        <!-- <link rel="marc21xml-record" href="{@resource}"/> -->
+        <link rel="record" href="{@resource}" media-type="application/marcxml+xml"/>
       </xsl:when>
       <xsl:when test="$record-type=('z3998:dcterms-rdf','z3998:dctersm-rdfa')">
         <!--TODO translate external DCTERMS records ?-->

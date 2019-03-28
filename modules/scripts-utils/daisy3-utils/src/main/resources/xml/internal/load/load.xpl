@@ -26,17 +26,26 @@
 
     <p:output port="fileset.out" primary="true" sequence="false">
         <p:pipe port="fileset" step="fileset-ordered"/>
+        <p:documentation>
+            This port sends back the generated fileset created by the "fileset-ordered" steps group
+        </p:documentation>
     </p:output>
     <p:output port="in-memory.out" sequence="true">
         <p:pipe port="source" step="main"/>
         <p:pipe port="docs" step="fileset-ordered"/>
+        <p:documentation>
+            This port sends back :
+            - The original OPF document from the source port of the current step
+            - The "smil" documents aggregated as text fileset
+        </p:documentation>
     </p:output>
 
     <p:serialization port="fileset.out" indent="true"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl">
-        <p:documentation xmlns="http://www.w3.org/1999/xhtml">For manipulating
-            filesets.</p:documentation>
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+            For manipulating filesets.
+        </p:documentation>
     </p:import>
 
     <p:xslt name="fileset">
@@ -89,6 +98,7 @@
                     <p:add-attribute attribute-name="media-type"
                         attribute-value="application/x-dtbook+xml" match="d:file"/>
                 </p:for-each>
+                <!-- Produce the fileset document-->
                 <px:fileset-join>
                     <p:input port="source">
                         <p:pipe port="result" step="fileset-no-dtbooks"/>

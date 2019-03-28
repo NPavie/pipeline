@@ -10,3 +10,18 @@ Converts multiple dtbooks to epub3 format
 
 {{>synopsis}}
 
+## Example running from command line
+
+On Linux and Mac OS X:
+
+    
+
+
+On Windows:
+
+    
+
+This command will create two entries in the output directory. One is a folder called "epub", which is a temporary directory created by the converter. The second is the resulting EPUB 3 file. The EPUB 3 file is given a name based on the dc:identifier and dc:title metadata elements from the original NCC; "dc:identifier - dc:title.epub".
+
+
+

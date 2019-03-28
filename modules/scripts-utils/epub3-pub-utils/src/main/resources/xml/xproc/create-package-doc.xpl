@@ -264,11 +264,12 @@
                             <p:pipe port="result" step="manifest.content-docs.current"/>
                         </p:with-option>
                     </p:add-attribute>
+                    <!--TODO 3.2: epub:switch is deprecated 
                     <p:add-attribute attribute-name="switch" match="/*/*">
                         <p:with-option name="attribute-value" select="count(//epub:switch) &gt; 0">
                             <p:pipe port="result" step="manifest.content-docs.current"/>
                         </p:with-option>
-                    </p:add-attribute>
+                    </p:add-attribute>-->
                     <p:add-attribute attribute-name="remote-resources" match="/*/*">
                         <p:with-option name="attribute-value" select="count(//*/@src[contains(tokenize(.,'/')[1],':')][1]) &gt; 0">
                             <p:pipe port="result" step="manifest.content-docs.current"/>
@@ -517,6 +518,8 @@
     </p:group>
     <p:sink/>
 
+    <!--TODO 3.2: bindings is now deprecated and should be removed 
+        The spec recommends to use HTML object fallback representation instead within the result-->
     <p:group name="bindings">
         <p:output port="result" sequence="true"/>
         <p:count>

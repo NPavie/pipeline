@@ -34,8 +34,12 @@
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">The directory that the EPUB3 fileset is intended to be stored in.</p:documentation>
     </p:option>
 
-    <p:option name="mediaoverlay" required="false" select="'true'" px:type="boolean"/>
-    <p:option name="compatibility-mode" required="false" select="'true'" px:type="boolean"/>
+    <p:option name="mediaoverlay" required="false" select="'true'" px:type="boolean">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"></p:documentation>
+    </p:option>
+    <p:option name="compatibility-mode" required="false" select="'true'" px:type="boolean">
+        <p:documentation xmlns="http://www.w3.org/1999/xhtml"></p:documentation>
+    </p:option>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
@@ -159,6 +163,7 @@
     </p:group>
     
     <!-- Make a map of all links from the SMIL files to the HTML files -->
+    <!-- See resolve-links.create-mapping.xpl -->
     <pxi:daisy202-to-epub3-resolve-links-create-mapping name="resolve-links-mapping">
         <p:input port="daisy-smil">
             <p:pipe port="smils" step="pre-processing"/>
@@ -197,7 +202,6 @@
     <p:sink/>
 
     <!-- Convert the content files. -->
-
     <pxi:daisy202-to-epub3-content name="content-without-navigation">
         <p:with-option name="publication-dir" select="$publication-dir">
             <p:empty/>

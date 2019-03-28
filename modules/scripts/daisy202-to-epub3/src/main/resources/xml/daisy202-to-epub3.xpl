@@ -33,6 +33,9 @@
             <h2 px:role="name">EPUB</h2>
         </p:documentation>
     </p:option>
+
+    <!-- NP 25/03/2019 : (ignore if the module is not maintained anymore)
+        why is the temp directory mandatory ? why not use the system temp directory by default with System.getProperty("java.io.tmpdir") ? -->
     <p:option name="temp-dir" required="true" px:output="temp" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">Temporary directory</h2>
@@ -63,6 +66,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/daisy202-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    <!-- Convertions steps are defined in convert.xpl -->
     <p:import href="convert/convert.xpl"/>
 
     <p:variable name="output-dir" select="if (ends-with($output,'/')) then $output else concat($output,'/')"/>
@@ -97,12 +101,14 @@
         <p:with-option name="param1" select="$compatibility-mode"/>
     </px:assert>
 
-    <!-- load -->
+    <!-- load file in memory 
+        (see scripts-utils/daisy202-utils/src/main/resources/xml/xproc/load/load.xpl) -->
     <px:daisy202-load name="load">
         <p:with-option name="ncc" select="$href"/>
     </px:daisy202-load>
 
-    <!-- convert -->
+    <!-- convert
+        (see the steps declared in convert/convert.xpl) -->
     <px:daisy202-to-epub3 name="convert">
         <p:input port="in-memory.in">
             <p:pipe port="in-memory.out" step="load"/>
@@ -112,7 +118,7 @@
         <p:with-option name="mediaoverlay" select="$mediaoverlay"/>
     </px:daisy202-to-epub3>
     
-    <!-- decide filename -->
+    <!-- decide filename (see fileset-utils library)-->
     <px:fileset-load media-types="application/oebps-package+xml">
         <p:input port="in-memory">
             <p:pipe port="in-memory.out" step="convert"/>
@@ -129,7 +135,8 @@
         <p:with-option name="href" select="$output-dir"/>
     </px:mkdir>
     
-    <!-- store -->
+    <!-- store 
+        (See store.xpl within scripts-utils/epub3-ocf-utils/) -->
     <px:epub3-store>
         <p:with-option name="href" select="/*/@result-uri">
             <p:pipe port="result" step="result-uri"/>
