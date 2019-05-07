@@ -975,6 +975,7 @@
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules</groupId>
                   <artifactId>epub3-ocf-utils</artifactId>
+                  <version>1.1.1-SNAPSHOT</version>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules</groupId>
@@ -993,14 +994,17 @@
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules</groupId>
                   <artifactId>epub3-validator</artifactId>
+                  <version>1.1.6-SNAPSHOT</version>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules</groupId>
                   <artifactId>epubcheck-adapter</artifactId>
+                  <version>1.1.6-SNAPSHOT</version>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.idpf</groupId>
+                  <groupId>org.w3c</groupId>
                   <artifactId>epubcheck</artifactId>
+                  <version>4.2.0-rc</version>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.commons</groupId>

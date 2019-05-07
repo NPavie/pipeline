@@ -1,4 +1,4 @@
-package org.idpf.epubcheck.util.saxon95;
+package org.w3c.epubcheck.util.saxon95;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;

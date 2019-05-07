@@ -1,4 +1,4 @@
-package org.idpf.epubcheck.util.saxon95;
+package org.w3c.epubcheck.util.saxon95;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -10,12 +10,12 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.Int64Value;
 import net.sf.saxon.value.SequenceType;
 
-public class LineNumberFunction extends ExtensionFunctionDefinition {
+public class ColumnNumberFunction extends ExtensionFunctionDefinition {
 
 	private static final long serialVersionUID = -4202710868367933385L;
-	
-	public static StructuredQName QNAME = new StructuredQName("saxon", "http://saxon.sf.net/", "line-number");
 
+	public static StructuredQName QNAME = new StructuredQName("saxon", "http://saxon.sf.net/", "column-number");
+	
 	@Override
 	public StructuredQName getFunctionQName() {
 		return QNAME;
@@ -61,10 +61,10 @@ public class LineNumberFunction extends ExtensionFunctionDefinition {
 				if (context.getContextItem() instanceof NodeInfo) {
 					return new Int64Value(
 							((NodeInfo) context.getContextItem())
-									.getLineNumber());
+									.getColumnNumber());
 				}
 				throw new XPathException(
-						"Unexpected XPath context for saxon:line-number");
+						"Unexpected XPath context for saxon:column-number");
 			}
 		};
 	}
