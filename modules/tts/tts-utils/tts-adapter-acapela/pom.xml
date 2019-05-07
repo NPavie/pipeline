@@ -5,9 +5,9 @@
 
   <parent>
     <groupId>org.daisy.pipeline.modules</groupId>
-    <artifactId>tts-modules-parent</artifactId>
+    <artifactId>modules-parent</artifactId>
     <version>1.12.1-SNAPSHOT</version>
-    <relativePath>../../parent</relativePath>
+    <relativePath>../../../parent</relativePath>
   </parent>
 
   <version>3.0.4-SNAPSHOT</version>
@@ -40,6 +40,12 @@
       <artifactId>jnaerator</artifactId>
     </dependency>
   </dependencies>
+  
+  <properties>
+    <expose-services>
+      org.daisy.pipeline.tts.acapella.AcapellaService
+    </expose-services>
+  </properties>
 
   <build>
     <plugins>
@@ -50,10 +56,15 @@
           <instructions>
             <Import-Package>
               net.sf.saxon.*;version="${saxon.versionRange}",
+              !org.daisy.common.spi,
               *
             </Import-Package>
-            <Service-Component>OSGI-INF/tts-service.xml</Service-Component>
-	    <Export-Package />
+            <Export-Package/>
+            <Private-Package>
+              org.daisy.pipeline.tts.acapella,
+              ${generated-packages}
+              {local-packages}
+            </Private-Package>
           </instructions>
         </configuration>
       </plugin>
