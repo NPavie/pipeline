@@ -5,9 +5,9 @@
 
   <parent>
     <groupId>org.daisy.pipeline.modules</groupId>
-    <artifactId>common-utils-parent</artifactId>
+    <artifactId>modules-parent</artifactId>
     <version>1.12.1-SNAPSHOT</version>
-    <relativePath>../parent/</relativePath>
+    <relativePath>../../parent/</relativePath>
   </parent>
 
   <artifactId>mediatype-utils</artifactId>
@@ -17,11 +17,20 @@
   <name>DAISY Pipeline 2 module :: mediatype-utils</name>
   
   <dependencies>
+    <!--
+        runtime dependencies
+    -->
     <dependency>
       <groupId>org.daisy.pipeline.modules</groupId>
       <artifactId>fileset-utils</artifactId>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
+  
+  <properties>
+    <expose-services>
+      org.daisy.pipeline.modules.impl.Module_mediatype_utils
+    </expose-services>
+  </properties>
   
 </project>

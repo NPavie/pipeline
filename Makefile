@@ -63,8 +63,7 @@ dist-rpm : pipeline2-$(assembly/VERSION)_redhat.rpm
 
 .PHONY : dist-docker-image
 dist-docker-image : assembly/.compile-dependencies
-	unset MAKECMDGOALS && \
-	$(MAKE) -C assembly docker
+	+$(EVAL) 'bash -c "unset MAKECMDGOALS && $(MAKE) -C assembly docker"'
 
 .PHONY : dist-webui-deb
 dist-webui-deb : assembly/.compile-dependencies
@@ -398,9 +397,9 @@ $(addprefix website/target/maven/,javadoc doc sources xprocdoc) : website/target
 
 .PHONY : dump-maven-cmd
 dump-maven-cmd :
-	echo "mvn () { $(shell dirname "$$(which mvn)")/mvn --settings \"$(CURDIR)/$(MVN_SETTINGS)\" $(MVN_PROPERTIES) \"\$$@\"; }"
-	echo '# Run this command to configure your shell: '
-	echo '# eval $$(make $@)'
+	@echo "mvn () { $(shell dirname "$$(which mvn)")/mvn --settings \"$(CURDIR)/$(MVN_SETTINGS)\" $(MVN_PROPERTIES) \"\$$@\"; }"
+	@echo '# Run this command to configure your shell: '
+	@echo '# eval $$(make $@)'
 
 .PHONY : dump-gradle-cmd
 dump-gradle-cmd :
@@ -448,7 +447,3 @@ help :
 	echo "	Build the website"                                                                                      >&2
 	echo "make dump-maven-cmd:"                                                                                     >&2
 	echo '	Get the Maven command used. To configure your shell: eval $$(make dump-maven-cmd)'                      >&2
-
-ifndef VERBOSE
-.SILENT:
-endif
