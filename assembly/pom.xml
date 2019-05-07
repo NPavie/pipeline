@@ -1004,7 +1004,7 @@
                 <artifactItem>
                   <groupId>org.w3c</groupId>
                   <artifactId>epubcheck</artifactId>
-                  <version>4.2.0-rc</version>
+                  <version>4.2.0</version>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.commons</groupId>
