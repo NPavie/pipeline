@@ -12,6 +12,9 @@
     <p:option name="href" required="true"/>
 
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
+
+    <p:import href="http://www.daisy.org/pipeline/modules/epub3-validator/library.xpl" />
+
     <p:import href="ocf-zip.xpl"/>
 
     <px:fileset-store name="fileset-store">
@@ -29,5 +32,18 @@
             <p:pipe port="fileset.out" step="fileset-store"/>
         </p:input>
     </px:epub3-ocf-zip>
+
+
+    <px:epub3-validator name="validation-report">
+        <p:with-option name="epub" select="$href" />
+        <p:with-option name="temp-dir" select="concat($href,'.validation')" />
+    </px:epub3-validator>
+
+    <p:store name="report">
+        <p:input port="source">
+            <p:pipe step="validation-report" port="html-report" />
+        </p:input>
+        <p:with-option name="href" select="concat($href,'.report.html')" />
+    </p:store>
 
 </p:declare-step>
