@@ -91,7 +91,7 @@
     </dependencies>
     
     <properties>
-    	<script.ext/>
+      <script.exec>./ant</script.exec>
     </properties>
   <profiles>
     <profile>
@@ -101,7 +101,7 @@
         </os>
       </activation>
       <properties>
-        <script.ext>.bat</script.ext>
+        <script.exec>ant.bat</script.exec>
       </properties>
     </profile>
     <profile>
@@ -139,7 +139,7 @@
                 </goals>
                 <configuration>
                   <workingDirectory>${project.basedir}/sources</workingDirectory>
-                  <executable>./ant${script.ext}</executable>
+                  <executable>${script.exec}</executable>
                   <commandlineArgs>jing-dist</commandlineArgs>
                 </configuration>
               </execution>
@@ -226,7 +226,7 @@
               </goals>
               <configuration>
                 <workingDirectory>${project.basedir}/sources</workingDirectory>
-                <executable>./ant${script.ext}</executable>
+                <executable>${script.exec}</executable>
                 <commandlineArgs>jar</commandlineArgs>
               </configuration>
             </execution>

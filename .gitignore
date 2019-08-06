@@ -20,3 +20,7 @@ bin/
 target/
 /build/
 /node-modules/
+# For jing temporary files
+build/
+modbuild.xml
+modules.xml
