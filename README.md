@@ -20,18 +20,18 @@ This super-project requires the following `tools` available in your `PATH` envir
 You can build the project archive using the following commands in a terminal positioned in the pipeline repository : 
 - For macOS : 
 ```bash
-mvn clean install -Dorg.daisy.org.ops4j.pax.url.mvn.settings="settings.xml" -Punpack-cli-mac -Punpack-updater-mac -Passemble-mac-zip
+mvn clean install -Dorg.daisy.org.ops4j.pax.url.mvn.settings="settings.xml" -Punpack-cli-mac -Punpack-updater-mac -Passemble-mac-zip -Pwithout-persistence
 ```
 - For Linux : 
 ```bash
-mvn clean install -Dorg.daisy.org.ops4j.pax.url.mvn.settings="settings.xml" -Punpack-cli-linux -Punpack-updater-linux -Passemble-linux-zip
+mvn clean install -Dorg.daisy.org.ops4j.pax.url.mvn.settings="settings.xml" -Punpack-cli-linux -Punpack-updater-linux -Passemble-linux-zip -Pwithout-persistence
 ```
 - For Windows :
 ```bash
-mvn clean install -Dorg.daisy.org.ops4j.pax.url.mvn.settings="settings.xml" -DskipTests -Punpack-cli-win -Punpack-updater-win -Punpack-updater-gui-win -Passemble-win-zip
+mvn clean install -Dorg.daisy.org.ops4j.pax.url.mvn.settings="settings.xml" -DskipTests -Punpack-cli-win -Punpack-updater-win -Punpack-updater-gui-win -Passemble-win-zip -Pwithout-persistence
 ```
 
-You will find the resulting archive in the folder `assembly/target`. Just unzip its content (a `daisy-pipeline` folder) wherever you want to start using the pipeline (see [how to launch the pipeline](#launch-the-pipeline)).
+You will find the resulting archive in the `assembly/target` folder. Just unzip its content (a `daisy-pipeline` folder) wherever you want to start using the pipeline (see [how to launch the pipeline](#launch-the-pipeline)).
 
 ### re-build / update
 
