@@ -90,6 +90,15 @@ $(JEKYLL_DIR)/api : $(MAVEN_DIR)/javadoc $(MAVEN_DIR)/xprocdoc
 	cp -r $</* $@/
 	cp -r $(word 2,$^)/* $@/
 
+$(MUSTACHE_DIR)/modules : $(MAVEN_DIR)/doc $(JEKYLL_DIR)/$(meta_file) | gems
+	mkdir -p $(dir $@)
+	rm -rf $@
+	cp -r $</org/daisy/pipeline/modules $@
+	if ! $(RUBY) make/mustache.rb "$@/**/*" $(word 2,$^) $(MUSTACHE_DIR) $(CONFIG_FILE); then \
+		rm -rf $@; \
+		exit 1; \
+	fi
+
 $(JEKYLL_DIR)/$(meta_file) : $(META_JEKYLL_DIR)/_site | gems
 	mkdir -p $(dir $@)
 	if ! $(RUBY) make/make_meta.rb "$<$(baseurl)/**/*.html" $<$(baseurl) $(CONFIG_FILE) >$@; then \
@@ -146,14 +155,6 @@ $(META_JEKYLL_DIR)/$(meta_file) :
 	mkdir -p $(dir $@)
 	touch $@
 
-$(MUSTACHE_DIR)/modules : $(MAVEN_DIR)/doc $(JEKYLL_DIR)/$(meta_file) | gems
-	mkdir -p $(dir $@)
-	rm -rf $@
-	cp -r $</org/daisy/pipeline/modules $@
-	if ! $(RUBY) make/mustache.rb "$@/**/*" $(word 2,$^) $(MUSTACHE_DIR) $(CONFIG_FILE); then \
-		rm -rf $@; \
-		exit 1; \
-	fi
 
 $(MAVEN_DIR)/doc \
 $(MAVEN_DIR)/javadoc \

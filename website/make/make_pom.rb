@@ -1,11 +1,16 @@
 #!/usr/bin/env ruby
 require 'yaml'
 require 'commaparty'
+require 'fileutils'
 
 versions = YAML.load_file(ARGV[0])
 modules = YAML.load_file(ARGV[1])
 api = YAML.load_file(ARGV[2])
+target_directory = ARGV[3]
 
+FileUtils.mkdir_p(target_directory) unless File.exists?(target_directory)
+
+$stdout.reopen(target_directory + "/pom.xml","w")
 $stdout << CommaParty.markup(
   [:project, {xmlns: 'http://maven.apache.org/POM/4.0.0'},
    [:modelVersion, '4.0.0'],

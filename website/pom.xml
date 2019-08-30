@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.daisy</groupId>
+    <artifactId>daisy</artifactId>
+    <version>4</version>
+    <relativePath />
+  </parent>
+
+  <groupId>org.daisy.pipeline</groupId>
+  <artifactId>website-builder</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>DAISY Pipeline 2 :: Website builder</name>
+  <description>Website building process (requires Ruby 2.5 and the "bundler" gem version 1.16.1)</description>
+
+  <properties>
+    <scriptext/>
+    <maven_dir>${project.basedir}/target/maven</maven_dir>
+    <jekyll_dir>${project.basedir}/target/jekyll</jekyll_dir>
+    <meta_jekyll_dir>${project.basedir}/target/meta/jekyll</meta_jekyll_dir>
+  </properties>
+
+  <profiles>
+    <profile>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <scriptext>.bat</scriptext>
+      </properties>
+    </profile>
+  </profiles>
+
+  
+  <!-- Reproducing the makefile steps with maven to allow crossplateforme build.
+  Ruby 2.5 with bundler gem is required -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.5.0</version>
+        <executions>
+          <execution>
+            <id>bundle-install-dependencies</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${project.basedir}</workingDirectory>
+              <executable>bundle${scriptext}</executable>
+              <commandlineArgs>install --path ${project.basedir}/gems</commandlineArgs>
+            </configuration>
+          </execution>
+          <!-- Build the website POM -->
+          <execution>
+            <id>gem-build-pom</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${project.basedir}</workingDirectory>
+              <executable>bundle${scriptext}</executable>
+              <commandlineArgs>exec ruby ${project.basedir}/make/make_pom.rb ${project.basedir}/src/_data/versions.yml ${project.basedir}/src/_data/modules.yml ${project.basedir}/src/_data/api.yml ${maven_dir}</commandlineArgs>
+            </configuration>
+          </execution>
+          <!-- Run the process-sources -->
+          <execution>
+            <id>pom-process-sources</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${maven_dir}</workingDirectory>
+              <executable>mvn${scriptext}</executable>
+              <commandlineArgs>process-sources</commandlineArgs>
+            </configuration>
+          </execution>
+          <!-- For future use in the compilation process
+          For now there seems to be an issue in the mustache 
+          templating process and sparql
+          <execution>
+            <id>ruby-build-jekyll</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${project.basedir}</workingDirectory>
+              <executable>bundle${scriptext}</executable>
+              <commandlineArgs>exec ruby ${project.basedir}/make/make_jekyll.rb ${project.basedir}/src ${project.basedir}/target</commandlineArgs>
+            </configuration>
+          </execution> -->
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>bundle-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+             <filesets>
+                <fileset>
+                  <directory>${project.basedir}/.bundle</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
