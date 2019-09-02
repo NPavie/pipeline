@@ -51,8 +51,10 @@ public class DataBinding extends Binding {
 
     public void setHref(String href) {
         URI base = node.getBaseURI();
-        base = base.resolve(href);
-        this.href = base.toASCIIString();
+        if(href != null && !href.equals("") ) {
+        	base = base.resolve(href);
+            this.href = base.toASCIIString();
+        } else throw new NullPointerException("Tried to load an " + (href != null ? "empty" : "undefined (null)" ) + " href.");
     }
 
     public String getHref() {

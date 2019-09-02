@@ -6,18 +6,23 @@ import java.util.Optional;
 
 import junit.framework.Assert;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.Test;
+import static org.junit.Assume.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
+
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
 	BinaryFinder.class,
 	BinaryFinder.PathFromPathHelper.class
 })
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "com.sun.org.apache.xalan.*"})
 public class BinaryFinderTest {
 
 	Optional<String> regularTest(String existingFolder, String existingBin,
@@ -105,6 +110,9 @@ public class BinaryFinderTest {
 	
 	@Test
 	public void pathFromPathHelper() throws Exception {
+		// path helper is a MacOS specific library, this test will failed on other platform !
+		assumeTrue(SystemUtils.IS_OS_MAC);
+
 		String pathHelperExecPath = "/usr/libexec/path_helper";
 		File pathHelperExecFile = PowerMockito.mock(File.class);
 		PowerMockito.whenNew(File.class)
