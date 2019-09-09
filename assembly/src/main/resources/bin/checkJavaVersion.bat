@@ -10,12 +10,6 @@ rem   0 check passed and JAVA set
 rem   1 check failed
 rem   3 check failed fatally (something wrong with code)
 
-rem For unit testing
-if not [%1]==[] (
-    call %*
-    goto :EOF
-)
-
 setlocal enabledelayedexpansion
 
 set DIRNAME=%~dp0
