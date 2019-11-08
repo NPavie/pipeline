@@ -32,13 +32,13 @@
 			<xsl:copy-of select="@*[not(name()='pho:ipa') and not(name()='pho:sampa')]" />
 			<ssml:phoneme>
 				<xsl:choose>
-					<xsl:when test="@sampa">
-						<xsl:attribute name="alphabet">sampa</xsl:attribute>
-						<xsl:attribute name="ph"><xsl:value-of select="@sampa"/></xsl:attribute>
+					<xsl:when test="@pho:sampa">
+						<xsl:attribute name="ssml:alphabet">sampa</xsl:attribute>
+						<xsl:attribute name="ssml:ph"><xsl:value-of select="@pho:sampa"/></xsl:attribute>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:attribute name="alphabet">ipa</xsl:attribute>
-						<xsl:attribute name="ph"><xsl:value-of select="ipa"/></xsl:attribute>
+						<xsl:attribute name="ssml:alphabet">ipa</xsl:attribute>
+						<xsl:attribute name="ssml:ph"><xsl:value-of select="@pho:ipa"/></xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:copy-of select="text()" />
