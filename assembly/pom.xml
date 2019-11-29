@@ -905,6 +905,7 @@
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules</groupId>
                   <artifactId>dtbook-to-ssml</artifactId>
+                  <version>3.0.2-SNAPSHOT</version>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules</groupId>
