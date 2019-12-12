@@ -1058,6 +1058,7 @@
                 <artifactItem>
                   <groupId>org.daisy.pipeline.modules</groupId>
                   <artifactId>tts-adapter-acapela</artifactId>
+                  <version>3.0.4-SNAPSHOT</version>
                 </artifactItem>
                 <!--
                 <artifactItem>

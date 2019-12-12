@@ -27,26 +27,25 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="dt:span[@pho:ipa]|dt:span[@pho:sampa]">
-		<xsl:copy>
+	<!-- Test to insert phoneme when a span with phonetic attributes is found  
+	<xsl:template match="dt:span[@pho:ipa]|span[@pho:sampa]">
+		<dt:w>
 			<xsl:copy-of select="@*[not(name()='pho:ipa' or name()='pho:sampa')]" />
-			<dt:w>
-				<ssml:phoneme>
-					<xsl:choose>
-						<xsl:when test="@pho:sampa">
-							<xsl:attribute name="ssml:alphabet">sampa</xsl:attribute>
-							<xsl:attribute name="ssml:ph"><xsl:value-of select="@pho:sampa"/></xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="ssml:alphabet">ipa</xsl:attribute>
-							<xsl:attribute name="ssml:ph"><xsl:value-of select="@pho:ipa"/></xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:copy-of select="descendant-or-self::node()/text()" />
-				</ssml:phoneme>
-			</dt:w>
-		</xsl:copy>
-	</xsl:template>
+			<ssml:phoneme>
+				<xsl:choose>
+					<xsl:when test="@pho:sampa">
+						<xsl:attribute name="ssml:alphabet">sampa</xsl:attribute>
+						<xsl:attribute name="ssml:ph"><xsl:value-of select="@pho:sampa"/></xsl:attribute>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:attribute name="ssml:alphabet">ipa</xsl:attribute>
+						<xsl:attribute name="ssml:ph"><xsl:value-of select="@pho:ipa"/></xsl:attribute>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:copy-of select="descendant-or-self::node()/text()" />
+			</ssml:phoneme>
+		</dt:w>
+	</xsl:template>  -->
 	
 
 	<!-- Add extra white spaces around elements that are sometimes badly juxtaposed. -->
@@ -103,13 +102,32 @@
 		to another, XHTML being less strict than DTBook regarding headers' positioning. -->
 	<xsl:variable name="headers"
 		select="('levelhd', 'hd', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6')" />
-	<xsl:template match="dt:w[count(*) = 0]">
+	<xsl:template match="dt:w[count(*) = 0]|dt:w[@pho:ipa]|dt:w[@pho:sampa]">
 		<xsl:variable name="text" select="dt:normalize(text())" />
 		<xsl:copy>
-			<xsl:copy-of select="@*" />
+			<xsl:copy-of select="@*[not(name()='pho:ipa' or name()='pho:sampa')]" />
 			<xsl:choose>
 				<xsl:when test="not(dt:is-numeral($text))">
-					<xsl:apply-templates select="node()" />
+					<xsl:choose>
+						<!-- apply direct phonetic correction -->
+						<xsl:when test="@pho:sampa">
+							<ssml:phoneme>
+								<xsl:attribute name="ssml:alphabet">sampa</xsl:attribute>
+								<xsl:attribute name="ssml:ph"><xsl:value-of select="@pho:sampa"/></xsl:attribute>
+								<xsl:apply-templates select="node()" />
+							</ssml:phoneme>
+						</xsl:when>
+						<xsl:when test="@pho:ipa">
+							<ssml:phoneme>
+								<xsl:attribute name="ssml:alphabet">ipa</xsl:attribute>
+								<xsl:attribute name="ssml:ph"><xsl:value-of select="@pho:ipa"/></xsl:attribute>
+								<xsl:apply-templates select="node()" />
+							</ssml:phoneme>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="node()" />
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:variable name="header"
