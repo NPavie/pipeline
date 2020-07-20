@@ -234,12 +234,14 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 			
 			try {
 				
+				// request values
 				String method = "GET";
 				String service = "polly";
 				String host = service + '.' + mRegion + ".amazonaws.com";
 				String api = "/v1/voices";
 				String endpoint = "https://" + host + api;
 				
+				// create a date for headers and the credential string
 				TimeZone tz = TimeZone.getTimeZone("UTC");
 				DateFormat amzDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
 				DateFormat datestampFormat = new SimpleDateFormat("yyyyMMdd");
@@ -248,33 +250,54 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 				String amzDate = amzDateFormat.format(new Date());
 				String datestamp = datestampFormat.format(new Date());
 				
+				// ************* TASK 1: CREATE A CANONICAL REQUEST *************
+				// http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html
+				
+				// create canonical URI--the part of the URI from domain to query
 				String canonicalUri = api;
+				
+				// create the canonical headers and signed headers
 				String canonicalHeaders = "host:" + host + '\n';
 				String signedHeaders = "host";
+				
+				// match the algorithm to the hashing algorithm SHA-256
 				String algorithm = "AWS4-HMAC-SHA256";
 				String credentialScope = datestamp + '/' + mRegion + '/' + service + '/' + "aws4_request";
+				
+				// create the canonical query string. In this example, request parameters are in the query string
 				String canonicalQuerystring = "X-Amz-Algorithm=AWS4-HMAC-SHA256";
 				canonicalQuerystring += "&X-Amz-Credential=" + URLEncoder.encode(mAccessKey + '/' + credentialScope, StandardCharsets.UTF_8.toString());
 				canonicalQuerystring += "&X-Amz-Date=" + amzDate;
 				canonicalQuerystring += "&X-Amz-Expires=30"; // temps avant que la requete expire ???
 				canonicalQuerystring += "&X-Amz-SignedHeaders=" + signedHeaders;
 				
+				// create payload hash 
+				// for GET requests, the payload is an empty string ("")
 				String payloadHash = hashSHA256("");
 				
+				// combine elements to create create canonical request
 				String canonicalRequest = method + '\n' + canonicalUri + '\n' + canonicalQuerystring + '\n' + canonicalHeaders + '\n' 
 						+ signedHeaders + '\n' + payloadHash;
 				
+				// ************* TASK 2: CREATE THE STRING TO SIGN*************
 				String stringToSign = algorithm + '\n' + amzDate + '\n' + credentialScope + '\n' + hashSHA256(canonicalRequest);
 				
+				// ************* TASK 3: CALCULATE THE SIGNATURE *************
+				// create the signing key
 				byte[] signingKey = getSignatureKey(mSecretKey, datestamp, mRegion, service);
 				
+				
+				// sign the string_to_sign using the signing_key
 			    byte[] hash = HmacSHA256(stringToSign, signingKey);
 			    BigInteger number = new BigInteger(1, hash);
 				StringBuilder hexString = new StringBuilder(number.toString(16));
 				String signature = hexString.toString();
 				
+				// ************* TASK 4: ADD SIGNING INFORMATION TO THE REQUEST *************
+				// the auth information is add to the query string
 				canonicalQuerystring += "&X-Amz-Signature=" + signature;
 				
+				// ************* SEND THE REQUEST *************
 				String requestUrl = endpoint + "?" + canonicalQuerystring;
 
 				URL url = new URL(requestUrl);
