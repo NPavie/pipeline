@@ -30,9 +30,9 @@ public class AWSTTSTest {
 		return res;
 	}
 
-	private static AWSTTSEngine allocateEngine() throws Throwable {
+	private static AWSRestTTSEngine allocateEngine() throws Throwable {
 		AWSTTSService s = new AWSTTSService();
-		return (AWSTTSEngine) s.newEngine(new HashMap<String, String>());
+		return (AWSRestTTSEngine) s.newEngine(new HashMap<String, String>());
 	}
 	
 	@Test
@@ -59,10 +59,10 @@ public class AWSTTSTest {
 
 	@Test
 	public void speakEasy() throws Throwable {
-		AWSTTSEngine engine = allocateEngine();
+		AWSRestTTSEngine engine = allocateEngine();
 
 		TTSResource resource = engine.allocateThreadResources();
-		Collection<AudioBuffer> li = engine.synthesize("<s>this is a test</s>", null, null,
+		Collection<AudioBuffer> li = engine.synthesize("<s>this is a test <mark name=\"here\"/></s>", null, null,
 		        resource, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
 
@@ -71,7 +71,7 @@ public class AWSTTSTest {
 	
 	@Test
 	public void speakEasyWithVoiceNotNull() throws Throwable {
-		AWSTTSEngine engine = allocateEngine();
+		AWSRestTTSEngine engine = allocateEngine();
 
 		TTSResource resource = engine.allocateThreadResources();
 		Collection<AudioBuffer> li = engine.synthesize("<s>this is a test</s>", null, new Voice("aws", "Emma"),
@@ -83,7 +83,7 @@ public class AWSTTSTest {
 
 	@Test
 	public void speakWithVoices() throws Throwable {
-		AWSTTSEngine engine = allocateEngine();
+		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
 
 		Set<Integer> sizes = new HashSet<Integer>();
@@ -107,7 +107,7 @@ public class AWSTTSTest {
 
 	@Test
 	public void speakUnicode() throws Throwable {
-		AWSTTSEngine engine = allocateEngine();
+		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
 		Collection<AudioBuffer> li = engine.synthesize(
 		        "<s>𝄞𝄞𝄞𝄞 水水水水水 𝄞水𝄞水𝄞水𝄞水 test 国Ø家Ť标准 ĜæŘ ß ŒÞ ๕</s>", null, null,
@@ -119,7 +119,7 @@ public class AWSTTSTest {
 
 	@Test
 	public void multiSpeak() throws Throwable {
-		final AWSTTSEngine engine = allocateEngine();
+		final AWSRestTTSEngine engine = allocateEngine();
 
 		final int[] sizes = new int[16];
 		Thread[] threads = new Thread[sizes.length];
@@ -170,7 +170,7 @@ public class AWSTTSTest {
 		for (int i = 0 ; i < 5001; i++) {
 			sentence = sentence + 'a';
 		}
-		AWSTTSEngine engine = allocateEngine();
+		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
 		engine.synthesize(sentence, null, null,resource, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
@@ -179,7 +179,7 @@ public class AWSTTSTest {
 	@Test
 	public void adaptedSentence() throws Throwable {
 		String sentence = "<s>I can pause <break time=\"3s\"/>.</s>";
-		AWSTTSEngine engine = allocateEngine();
+		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
 		engine.synthesize(sentence, null, null,resource, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
