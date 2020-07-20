@@ -1,6 +1,10 @@
 package org.daisy.pipeline.tts.aws.impl;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -330,6 +334,109 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 	InterruptedException {
 		return new TTSResource();
 	}
+
+	static String getMarksData(String sentence, Voice voice) throws Exception {
+		
+		// pour les test
+		String mAccessKey = "AKIAJUWCEFT47BE2VBEA";
+		String mSecretKey = "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";
+		String mRegion = "eu-west-3"; 
+
+		String adaptedSentence = "";
+
+		for (int i = 0; i < sentence.length(); i++) {
+			if (sentence.charAt(i) == '"') {
+				adaptedSentence = adaptedSentence + '\\' + sentence.charAt(i);
+			}
+			else {
+				adaptedSentence = adaptedSentence + sentence.charAt(i);
+			}
+		}
+
+		adaptedSentence = '"' + adaptedSentence + '"';
+
+		String name;
+
+		if (voice != null) {
+			name = '"' + voice.name + '"';
+		}
+		else {
+			// by default the voice is set to English
+			name = '"' + "Brian" + '"';
+		}
+
+		String method = "POST";
+		String service = "polly";
+		String region = mRegion;
+		String host = service + '.' + region + ".amazonaws.com";
+		String api = "/v1/speech";
+		String endpoint = "https://" + host + api;
+		String contentType = "application/json";
+
+		String requestParameters = "{";
+		requestParameters += "\"OutputFormat\": \"json\",";
+		requestParameters += "\"SpeechMarkTypes\": [ \"ssml\" ],";
+		requestParameters += "\"Text\":" + adaptedSentence + ",";
+		requestParameters += "\"TextType\": \"ssml\",";
+		requestParameters += "\"VoiceId\":" + name;
+		requestParameters += "}";
+
+
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		DateFormat amzDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
+		DateFormat datestampFormat = new SimpleDateFormat("yyyyMMdd");
+		amzDateFormat.setTimeZone(tz);
+		datestampFormat.setTimeZone(tz);
+		String amzDate = amzDateFormat.format(new Date());
+		String datestamp = datestampFormat.format(new Date());
+
+		String canonicalUri = api;
+		String canonicalQuerystring = "";
+		String canonicalHeaders = "content-type:" + contentType + '\n' + "host:" + host + '\n' + "x-amz-date:" + amzDate + '\n';
+		String signedHeaders = "content-type;host;x-amz-date";
+		String algorithm = "AWS4-HMAC-SHA256";
+		String credentialScope = datestamp + '/' + region + '/' + service + '/' + "aws4_request";
+		String payloadHash = hashSHA256(requestParameters);
+
+		String canonicalRequest = method + '\n' + canonicalUri + '\n' + canonicalQuerystring + '\n' + canonicalHeaders + '\n' 
+				+ signedHeaders + '\n' + payloadHash;
+
+		String stringToSign = algorithm + '\n' + amzDate + '\n' + credentialScope + '\n' + hashSHA256(canonicalRequest);
+
+		byte[] signingKey = getSignatureKey(mSecretKey, datestamp, region, service);
+
+		byte[] hash = HmacSHA256(stringToSign, signingKey);
+		BigInteger number = new BigInteger(1, hash);
+		StringBuilder hexString = new StringBuilder(number.toString(16));
+		String signature = hexString.toString();
+
+		String requestUrl = endpoint;
+
+		String authorizationHeader = algorithm + ' ' + "Credential=" + mAccessKey + '/' + credentialScope + ", " + "SignedHeaders=" + signedHeaders + ", " + "Signature=" + signature;
+
+		URL url = new URL(requestUrl);
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		con.setRequestProperty("Accept", "application/json");
+		con.setRequestProperty("Content-Type", contentType);
+		con.setRequestProperty("X-Amz-Date", amzDate);
+		con.setRequestProperty("Authorization", authorizationHeader);
+		con.setDoOutput(true);
+
+		try(OutputStream os = con.getOutputStream()) {
+			byte[] input = requestParameters.getBytes("utf-8");
+			os.write(input, 0, input.length);           
+		}
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+		StringBuilder response = new StringBuilder();
+		String inputLine;
+		while ((inputLine = br.readLine()) != null) {
+			response.append(inputLine.trim());
+		}
+		br.close();
+
+		return response.toString();
+	}
 	
 	static byte[] HmacSHA256(String data, byte[] key) throws Exception {
 	    String algorithm="HmacSHA256";
@@ -441,90 +548,79 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 
 	public static void main (String[] args) throws Exception {
 
-		for(int i=0; i<10; i++) {
+		String accessKey = "AKIAJUWCEFT47BE2VBEA";
+		String secretKey = "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";
 
-			String accessKey = "AKIAJUWCEFT47BE2VBEA";
-			String secretKey = "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";
+		String method = "POST";
+		String service = "polly";
+		String region = "eu-west-3"; // variable globale mRegion
+		String host = service + '.' + region + ".amazonaws.com";
+		String api = "/v1/speech";
+		String endpoint = "https://" + host + api;
+		String contentType = "application/json";
 
-			String method = "POST";
-			String service = "polly";
-			String region = "eu-west-3"; // variable globale mRegion
-			String host = service + '.' + region + ".amazonaws.com";
-			String api = "/v1/speech";
-			String endpoint = "https://" + host + api;
-			String contentType = "application/json";
-
-			String requestParameters = "{";
-			requestParameters += "\"OutputFormat\": \"json\",";
-			requestParameters += "\"SpeechMarkTypes\": [ \"ssml\" ],";
-			//requestParameters += "\"Text\": \"<speak>He was caught up in the game.<break time=\'1s\'/> In the middle of the 10/3/2014 <sub alias=\'World Wide Web Consortium\'>W3C</sub> meeting, he shouted, \'Nice job!\' quite loudly. When his boss stared at him, he repeated <amazon:effect name=\'whispered\'>\'Nice job,\'</amazon:effect> in a whisper.</speak>\",";
-			requestParameters += "\"Text\": \"<speak>Hello <mark name=\'here\'/></speak>\",";
-			requestParameters += "\"TextType\": \"ssml\",";
-			requestParameters += "\"VoiceId\": \"Brian\"";
-			requestParameters += "}";
+		String requestParameters = "{";
+		requestParameters += "\"OutputFormat\": \"mp3\",";
+		//requestParameters += "\"Text\": \"<speak>He was caught up in the game.<break time=\'1s\'/> In the middle of the 10/3/2014 <sub alias=\'World Wide Web Consortium\'>W3C</sub> meeting, he shouted, \'Nice job!\' quite loudly. When his boss stared at him, he repeated <amazon:effect name=\'whispered\'>\'Nice job,\'</amazon:effect> in a whisper.</speak>\",";
+		requestParameters += "\"Text\": \"<speak>Hello</speak>\",";
+		requestParameters += "\"TextType\": \"ssml\",";
+		requestParameters += "\"VoiceId\": \"Brian\"";
+		requestParameters += "}";
 
 
-			TimeZone tz = TimeZone.getTimeZone("UTC");
-			DateFormat amzDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-			DateFormat datestampFormat = new SimpleDateFormat("yyyyMMdd");
-			amzDateFormat.setTimeZone(tz);
-			datestampFormat.setTimeZone(tz);
-			String amzDate = amzDateFormat.format(new Date());
-			String datestamp = datestampFormat.format(new Date());
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		DateFormat amzDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
+		DateFormat datestampFormat = new SimpleDateFormat("yyyyMMdd");
+		amzDateFormat.setTimeZone(tz);
+		datestampFormat.setTimeZone(tz);
+		String amzDate = amzDateFormat.format(new Date());
+		String datestamp = datestampFormat.format(new Date());
 
-			String canonicalUri = api;
-			String canonicalQuerystring = "";
-			String canonicalHeaders = "content-type:" + contentType + '\n' + "host:" + host + '\n' + "x-amz-date:" + amzDate + '\n';
-			String signedHeaders = "content-type;host;x-amz-date";
-			String algorithm = "AWS4-HMAC-SHA256";
-			String credentialScope = datestamp + '/' + region + '/' + service + '/' + "aws4_request";
-			String payloadHash = hashSHA256(requestParameters);
+		String canonicalUri = api;
+		String canonicalQuerystring = "";
+		String canonicalHeaders = "content-type:" + contentType + '\n' + "host:" + host + '\n' + "x-amz-date:" + amzDate + '\n';
+		String signedHeaders = "content-type;host;x-amz-date";
+		String algorithm = "AWS4-HMAC-SHA256";
+		String credentialScope = datestamp + '/' + region + '/' + service + '/' + "aws4_request";
+		String payloadHash = hashSHA256(requestParameters);
 
-			String canonicalRequest = method + '\n' + canonicalUri + '\n' + canonicalQuerystring + '\n' + canonicalHeaders + '\n' 
-					+ signedHeaders + '\n' + payloadHash;
+		String canonicalRequest = method + '\n' + canonicalUri + '\n' + canonicalQuerystring + '\n' + canonicalHeaders + '\n' 
+				+ signedHeaders + '\n' + payloadHash;
 
-			String stringToSign = algorithm + '\n' + amzDate + '\n' + credentialScope + '\n' + hashSHA256(canonicalRequest);
+		String stringToSign = algorithm + '\n' + amzDate + '\n' + credentialScope + '\n' + hashSHA256(canonicalRequest);
 
-			byte[] signingKey = getSignatureKey(secretKey, datestamp, region, service);
+		byte[] signingKey = getSignatureKey(secretKey, datestamp, region, service);
 
-			byte[] hash = HmacSHA256(stringToSign, signingKey);
-			BigInteger number = new BigInteger(1, hash);
-			StringBuilder hexString = new StringBuilder(number.toString(16));
-			String signature = hexString.toString();
+		byte[] hash = HmacSHA256(stringToSign, signingKey);
+		BigInteger number = new BigInteger(1, hash);
+		StringBuilder hexString = new StringBuilder(number.toString(16));
+		String signature = hexString.toString();
 
-			String requestUrl = endpoint;
+		String requestUrl = endpoint;
 
-			String authorizationHeader = algorithm + ' ' + "Credential=" + accessKey + '/' + credentialScope + ", " + "SignedHeaders=" + signedHeaders + ", " + "Signature=" + signature;
+		String authorizationHeader = algorithm + ' ' + "Credential=" + accessKey + '/' + credentialScope + ", " + "SignedHeaders=" + signedHeaders + ", " + "Signature=" + signature;
 
-			URL url = new URL(requestUrl);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setRequestProperty("Accept", "application/json");
-			con.setRequestProperty("Content-Type", contentType);
-			con.setRequestProperty("X-Amz-Date", amzDate);
-			con.setRequestProperty("Authorization", authorizationHeader);
-			con.setDoOutput(true);
+		URL url = new URL(requestUrl);
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		con.setRequestProperty("Accept", "application/json");
+		con.setRequestProperty("Content-Type", contentType);
+		con.setRequestProperty("X-Amz-Date", amzDate);
+		con.setRequestProperty("Authorization", authorizationHeader);
+		con.setDoOutput(true);
 
-			try(OutputStream os = con.getOutputStream()) {
-				byte[] input = requestParameters.getBytes("utf-8");
-				os.write(input, 0, input.length);           
-			}
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
-			StringBuilder response = new StringBuilder();
-			String inputLine;
-			while ((inputLine = br.readLine()) != null) {
-				response.append(inputLine.trim());
-			}
-			br.close();
-
-			System.out.println(response);
-
+		try(OutputStream os = con.getOutputStream()) {
+			byte[] input = requestParameters.getBytes("utf-8");
+			os.write(input, 0, input.length);           
 		}
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+		StringBuilder response = new StringBuilder();
+		String inputLine;
+		while ((inputLine = br.readLine()) != null) {
+			response.append(inputLine.trim());
+		}
+		br.close();
 		
-		//try (OutputStream out = new FileOutputStream("output.mp3")) {
-		//	out.write(response.toString().getBytes());
-		//	System.out.println("Audio content written to file \"output.mp3\"");
-		//}
 
 	}
 
