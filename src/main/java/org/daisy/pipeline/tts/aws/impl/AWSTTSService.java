@@ -28,11 +28,9 @@ public class AWSTTSService extends AbstractTTSService {
 		String secretKey = params.get("org.daisy.pipeline.tts.aws.secretkey");
 		String region = params.get("org.daisy.pipeline.tts.aws.region");
 		
-		//int sampleRate = convertToInt(params, "org.daisy.pipeline.tts.aws.samplerate", 22050);
-		
 		int priority = convertToInt(params, "org.daisy.pipeline.tts.aws.priority", 17);
 
-		AudioFormat audioFormat = new AudioFormat((float) 22050, 16, 1, true, false);
+		AudioFormat audioFormat = new AudioFormat((float) 16000, 16, 1, true, false);
 		
 		AWSRequestScheduler scheduler = new AWSRequestScheduler();
 		
