@@ -91,9 +91,16 @@ public class AWSTTSTest {
 		Iterator<Voice> ite = engine.getAvailableVoices().iterator();
 		while (ite.hasNext()) {
 			Voice v = ite.next();
-			Collection<AudioBuffer> li = engine.synthesize("<s>small test</s>", null, v, resource,
-				       BufferAllocator, false);
-
+			Collection<AudioBuffer> li;
+			// voices cannot read all sentences
+			if (!v.name.equals("Karl") && !v.name.equals("Astrid") && !v.name.equals("Bianca") && !v.name.equals("Carla")) {
+				li = engine.synthesize("<s>small test</s>", null, v, resource,
+						BufferAllocator, false);
+			}
+			else {
+				li = engine.synthesize("<s>hello</s>", null, v, resource,
+						BufferAllocator, false);
+			}
 			sizes.add(getSize(li) / 4); //div 4 helps being more robust to tiny differences
 			totalVoices++;
 		}
@@ -166,10 +173,11 @@ public class AWSTTSTest {
 	
 	@Test(expected=SynthesisException.class)
 	public void tooBigSentence() throws Throwable {
-		String sentence = "";
-		for (int i = 0 ; i < 5001; i++) {
-			sentence = sentence + 'a';
+		String sentence = "<s>";
+		for (int i = 0 ; i < 3001; i++) {
+			sentence += 'a';
 		}
+		sentence += "</s>";
 		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
 		engine.synthesize(sentence, null, null,resource, BufferAllocator, false);
