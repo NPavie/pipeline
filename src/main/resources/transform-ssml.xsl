@@ -6,23 +6,13 @@
   <!--  the SSML needs to be serialized because eSpeak doesn't work well with namespaces -->
   <xsl:output method="text" omit-xml-declaration="yes" indent="no"/>
 
-  <xsl:param name="voice" select="''"/>
   <xsl:param name="ending-mark"/>
 
   <xsl:template match="*">
     <xsl:variable name="content" select="if (local-name() = 'speak') then node() else ."/>
     <xsl:variable name="to-be-serialized">
-      <xsl:choose>
-	<xsl:when test="$voice != ''">
-	  <ssml:voice name="{$voice}">
-	    <xsl:sequence select="$content"/>
-	  </ssml:voice>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:sequence select="$content"/>
-	</xsl:otherwise>
-      </xsl:choose>
-      <ssml:break time="250ms"/>
+    <xsl:sequence select="$content"/>
+    <ssml:break time="250ms"/>
     </xsl:variable>
     <xsl:apply-templates mode="serialize" select="$to-be-serialized"/>
   </xsl:template>
