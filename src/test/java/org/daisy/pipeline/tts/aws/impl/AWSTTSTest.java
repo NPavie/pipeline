@@ -62,8 +62,8 @@ public class AWSTTSTest {
 		AWSRestTTSEngine engine = allocateEngine();
 
 		TTSResource resource = engine.allocateThreadResources();
-		Collection<AudioBuffer> li = engine.synthesize("<s>this is a test <mark name=\"here\"/></s>", null, null,
-		        resource, BufferAllocator, false);
+		Collection<AudioBuffer> li = engine.synthesize("<s>small sentence</s><break time=\"250ms\"></break>", null, null,
+		        resource, null, null, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
 
 		Assert.assertTrue(getSize(li) > 2000);
@@ -74,8 +74,8 @@ public class AWSTTSTest {
 		AWSRestTTSEngine engine = allocateEngine();
 
 		TTSResource resource = engine.allocateThreadResources();
-		Collection<AudioBuffer> li = engine.synthesize("<s>this is a test</s>", null, new Voice("aws", "Emma"),
-		        resource, BufferAllocator, false);
+		Collection<AudioBuffer> li = engine.synthesize("<s>small sentence</s><break time=\"250ms\"></break>", null, new Voice("aws", "Lotte"),
+		        resource, null, null, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
 
 		Assert.assertTrue(getSize(li) > 2000);
@@ -95,11 +95,11 @@ public class AWSTTSTest {
 			// voices cannot read all sentences
 			if (!v.name.equals("Karl") && !v.name.equals("Astrid") && !v.name.equals("Bianca") && !v.name.equals("Carla")) {
 				li = engine.synthesize("<s>small test</s>", null, v, resource,
-						BufferAllocator, false);
+						null, null, BufferAllocator, false);
 			}
 			else {
 				li = engine.synthesize("<s>hello</s>", null, v, resource,
-						BufferAllocator, false);
+						null, null, BufferAllocator, false);
 			}
 			sizes.add(getSize(li) / 4); //div 4 helps being more robust to tiny differences
 			totalVoices++;
@@ -118,7 +118,7 @@ public class AWSTTSTest {
 		TTSResource resource = engine.allocateThreadResources();
 		Collection<AudioBuffer> li = engine.synthesize(
 		        "<s>𝄞𝄞𝄞𝄞 水水水水水 𝄞水𝄞水𝄞水𝄞水 test 国Ø家Ť标准 ĜæŘ ß ŒÞ ๕</s>", null, null,
-		        resource, BufferAllocator, false);
+		        resource, null, null, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
 
 		Assert.assertTrue(getSize(li) > 2000);
@@ -144,7 +144,7 @@ public class AWSTTSTest {
 					Collection<AudioBuffer> li = null;
 					for (int k = 0; k < 16; ++k) {
 						try {
-							li = engine.synthesize("<s>small test</s>", null, null, resource, BufferAllocator, false);
+							li = engine.synthesize("<s>small test</s>", null, null, resource, null, null, BufferAllocator, false);
 
 						} catch (SynthesisException | InterruptedException | MemoryException e) {
 							e.printStackTrace();
@@ -180,7 +180,7 @@ public class AWSTTSTest {
 		sentence += "</s>";
 		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
-		engine.synthesize(sentence, null, null,resource, BufferAllocator, false);
+		engine.synthesize(sentence, null, null,resource, null, null, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
 	}
 	
@@ -189,7 +189,7 @@ public class AWSTTSTest {
 		String sentence = "<s>I can pause <break time=\"3s\"/>.</s>";
 		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
-		engine.synthesize(sentence, null, null,resource, BufferAllocator, false);
+		engine.synthesize(sentence, null, null,resource, null, null, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
 	}
 	
