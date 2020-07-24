@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -31,13 +32,14 @@ import org.apache.commons.io.IOUtils;
 import org.daisy.pipeline.audio.AudioBuffer;
 import org.daisy.pipeline.tts.AudioBufferAllocator;
 import org.daisy.pipeline.tts.AudioBufferAllocator.MemoryException;
-import org.daisy.pipeline.tts.MarklessTTSEngine;
 import org.daisy.pipeline.tts.SoundUtil;
+import org.daisy.pipeline.tts.TTSEngine;
 import org.daisy.pipeline.tts.TTSRegistry.TTSResource;
+import org.daisy.pipeline.tts.TTSService.Mark;
 import org.daisy.pipeline.tts.TTSService.SynthesisException;
 import org.daisy.pipeline.tts.Voice;
 
-public class AWSRestTTSEngine extends MarklessTTSEngine {
+public class AWSRestTTSEngine extends TTSEngine {
 
 	private AudioFormat mAudioFormat;
 	private RequestScheduler mRequestScheduler;
@@ -52,20 +54,16 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 		mPriority = priority;
 		mAudioFormat = audioFormat;
 		mRequestScheduler = requestScheduler;
-		mAccessKey = accessKey;
-		mSecretKey = secretKey;
-		mRegion = region; 
+		mAccessKey = "AKIAJUWCEFT47BE2VBEA";
+		mSecretKey = "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";
+		mRegion = "eu-west-3"; 
 	}
 
 	@Override
-	public int expectedMillisecPerWord() {
-		return 64000;
-	}
-
-	@Override
-	public Collection<AudioBuffer> synthesize(String sentence, XdmNode xmlSentence,
-			Voice voice, TTSResource threadResources, AudioBufferAllocator bufferAllocator, boolean retry)
-					throws SynthesisException,InterruptedException, MemoryException {
+	public Collection<AudioBuffer> synthesize(String sentence, XdmNode xmlSentence, Voice voice,
+			TTSResource threadResources, List<Mark> marks, List<String> expectedMarks,
+			AudioBufferAllocator bufferAllocator, boolean retry)
+					throws SynthesisException, InterruptedException, MemoryException {
 
 		if (sentence.length() > 6000 || nbCharCharged(sentence) > 3000) {
 			throw new SynthesisException("The number of characters in the sentence must not exceed 3000. The tags are not taken into account");
@@ -98,6 +96,15 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 			// by default the voice is set to en-US
 			name = '"' + "Joey" + '"';
 		}
+		
+		try {
+			for (Mark mark : getMarksData(adaptedSentence, name)) {
+				marks.add(mark);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 
 		HttpURLConnection con = null;
 
@@ -144,7 +151,7 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 				try {
 					if (con.getResponseCode() == 429) {
 						// if the error "too many requests is raised
-						//mRequestScheduler.sleep();
+						mRequestScheduler.sleep();
 					}
 					else {
 						SoundUtil.cancelFootPrint(result, bufferAllocator);
@@ -249,6 +256,16 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 	InterruptedException {
 		return new TTSResource();
 	}
+	
+	@Override
+	public int expectedMillisecPerWord() {
+		return 64000;
+	}
+	
+	@Override
+	public String endingMark() {
+		return "ending-mark";
+	}
 
 	private Map<String, String> createRequest(String method, String api, String requestParameters) throws Exception {
 
@@ -324,37 +341,16 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 		return requestData;
 	}
 
-	private String getMarksData(String sentence, Voice voice) throws Exception {
-
-		String adaptedSentence = "";
-
-		for (int i = 0; i < sentence.length(); i++) {
-			if (sentence.charAt(i) == '"') {
-				adaptedSentence = adaptedSentence + '\\' + sentence.charAt(i);
-			}
-			else {
-				adaptedSentence = adaptedSentence + sentence.charAt(i);
-			}
-		}
-
-		adaptedSentence = '"' + adaptedSentence + '"';
-
-		String name;
-
-		if (voice != null) {
-			name = '"' + voice.name + '"';
-		}
-		else {
-			// by default the voice is set to en-US
-			name = '"' + "Joey" + '"';
-		}
+	private List<Mark> getMarksData(String adaptedSentence, String voiceName) throws Exception {
+		
+		List<Mark> marks = new ArrayList<>();
 
 		String requestParameters = "{";
 		requestParameters += "\"OutputFormat\": \"json\",";
 		requestParameters += "\"SpeechMarkTypes\": [ \"ssml\" ],";
 		requestParameters += "\"Text\":" + adaptedSentence + ",";
 		requestParameters += "\"TextType\": \"ssml\",";
-		requestParameters += "\"VoiceId\":" + name;
+		requestParameters += "\"VoiceId\":" + voiceName;
 		requestParameters += "}";
 
 
@@ -380,12 +376,34 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 			response.append(inputLine.trim());
 		}
 		br.close();
+		
+		Pattern pSingleMark = Pattern .compile("\\{[^\\}]*\\}");
+		Matcher mSingleMark = pSingleMark.matcher(response);
+		
+		Pattern pTime = Pattern.compile("\"time\":[0-9]*");
+		Pattern pValue = Pattern.compile("\"value\":[^\\}]*");
 
-		return response.toString();
+		while (mSingleMark.find()) {
+			String singleMark = response.substring(mSingleMark.start(), mSingleMark.end());
+
+			Matcher mTime = pTime.matcher(singleMark);
+			mTime.find();
+			// + 7 to start after "time":
+			String time = singleMark.substring(mTime.start() + 7, mTime.end());
+
+			Matcher mValue = pValue.matcher(singleMark);
+			mValue.find();
+			// + 9 to start after "value":" & - 1 to stop before "
+			String value = singleMark.substring(mValue.start() + 9, mValue.end() - 1);
+			
+			marks.add(new Mark(value, Integer.parseInt(time)));	
+		}
+
+		return marks;
 	}
 
 	// calculation of the number of characters charged by aws
-	private int nbCharCharged(String sentence) {
+	private static int nbCharCharged(String sentence) {
 		int n = 0;
 		int i = 0;
 		boolean inTag = false;
@@ -414,14 +432,14 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 	}
 
 	// key derivation functions
-	private byte[] HmacSHA256(String data, byte[] key) throws Exception {
+	private static byte[] HmacSHA256(String data, byte[] key) throws Exception {
 		String algorithm="HmacSHA256";
 		Mac mac = Mac.getInstance(algorithm);
 		mac.init(new SecretKeySpec(key, algorithm));
 		return mac.doFinal(data.getBytes("UTF-8"));
 	}
 
-	private byte[] getSignatureKey(String key, String dateStamp, String regionName, String serviceName) throws Exception {
+	private static byte[] getSignatureKey(String key, String dateStamp, String regionName, String serviceName) throws Exception {
 		byte[] kSecret = ("AWS4" + key).getBytes("UTF-8");
 		byte[] kDate = HmacSHA256(dateStamp, kSecret);
 		byte[] kRegion = HmacSHA256(regionName, kDate);
@@ -430,13 +448,13 @@ public class AWSRestTTSEngine extends MarklessTTSEngine {
 		return kSigning;
 	}
 
-	private String hashSHA256(String data) throws NoSuchAlgorithmException {
+	private static String hashSHA256(String data) throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");  
 		byte[] hash = md.digest(data.getBytes(StandardCharsets.UTF_8));
 		return byteArrayToHex(hash);
 	}
 
-	private String byteArrayToHex(byte[] a) {
+	private static String byteArrayToHex(byte[] a) {
 		StringBuilder sb = new StringBuilder(a.length * 2);
 		for(byte b: a)
 			sb.append(String.format("%02x", b));
