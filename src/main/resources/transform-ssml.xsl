@@ -5,16 +5,23 @@
 
   <!--  the SSML needs to be serialized because eSpeak doesn't work well with namespaces -->
   <xsl:output method="text" omit-xml-declaration="yes" indent="no"/>
-
-  <xsl:param name="ending-mark"/>
+  
+  <xsl:param name="ending-mark" select="''"/>
+  
+  <xsl:variable name="end">
+    	<xsl:if test="$ending-mark != ''">
+    		<ssml:mark name="{$ending-mark}"/>
+    	</xsl:if>
+    	<ssml:break time="250ms"/>
+   </xsl:variable>
 
   <xsl:template match="*">
-    <xsl:variable name="content" select="if (local-name() = 'speak') then node() else ."/>
-    <xsl:variable name="to-be-serialized">
-    <xsl:sequence select="$content"/>
-    <ssml:break time="250ms"/>
-    </xsl:variable>
-    <xsl:apply-templates mode="serialize" select="$to-be-serialized"/>
+	  	<xsl:variable name="content" select="if (local-name() = 'speak') then node() else ."/>
+		<xsl:variable name="to-be-serialized">
+			<xsl:sequence select="$content"/>
+		</xsl:variable>
+		<xsl:apply-templates mode="serialize" select="$to-be-serialized"/>
+		<xsl:apply-templates mode="serialize" select="$end"/>
   </xsl:template>
 
 
@@ -29,7 +36,8 @@
   </xsl:template>
 
   <xsl:template match="ssml:mark" mode="serialize" priority="3">
-    <!--  ignore -->
+    <!--  we can use any name as long as it is unique -->
+	<xsl:value-of select="concat('&lt;mark name=&quot;', generate-id(), '&quot;/>')"/>
   </xsl:template>
 
   <xsl:template match="ssml:*" mode="serialize" priority="2">
