@@ -85,7 +85,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 			}
 		}
 
-		adaptedSentence = '"' + "<speak>" + adaptedSentence + "</speak>" + '"';
+		adaptedSentence = '"' + adaptedSentence + '"';
 
 		String name;
 
@@ -389,14 +389,16 @@ public class AWSRestTTSEngine extends TTSEngine {
 			Matcher mTime = pTime.matcher(singleMark);
 			mTime.find();
 			// + 7 to start after "time":
-			String time = singleMark.substring(mTime.start() + 7, mTime.end());
+			int time = Integer.parseInt(singleMark.substring(mTime.start() + 7, mTime.end()));
+			// TODO
+			int offset = time * 16000 * 2 + 44;
 
 			Matcher mValue = pValue.matcher(singleMark);
 			mValue.find();
 			// + 9 to start after "value":" & - 1 to stop before "
 			String value = singleMark.substring(mValue.start() + 9, mValue.end() - 1);
 			
-			marks.add(new Mark(value, Integer.parseInt(time)));	
+			marks.add(new Mark(value, offset));	
 		}
 
 		return marks;
