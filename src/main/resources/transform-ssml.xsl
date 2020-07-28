@@ -1,47 +1,50 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:ssml="http://www.w3.org/2001/10/synthesis"
+    exclude-result-prefixes="#all"
     version="2.0">
 
-    <!--  the SSML needs to be serialized because of the starting \voice command -->
-    <xsl:output method="text" omit-xml-declaration="yes" indent="no"/>
+  <xsl:output omit-xml-declaration="yes"/>
+  
+  <xsl:param name="voice" select="''"/>
+  <xsl:param name="ending-mark" select="''"/>
 
-    <xsl:param name="ending-mark" select="''"/>
+  <xsl:template match="*">
+    <speak version="1.0">
+      <xsl:apply-templates select="if (local-name()='speak') then node() else ." mode="copy"/>
+      <break time="250ms"/>
+      <xsl:if test="$ending-mark != ''">
+	<mark name="{$ending-mark}"/>
+      </xsl:if>
+    </speak>
+  </xsl:template>
+  
+  <xsl:template match="ssml:*" mode="copy">
+  	<xsl:element name="{local-name(.)}">
+    	<xsl:apply-templates select="node()" mode="copy"/>
+    </xsl:element>
+  </xsl:template>
+  
+  <xsl:template match="ssml:mark" mode="copy">
+  	<xsl:element name="{local-name(.)}">
+    	<xsl:apply-templates select="@*|node()" mode="copy"/>
+    </xsl:element>
+  </xsl:template>
+  
+  <xsl:template match="ssml:break" mode="copy">
+  	<xsl:element name="{local-name(.)}">
+    	<xsl:apply-templates select="@*|node()" mode="copy"/>
+    </xsl:element>
+  </xsl:template>
 
-    <xsl:variable name="end">
-    	<xsl:if test="$ending-mark != ''">
-    		<ssml:mark name="{$ending-mark}"/>
-    	</xsl:if>
-    	<ssml:break time="250ms"/>
-    </xsl:variable>
+  <xsl:template match="@*|node()" mode="copy">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()" mode="copy"/>
+    </xsl:copy>
+  </xsl:template>
 
-    <xsl:template match="*">
-    	<xsl:apply-templates mode="serialize" select="."/>
-  	</xsl:template>
-
-	<xsl:template match="text()" mode="serialize">
-		<xsl:value-of select="."/>
-	</xsl:template>
-	
-	<xsl:template match="ssml:s" mode="serialize">
-		<xsl:value-of select="concat('&lt;', local-name(), '>')"/>
-		<xsl:apply-templates mode="serialize" select="node()"/>
-		<xsl:apply-templates mode="serialize" select="$end"/>
-		<xsl:value-of select="concat('&lt;/', local-name(), '>')"/>
-	</xsl:template>
-
-	<xsl:template match="ssml:*" mode="serialize">
-		<xsl:value-of select="concat('&lt;', local-name())"/>
-		<xsl:if test="local-name() = 'break' | local-name() = 'mark'">
-			<xsl:apply-templates select="@*" mode="serialize"/>
-		</xsl:if>
-		<xsl:value-of select="'>'"/>
-		<xsl:apply-templates mode="serialize" select="node()"/>
-		<xsl:value-of select="concat('&lt;/', local-name(), '>')"/>
-	</xsl:template>
-
-	<xsl:template match="@*" mode="serialize">
-		<xsl:value-of select="concat(' ', local-name(), '=&quot;', ., '&quot;')"/>
-	</xsl:template>
+  <xsl:template match="@xml:lang" mode="copy">
+    <!-- not copied in order to prevent inconsistency with the current voice -->
+  </xsl:template>
 
 </xsl:stylesheet>
