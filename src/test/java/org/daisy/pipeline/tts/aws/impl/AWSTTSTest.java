@@ -1,9 +1,11 @@
 package org.daisy.pipeline.tts.aws.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +14,7 @@ import org.daisy.pipeline.tts.AudioBufferAllocator;
 import org.daisy.pipeline.tts.AudioBufferAllocator.MemoryException;
 import org.daisy.pipeline.tts.StraightBufferAllocator;
 import org.daisy.pipeline.tts.TTSRegistry.TTSResource;
+import org.daisy.pipeline.tts.TTSService.Mark;
 import org.daisy.pipeline.tts.TTSService.SynthesisException;
 import org.daisy.pipeline.tts.Voice;
 
@@ -62,7 +65,7 @@ public class AWSTTSTest {
 		AWSRestTTSEngine engine = allocateEngine();
 
 		TTSResource resource = engine.allocateThreadResources();
-		Collection<AudioBuffer> li = engine.synthesize("<s>small sentence</s><break time=\"250ms\"></break>", null, null,
+		Collection<AudioBuffer> li = engine.synthesize("<s>small sentence<break time=\"250ms\"></break></s>", null, null,
 		        resource, null, null, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
 
@@ -74,7 +77,7 @@ public class AWSTTSTest {
 		AWSRestTTSEngine engine = allocateEngine();
 
 		TTSResource resource = engine.allocateThreadResources();
-		Collection<AudioBuffer> li = engine.synthesize("<s>small sentence</s><break time=\"250ms\"></break>", null, new Voice("aws", "Lotte"),
+		Collection<AudioBuffer> li = engine.synthesize("<s>small sentence<break time=\"250ms\"></break></s>", null, new Voice("aws", "Lotte"),
 		        resource, null, null, BufferAllocator, false);
 		engine.releaseThreadResources(resource);
 
@@ -91,16 +94,8 @@ public class AWSTTSTest {
 		Iterator<Voice> ite = engine.getAvailableVoices().iterator();
 		while (ite.hasNext()) {
 			Voice v = ite.next();
-			Collection<AudioBuffer> li;
-			// voices cannot read all sentences
-			if (!v.name.equals("Karl") && !v.name.equals("Astrid") && !v.name.equals("Bianca") && !v.name.equals("Carla")) {
-				li = engine.synthesize("<s>small test</s>", null, v, resource,
-						null, null, BufferAllocator, false);
-			}
-			else {
-				li = engine.synthesize("<s>hello</s>", null, v, resource,
-						null, null, BufferAllocator, false);
-			}
+			Collection<AudioBuffer> li = engine.synthesize("<s>small sentence</s>", null, v, resource,
+					null, null, BufferAllocator, false);
 			sizes.add(getSize(li) / 4); //div 4 helps being more robust to tiny differences
 			totalVoices++;
 		}
@@ -184,6 +179,19 @@ public class AWSTTSTest {
 		engine.releaseThreadResources(resource);
 	}
 	
+	@Test(expected=SynthesisException.class)
+	public void tooBigSentenceBecauseOfTags() throws Throwable {
+		String sentence = "<s>";
+		for (int i = 0 ; i < 2000; i++) {
+			sentence += "<s>a</s>";
+		}
+		sentence += "</s>";
+		AWSRestTTSEngine engine = allocateEngine();
+		TTSResource resource = engine.allocateThreadResources();
+		engine.synthesize(sentence, null, null,resource, null, null, BufferAllocator, false);
+		engine.releaseThreadResources(resource);
+	}
+	
 	@Test
 	public void adaptedSentence() throws Throwable {
 		String sentence = "<s>I can pause <break time=\"3s\"/>.</s>";
@@ -193,4 +201,29 @@ public class AWSTTSTest {
 		engine.releaseThreadResources(resource);
 	}
 	
+	@Test
+	public void speakWithMark() throws Throwable {
+		AWSRestTTSEngine engine = allocateEngine();
+		List<Mark> marks = new ArrayList<>();
+
+		TTSResource resource = engine.allocateThreadResources();
+		Collection<AudioBuffer> li = engine.synthesize("<s>small sentence<mark name=\"test\"/></s>", null, null,
+		        resource, marks, null, BufferAllocator, false);
+		engine.releaseThreadResources(resource);
+
+		Assert.assertTrue(getSize(li) > 2000);
+		Assert.assertTrue(marks.size() == 1);
+		Assert.assertTrue(marks.get(0).name.equals("test"));
+	}
+	
+	@Test(expected=SynthesisException.class)
+	public void speakWithEmptyListMarks() throws Throwable {
+		AWSRestTTSEngine engine = allocateEngine();
+
+		TTSResource resource = engine.allocateThreadResources();
+		engine.synthesize("<s>small sentence<mark name=\"test\"/></s>", null, null,
+		        resource, null, null, BufferAllocator, false);
+		engine.releaseThreadResources(resource);
+	}
+		
 }
