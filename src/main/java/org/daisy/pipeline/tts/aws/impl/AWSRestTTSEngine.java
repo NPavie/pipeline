@@ -54,9 +54,9 @@ public class AWSRestTTSEngine extends TTSEngine {
 		mPriority = priority;
 		mAudioFormat = audioFormat;
 		mRequestScheduler = requestScheduler;
-		mAccessKey = "AKIAJUWCEFT47BE2VBEA";
-		mSecretKey = "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";
-		mRegion = "eu-west-3"; 
+		mAccessKey = accessKey;
+		mSecretKey = secretKey;
+		mRegion = region; 
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 				marks.add(mark);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new SynthesisException(e.getMessage(), e.getCause());
 		}
 		
 
@@ -391,7 +391,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 			// + 7 to start after "time":
 			int time = Integer.parseInt(singleMark.substring(mTime.start() + 7, mTime.end()));
 			// TODO
-			int offset = time * 16000 * 2 + 44;
+			int offset = (int) (time * Math.pow(10, -3) * 16000 * 2);
 
 			Matcher mValue = pValue.matcher(singleMark);
 			mValue.find();
