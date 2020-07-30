@@ -29,8 +29,10 @@ public class AWSTTSService extends AbstractTTSService {
 		String region = params.get("org.daisy.pipeline.tts.aws.region");
 		
 		int priority = convertToInt(params, "org.daisy.pipeline.tts.aws.priority", 17);
+		
+		int sampleRate = convertToInt(params, "org.daisy.pipeline.tts.aws.samplerate", 16000);
 
-		AudioFormat audioFormat = new AudioFormat((float) 16000, 16, 1, true, false);
+		AudioFormat audioFormat = new AudioFormat((float) sampleRate, 16, 1, true, false);
 		
 		AWSRequestScheduler scheduler = new AWSRequestScheduler();
 		
