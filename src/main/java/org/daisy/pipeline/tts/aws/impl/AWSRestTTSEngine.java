@@ -2,28 +2,14 @@ package org.daisy.pipeline.tts.aws.impl;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import javax.sound.sampled.AudioFormat;
 
 import net.sf.saxon.s9api.XdmNode;
@@ -38,25 +24,29 @@ import org.daisy.pipeline.tts.TTSRegistry.TTSResource;
 import org.daisy.pipeline.tts.TTSService.Mark;
 import org.daisy.pipeline.tts.TTSService.SynthesisException;
 import org.daisy.pipeline.tts.Voice;
+import org.daisy.pipeline.tts.aws.impl.AWSRequestBuilder.Action;
 
+/**
+ * Connector class to synthesize audio using the amazon polly engine.
+ * This connector is based on their REST Api.
+ * 
+ * @author Louis Caille @ braillenet.org
+ *
+ */
 public class AWSRestTTSEngine extends TTSEngine {
 
 	private AudioFormat mAudioFormat;
 	private RequestScheduler mRequestScheduler;
 	private int mPriority;
-	private String mAccessKey;
-	private String mSecretKey;
-	private String mRegion;
-
+	private AWSRequestBuilder requestBuilder;
+	
 	public AWSRestTTSEngine(AWSTTSService awsService, AudioFormat audioFormat, String accessKey, String secretKey, 
 			String region, RequestScheduler requestScheduler, int priority) {
 		super(awsService);
 		mPriority = priority;
 		mAudioFormat = audioFormat;
 		mRequestScheduler = requestScheduler;
-		mAccessKey = accessKey;
-		mSecretKey = secretKey;
-		mRegion = region; 
+		requestBuilder = new AWSRequestBuilder(accessKey, secretKey, region, mAudioFormat.getSampleRate(), "ssml");
 	}
 
 	@Override
@@ -70,6 +60,8 @@ public class AWSRestTTSEngine extends TTSEngine {
 		}
 
 		Collection<AudioBuffer> result = new ArrayList<AudioBuffer>();
+		
+		AWSRestRequest speechRequest = null;
 
 		// the sentence must be in an appropriate format to be inserted in the json query
 		// it is necessary to wrap the sentence in quotes and add backslash in front of the existing quotes
@@ -90,11 +82,11 @@ public class AWSRestTTSEngine extends TTSEngine {
 		String name;
 
 		if (voice != null) {
-			name = '"' + voice.name + '"';
+			name = voice.name;
 		}
 		else {
 			// by default the voice is set to en-US
-			name = '"' + "Joey" + '"';
+			name = "Joey";
 		}
 		
 		try {
@@ -104,9 +96,6 @@ public class AWSRestTTSEngine extends TTSEngine {
 		} catch (Exception e) {
 			throw new SynthesisException(e.getMessage(), e.getCause());
 		}
-		
-
-		HttpURLConnection con = null;
 
 		boolean isNotDone = true;
 
@@ -115,30 +104,16 @@ public class AWSRestTTSEngine extends TTSEngine {
 		while(isNotDone) {
 
 			try {
+				
+				speechRequest = requestBuilder.newRequest()
+						.withAction(Action.SPEECH)
+						.withOutputFormat("pcm")
+						.withSpeechMarksTypes(new ArrayList<>())
+						.withText(adaptedSentence)
+						.withVoice(name)
+						.build();
 
-				String requestParameters = "{";
-				requestParameters += "\"OutputFormat\": \"pcm\",";
-				requestParameters += "\"Text\": " + adaptedSentence +",";
-				requestParameters += "\"TextType\": \"ssml\",";
-				requestParameters += "\"VoiceId\":" + name;
-				requestParameters += "}";
-
-				Map<String, String> requestData = createRequest("POST", "/v1/speech", requestParameters);
-
-				URL url = new URL(requestData.get("requestUrl"));
-				con = (HttpURLConnection) url.openConnection();
-				con.setRequestProperty("Accept", "application/json");
-				con.setRequestProperty("Content-Type", requestData.get("contentType"));
-				con.setRequestProperty("X-Amz-Date", requestData.get("amzDate"));
-				con.setRequestProperty("Authorization", requestData.get("authorizationHeader"));
-				con.setDoOutput(true);
-
-				try(OutputStream os = con.getOutputStream()) {
-					byte[] input = requestParameters.getBytes("utf-8");
-					os.write(input, 0, input.length);           
-				}
-
-				byte[] bytes = IOUtils.toByteArray(con.getInputStream());
+				byte[] bytes = IOUtils.toByteArray(speechRequest.send());
 
 				AudioBuffer b = bufferAllocator.allocateBuffer(bytes.length);
 				b.data = bytes;
@@ -149,8 +124,8 @@ public class AWSRestTTSEngine extends TTSEngine {
 			} catch (Throwable e1) {
 
 				try {
-					if (con.getResponseCode() == 429) {
-						// if the error "too many requests is raised
+					if (speechRequest.getConnection().getResponseCode() == 429) {
+						// if the error "too many requests" is raised
 						mRequestScheduler.sleep();
 					}
 					else {
@@ -183,8 +158,8 @@ public class AWSRestTTSEngine extends TTSEngine {
 	InterruptedException {
 
 		Collection<Voice> result = new ArrayList<Voice>();
-
-		HttpURLConnection con = null;
+		
+		AWSRestRequest voiceRequest = null;
 
 		boolean isNotDone = true;
 
@@ -193,16 +168,12 @@ public class AWSRestTTSEngine extends TTSEngine {
 		while(isNotDone) {
 
 			try {
+				
+				voiceRequest = requestBuilder.newRequest()
+						.withAction(Action.VOICES)
+						.build();
 
-				Map<String, String> requestData = createRequest("GET", "/v1/voices", "");
-
-				URL url = new URL(requestData.get("requestUrl"));
-				con = (HttpURLConnection) url.openConnection();
-				con.setRequestProperty("Content-Type", requestData.get("contentType"));
-				con.setRequestProperty("X-Amz-Date", requestData.get("amzDate"));
-				con.setRequestProperty("Authorization", requestData.get("authorizationHeader"));
-
-				BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+				BufferedReader br = new BufferedReader(new InputStreamReader(voiceRequest.send(), "utf-8"));
 				StringBuilder response = new StringBuilder();
 				String inputLine;
 				while ((inputLine = br.readLine()) != null) {
@@ -227,8 +198,8 @@ public class AWSRestTTSEngine extends TTSEngine {
 			} catch (Throwable e1) {
 
 				try {
-					if (con.getResponseCode() == 429) {
-						// if the error "too many requests is raised
+					if (voiceRequest.getConnection().getResponseCode() == 429) {
+						// if the error "too many requests" is raised
 						mRequestScheduler.sleep();
 					}
 					else {
@@ -266,110 +237,25 @@ public class AWSRestTTSEngine extends TTSEngine {
 	public String endingMark() {
 		return "ending-mark";
 	}
-
-	private Map<String, String> createRequest(String method, String api, String requestParameters) throws Exception {
-
-		Map<String, String> requestData = new HashMap<>();
-
-		// request values
-		String service = "polly";
-		String host = service + '.' + mRegion + ".amazonaws.com";
-		String endpoint = "https://" + host + api;
-		String contentType = "application/json";
-		requestData.put("contentType", contentType);
-
-		// create a date for headers and the credential string
-		TimeZone tz = TimeZone.getTimeZone("UTC");
-		DateFormat amzDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-		DateFormat datestampFormat = new SimpleDateFormat("yyyyMMdd");
-		amzDateFormat.setTimeZone(tz);
-		datestampFormat.setTimeZone(tz);
-		String amzDate = amzDateFormat.format(new Date());
-		String datestamp = datestampFormat.format(new Date());
-		requestData.put("amzDate",amzDate);
-
-		// ************* TASK 1: CREATE A CANONICAL REQUEST *************
-		// http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html
-
-		// create canonical URI--the part of the URI from domain to query
-		String canonicalUri = api;
-
-		// create the canonical query string
-		String canonicalQuerystring = "";
-
-		// create the canonical headers and signed headers
-		String canonicalHeaders = "content-type:" + contentType + '\n' + "host:" + host + '\n' + "x-amz-date:" + amzDate + '\n';
-
-		// create the list of signed headers
-		String signedHeaders = "content-type;host;x-amz-date";
-
-		// create payload hash 
-		String payloadHash = hashSHA256(requestParameters);
-
-		// combine elements to create create canonical request
-		String canonicalRequest = method + '\n' + canonicalUri + '\n' + canonicalQuerystring + '\n' + canonicalHeaders + '\n' 
-				+ signedHeaders + '\n' + payloadHash;
-
-		// ************* TASK 2: CREATE THE STRING TO SIGN*************
-
-		// match the algorithm to the hashing algorithm SHA-256
-		String algorithm = "AWS4-HMAC-SHA256";
-		String credentialScope = datestamp + '/' + mRegion + '/' + service + '/' + "aws4_request";	
-		String stringToSign = algorithm + '\n' + amzDate + '\n' + credentialScope + '\n' + hashSHA256(canonicalRequest);
-
-		// ************* TASK 3: CALCULATE THE SIGNATURE *************
-
-		// create the signing key
-		byte[] signingKey = getSignatureKey(mSecretKey, datestamp, mRegion, service);
-
-
-		// sign the stringToSign using the signing_key
-		byte[] hash = HmacSHA256(stringToSign, signingKey);
-		String signature = byteArrayToHex(hash);
-
-		// ************* TASK 4: ADD SIGNING INFORMATION TO THE REQUEST *************
-
-		String authorizationHeader = algorithm + ' ' + "Credential=" + mAccessKey + '/' + credentialScope + ", " 
-				+ "SignedHeaders=" + signedHeaders + ", " + "Signature=" + signature;
-		requestData.put("authorizationHeader", authorizationHeader);
-
-		// ************* SEND THE REQUEST *************
-
-		String requestUrl = endpoint + "?" + canonicalQuerystring;	
-		requestData.put("requestUrl", requestUrl);
-
-		return requestData;
-	}
-
+	
 	private List<Mark> getMarksData(String adaptedSentence, String voiceName) throws Exception {
 		
 		List<Mark> marks = new ArrayList<>();
 
-		String requestParameters = "{";
-		requestParameters += "\"OutputFormat\": \"json\",";
-		requestParameters += "\"SpeechMarkTypes\": [ \"ssml\" ],";
-		requestParameters += "\"Text\":" + adaptedSentence + ",";
-		requestParameters += "\"TextType\": \"ssml\",";
-		requestParameters += "\"VoiceId\":" + voiceName;
-		requestParameters += "}";
+		AWSRestRequest marksRequest = null;
+		
+		List<String> speechMarksTypes = new ArrayList<>();
+		speechMarksTypes.add("ssml");
+		
+		marksRequest = requestBuilder.newRequest()
+				.withAction(Action.SPEECH)
+				.withOutputFormat("json")
+				.withSpeechMarksTypes(speechMarksTypes)
+				.withText(adaptedSentence)
+				.withVoice(voiceName)
+				.build();
 
-
-		Map<String, String> requestData = createRequest("POST", "/v1/speech", requestParameters);
-
-		URL url = new URL(requestData.get("requestUrl"));
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		con.setRequestProperty("Accept", "application/json");
-		con.setRequestProperty("Content-Type", requestData.get("contentType"));
-		con.setRequestProperty("X-Amz-Date", requestData.get("amzDate"));
-		con.setRequestProperty("Authorization", requestData.get("authorizationHeader"));
-		con.setDoOutput(true);
-
-		try(OutputStream os = con.getOutputStream()) {
-			byte[] input = requestParameters.getBytes("utf-8");
-			os.write(input, 0, input.length);           
-		}
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+		BufferedReader br = new BufferedReader(new InputStreamReader(marksRequest.send(), "utf-8"));
 		StringBuilder response = new StringBuilder();
 		String inputLine;
 		while ((inputLine = br.readLine()) != null) {
@@ -389,15 +275,23 @@ public class AWSRestTTSEngine extends TTSEngine {
 			Matcher mTime = pTime.matcher(singleMark);
 			mTime.find();
 			// + 7 to start after "time":
-			int time = Integer.parseInt(singleMark.substring(mTime.start() + 7, mTime.end()));
-			// TODO
-			int offset = (int) (time * Math.pow(10, -3) * 16000 * 2);
+			int timeInMilliSeconds = Integer.parseInt(singleMark.substring(mTime.start() + 7, mTime.end()));
+			// for amazon raw PCM data, 
+			// - default sample rate is 16khz 
+			// - default sample size is 2 bytes (16bits)
+			// - only 1 channel is used
+			int offset = (int) (
+					timeInMilliSeconds * 0.001 * 
+					mAudioFormat.getSampleRate() * 
+					mAudioFormat.getChannels() * 
+					mAudioFormat.getSampleSizeInBits() * 0.125
+					);
 
 			Matcher mValue = pValue.matcher(singleMark);
 			mValue.find();
 			// + 9 to start after "value":" & - 1 to stop before "
 			String value = singleMark.substring(mValue.start() + 9, mValue.end() - 1);
-			
+
 			marks.add(new Mark(value, offset));	
 		}
 
@@ -431,36 +325,6 @@ public class AWSRestTTSEngine extends TTSEngine {
 			}
 		}
 		return n;
-	}
-
-	// key derivation functions
-	private static byte[] HmacSHA256(String data, byte[] key) throws Exception {
-		String algorithm="HmacSHA256";
-		Mac mac = Mac.getInstance(algorithm);
-		mac.init(new SecretKeySpec(key, algorithm));
-		return mac.doFinal(data.getBytes("UTF-8"));
-	}
-
-	private static byte[] getSignatureKey(String key, String dateStamp, String regionName, String serviceName) throws Exception {
-		byte[] kSecret = ("AWS4" + key).getBytes("UTF-8");
-		byte[] kDate = HmacSHA256(dateStamp, kSecret);
-		byte[] kRegion = HmacSHA256(regionName, kDate);
-		byte[] kService = HmacSHA256(serviceName, kRegion);
-		byte[] kSigning = HmacSHA256("aws4_request", kService);
-		return kSigning;
-	}
-
-	private static String hashSHA256(String data) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-256");  
-		byte[] hash = md.digest(data.getBytes(StandardCharsets.UTF_8));
-		return byteArrayToHex(hash);
-	}
-
-	private static String byteArrayToHex(byte[] a) {
-		StringBuilder sb = new StringBuilder(a.length * 2);
-		for(byte b: a)
-			sb.append(String.format("%02x", b));
-		return sb.toString();
 	}
 
 }
