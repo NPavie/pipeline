@@ -36,12 +36,12 @@ import org.daisy.pipeline.tts.aws.impl.AWSRequestBuilder.Action;
 public class AWSRestTTSEngine extends TTSEngine {
 
 	private AudioFormat mAudioFormat;
-	private RequestScheduler mRequestScheduler;
+	private RequestScheduler<AWSRestRequest> mRequestScheduler;
 	private int mPriority;
 	private AWSRequestBuilder requestBuilder;
 	
 	public AWSRestTTSEngine(AWSTTSService awsService, AudioFormat audioFormat, String accessKey, String secretKey, 
-			String region, RequestScheduler requestScheduler, int priority) {
+			String region, RequestScheduler<AWSRestRequest> requestScheduler, int priority) {
 		super(awsService);
 		mPriority = priority;
 		mAudioFormat = audioFormat;
