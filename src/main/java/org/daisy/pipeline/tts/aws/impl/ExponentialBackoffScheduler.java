@@ -1,6 +1,6 @@
 package org.daisy.pipeline.tts.aws.impl;
 
-public class AWSRequestScheduler implements RequestScheduler {
+public class ExponentialBackoffScheduler implements RequestScheduler {
 	
 	private long waitingTime;
 	private long random_number_milliseconds;
