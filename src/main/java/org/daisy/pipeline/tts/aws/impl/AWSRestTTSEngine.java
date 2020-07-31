@@ -237,62 +237,89 @@ public class AWSRestTTSEngine extends TTSEngine {
 	public String endingMark() {
 		return "ending-mark";
 	}
-	
+
 	private List<Mark> getMarksData(String adaptedSentence, String voiceName) throws Exception {
-		
+
 		List<Mark> marks = new ArrayList<>();
 
 		AWSRestRequest marksRequest = null;
-		
+
 		List<String> speechMarksTypes = new ArrayList<>();
 		speechMarksTypes.add("ssml");
-		
-		marksRequest = requestBuilder.newRequest()
-				.withAction(Action.SPEECH)
-				.withOutputFormat("json")
-				.withSpeechMarksTypes(speechMarksTypes)
-				.withText(adaptedSentence)
-				.withVoice(voiceName)
-				.build();
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(marksRequest.send(), "utf-8"));
-		StringBuilder response = new StringBuilder();
-		String inputLine;
-		while ((inputLine = br.readLine()) != null) {
-			response.append(inputLine.trim());
-		}
-		br.close();
-		
-		Pattern pSingleMark = Pattern .compile("\\{[^\\}]*\\}");
-		Matcher mSingleMark = pSingleMark.matcher(response);
-		
-		Pattern pTime = Pattern.compile("\"time\":[0-9]*");
-		Pattern pValue = Pattern.compile("\"value\":[^\\}]*");
+		boolean isNotDone = true;
 
-		while (mSingleMark.find()) {
-			String singleMark = response.substring(mSingleMark.start(), mSingleMark.end());
+		// we loop until the request has not been processed 
+		// (aws limits to 80 requests per minute or 15000 characters)
+		while(isNotDone) {
 
-			Matcher mTime = pTime.matcher(singleMark);
-			mTime.find();
-			// + 7 to start after "time":
-			int timeInMilliSeconds = Integer.parseInt(singleMark.substring(mTime.start() + 7, mTime.end()));
-			// for amazon raw PCM data, 
-			// - default sample rate is 16khz 
-			// - default sample size is 2 bytes (16bits)
-			// - only 1 channel is used
-			int offset = (int) (
-					timeInMilliSeconds * 0.001 * 
-					mAudioFormat.getSampleRate() * 
-					mAudioFormat.getChannels() * 
-					mAudioFormat.getSampleSizeInBits() * 0.125
-					);
+			try {
 
-			Matcher mValue = pValue.matcher(singleMark);
-			mValue.find();
-			// + 9 to start after "value":" & - 1 to stop before "
-			String value = singleMark.substring(mValue.start() + 9, mValue.end() - 1);
+				marksRequest = requestBuilder.newRequest()
+						.withAction(Action.SPEECH)
+						.withOutputFormat("json")
+						.withSpeechMarksTypes(speechMarksTypes)
+						.withText(adaptedSentence)
+						.withVoice(voiceName)
+						.build();
 
-			marks.add(new Mark(value, offset));	
+				BufferedReader br = new BufferedReader(new InputStreamReader(marksRequest.send(), "utf-8"));
+				StringBuilder response = new StringBuilder();
+				String inputLine;
+				while ((inputLine = br.readLine()) != null) {
+					response.append(inputLine.trim());
+				}
+				br.close();
+
+				Pattern pSingleMark = Pattern .compile("\\{[^\\}]*\\}");
+				Matcher mSingleMark = pSingleMark.matcher(response);
+
+				Pattern pTime = Pattern.compile("\"time\":[0-9]*");
+				Pattern pValue = Pattern.compile("\"value\":[^\\}]*");
+
+				while (mSingleMark.find()) {
+					String singleMark = response.substring(mSingleMark.start(), mSingleMark.end());
+
+					Matcher mTime = pTime.matcher(singleMark);
+					mTime.find();
+					// + 7 to start after "time":
+					int timeInMilliSeconds = Integer.parseInt(singleMark.substring(mTime.start() + 7, mTime.end()));
+					// for amazon raw PCM data, 
+					// - default sample rate is 16khz 
+					// - default sample size is 2 bytes (16bits)
+					// - only 1 channel is used
+					int offset = (int) (
+							timeInMilliSeconds * 0.001 * 
+							mAudioFormat.getSampleRate() * 
+							mAudioFormat.getChannels() * 
+							mAudioFormat.getSampleSizeInBits() * 0.125
+							);
+
+					Matcher mValue = pValue.matcher(singleMark);
+					mValue.find();
+					// + 9 to start after "value":" & - 1 to stop before "
+					String value = singleMark.substring(mValue.start() + 9, mValue.end() - 1);
+
+					marks.add(new Mark(value, offset));	
+				}
+
+				isNotDone = false;
+
+			} catch (Throwable e1) {
+
+				try {
+					if (marksRequest.getConnection().getResponseCode() == 429) {
+						// if the error "too many requests" is raised
+						mRequestScheduler.sleep();
+					}
+					else {
+						throw new SynthesisException(e1.getMessage(), e1.getCause());
+					}
+				} catch (Exception e2) {
+					throw new SynthesisException(e2.getMessage(), e2.getCause());
+				}
+
+			}
 		}
 
 		return marks;
