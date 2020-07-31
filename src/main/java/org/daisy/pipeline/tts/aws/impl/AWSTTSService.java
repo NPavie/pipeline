@@ -28,7 +28,7 @@ public class AWSTTSService extends AbstractTTSService {
 		String secretKey = params.get("org.daisy.pipeline.tts.aws.secretkey");
 		String region = params.get("org.daisy.pipeline.tts.aws.region");
 		
-		int priority = convertToInt(params, "org.daisy.pipeline.tts.aws.priority", 17);
+		int priority = convertToInt(params, "org.daisy.pipeline.tts.aws.priority", 15);
 		
 		// Valid values for pcm are "8000" and "16000" The default value is "16000". 
 		int sampleRate = convertToInt(params, "org.daisy.pipeline.tts.aws.samplerate", 16000);
