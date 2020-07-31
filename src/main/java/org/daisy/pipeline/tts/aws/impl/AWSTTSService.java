@@ -30,11 +30,13 @@ public class AWSTTSService extends AbstractTTSService {
 		
 		int priority = convertToInt(params, "org.daisy.pipeline.tts.aws.priority", 17);
 		
+		// Valid values for pcm are "8000" and "16000" The default value is "16000". 
 		int sampleRate = convertToInt(params, "org.daisy.pipeline.tts.aws.samplerate", 16000);
+		assertSampleRate(sampleRate);
 
 		AudioFormat audioFormat = new AudioFormat((float) sampleRate, 16, 1, true, false);
 		
-		AWSRequestScheduler scheduler = new AWSRequestScheduler();
+		ExponentialBackoffScheduler scheduler = new ExponentialBackoffScheduler();
 		
 		return new AWSRestTTSEngine(this, audioFormat, accessKey, secretKey, region, scheduler, priority);
 
@@ -62,6 +64,11 @@ public class AWSTTSService extends AbstractTTSService {
 			}
 		}
 		return defaultVal;
+	}
+	
+	private static void assertSampleRate(int sampleRate) throws SynthesisException {
+		if (sampleRate != 16000 && sampleRate != 8000) 
+			throw new SynthesisException(sampleRate + " is not a valid a value for sample rate which must be 8000 or 16000.");
 	}
 
 }
