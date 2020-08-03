@@ -136,6 +136,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 				try {
 					if (request.getConnection().getResponseCode() == 429) {
 						// if the error "too many requests" is raised
+						requestUuid = mRequestScheduler.add(request);
 						mRequestScheduler.delay(requestUuid);
 					}
 					else {
@@ -221,6 +222,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 				try {
 					if (request.getConnection().getResponseCode() == 429) {
 						// if the error "too many requests" is raised
+						requestUuid = mRequestScheduler.add(request);
 						mRequestScheduler.delay(requestUuid);
 					}
 					else {
@@ -341,6 +343,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 				try {
 					if (request.getConnection().getResponseCode() == 429) {
+						requestUuid = mRequestScheduler.add(request);
 						// if the error "too many requests" is raised
 						mRequestScheduler.delay(requestUuid);
 					}
