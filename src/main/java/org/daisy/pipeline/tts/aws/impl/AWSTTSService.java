@@ -36,7 +36,7 @@ public class AWSTTSService extends AbstractTTSService {
 
 		AudioFormat audioFormat = new AudioFormat((float) sampleRate, 16, 1, true, false);
 		
-		ExponentialBackoffScheduler scheduler = new ExponentialBackoffScheduler();
+		ExponentialBackoffScheduler<AWSRestRequest> scheduler = new ExponentialBackoffScheduler<AWSRestRequest>();
 		
 		return new AWSRestTTSEngine(this, audioFormat, accessKey, secretKey, region, scheduler, priority);
 

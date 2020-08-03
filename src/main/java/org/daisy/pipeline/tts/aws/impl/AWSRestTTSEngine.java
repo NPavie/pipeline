@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,8 +61,6 @@ public class AWSRestTTSEngine extends TTSEngine {
 		}
 
 		Collection<AudioBuffer> result = new ArrayList<AudioBuffer>();
-		
-		AWSRestRequest speechRequest = null;
 
 		// the sentence must be in an appropriate format to be inserted in the json query
 		// it is necessary to wrap the sentence in quotes and add backslash in front of the existing quotes
@@ -96,8 +95,27 @@ public class AWSRestTTSEngine extends TTSEngine {
 		} catch (Exception e) {
 			throw new SynthesisException(e.getMessage(), e.getCause());
 		}
-
+		
+		AWSRestRequest speechRequest = null;
+		AWSRestRequest request = null;
+		UUID requestUuid = null;
 		boolean isNotDone = true;
+
+		try {
+
+			speechRequest = requestBuilder.newRequest()
+					.withAction(Action.SPEECH)
+					.withOutputFormat("pcm")
+					.withSpeechMarksTypes(new ArrayList<>())
+					.withText(adaptedSentence)
+					.withVoice(name)
+					.build();
+
+			requestUuid = mRequestScheduler.add(speechRequest);
+
+		} catch (Throwable e) {
+			throw new SynthesisException(e.getMessage(), e.getCause());
+		}
 
 		// we loop until the request has not been processed 
 		// (aws limits to 80 requests per minute for standard voice and 8 for neural voice or 15000 characters)
@@ -105,15 +123,9 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 			try {
 				
-				speechRequest = requestBuilder.newRequest()
-						.withAction(Action.SPEECH)
-						.withOutputFormat("pcm")
-						.withSpeechMarksTypes(new ArrayList<>())
-						.withText(adaptedSentence)
-						.withVoice(name)
-						.build();
-
-				byte[] bytes = IOUtils.toByteArray(speechRequest.send());
+				request = mRequestScheduler.poll(requestUuid);
+				
+				byte[] bytes = IOUtils.toByteArray(request.send());
 
 				AudioBuffer b = bufferAllocator.allocateBuffer(bytes.length);
 				b.data = bytes;
@@ -124,9 +136,9 @@ public class AWSRestTTSEngine extends TTSEngine {
 			} catch (Throwable e1) {
 
 				try {
-					if (speechRequest.getConnection().getResponseCode() == 429) {
+					if (request.getConnection().getResponseCode() == 429) {
 						// if the error "too many requests" is raised
-						mRequestScheduler.sleep();
+						mRequestScheduler.delay(requestUuid);
 					}
 					else {
 						SoundUtil.cancelFootPrint(result, bufferAllocator);
@@ -160,8 +172,21 @@ public class AWSRestTTSEngine extends TTSEngine {
 		Collection<Voice> result = new ArrayList<Voice>();
 		
 		AWSRestRequest voiceRequest = null;
-
+		AWSRestRequest request = null;
+		UUID requestUuid = null;
 		boolean isNotDone = true;
+		
+		try {
+
+			voiceRequest = requestBuilder.newRequest()
+					.withAction(Action.VOICES)
+					.build();
+
+			requestUuid = mRequestScheduler.add(voiceRequest);
+
+		} catch (Throwable e) {
+			throw new SynthesisException(e.getMessage(), e.getCause());
+		}
 
 		// we loop until the request has not been processed 
 		// (aws limits to 80 requests per minute or 15000 characters)
@@ -169,11 +194,9 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 			try {
 				
-				voiceRequest = requestBuilder.newRequest()
-						.withAction(Action.VOICES)
-						.build();
+				request = mRequestScheduler.poll(requestUuid);
 
-				BufferedReader br = new BufferedReader(new InputStreamReader(voiceRequest.send(), "utf-8"));
+				BufferedReader br = new BufferedReader(new InputStreamReader(request.send(), "utf-8"));
 				StringBuilder response = new StringBuilder();
 				String inputLine;
 				while ((inputLine = br.readLine()) != null) {
@@ -198,9 +221,9 @@ public class AWSRestTTSEngine extends TTSEngine {
 			} catch (Throwable e1) {
 
 				try {
-					if (voiceRequest.getConnection().getResponseCode() == 429) {
+					if (request.getConnection().getResponseCode() == 429) {
 						// if the error "too many requests" is raised
-						mRequestScheduler.sleep();
+						mRequestScheduler.delay(requestUuid);
 					}
 					else {
 						throw new SynthesisException(e1.getMessage(), e1.getCause());
@@ -242,28 +265,39 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 		List<Mark> marks = new ArrayList<>();
 
-		AWSRestRequest marksRequest = null;
-
 		List<String> speechMarksTypes = new ArrayList<>();
 		speechMarksTypes.add("ssml");
-
+		
+		AWSRestRequest marksRequest = null;
+		AWSRestRequest request = null;
+		UUID requestUuid = null;
 		boolean isNotDone = true;
+
+		try {
+
+			marksRequest = requestBuilder.newRequest()
+					.withAction(Action.SPEECH)
+					.withOutputFormat("json")
+					.withSpeechMarksTypes(speechMarksTypes)
+					.withText(adaptedSentence)
+					.withVoice(voiceName)
+					.build();
+
+			requestUuid = mRequestScheduler.add(marksRequest);
+
+		} catch (Throwable e) {
+			throw new SynthesisException(e.getMessage(), e.getCause());
+		}
 
 		// we loop until the request has not been processed 
 		// (aws limits to 80 requests per minute or 15000 characters)
 		while(isNotDone) {
 
 			try {
+				
+				request = mRequestScheduler.poll(requestUuid);
 
-				marksRequest = requestBuilder.newRequest()
-						.withAction(Action.SPEECH)
-						.withOutputFormat("json")
-						.withSpeechMarksTypes(speechMarksTypes)
-						.withText(adaptedSentence)
-						.withVoice(voiceName)
-						.build();
-
-				BufferedReader br = new BufferedReader(new InputStreamReader(marksRequest.send(), "utf-8"));
+				BufferedReader br = new BufferedReader(new InputStreamReader(request.send(), "utf-8"));
 				StringBuilder response = new StringBuilder();
 				String inputLine;
 				while ((inputLine = br.readLine()) != null) {
@@ -308,9 +342,9 @@ public class AWSRestTTSEngine extends TTSEngine {
 			} catch (Throwable e1) {
 
 				try {
-					if (marksRequest.getConnection().getResponseCode() == 429) {
+					if (request.getConnection().getResponseCode() == 429) {
 						// if the error "too many requests" is raised
-						mRequestScheduler.sleep();
+						mRequestScheduler.delay(requestUuid);
 					}
 					else {
 						throw new SynthesisException(e1.getMessage(), e1.getCause());

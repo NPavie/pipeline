@@ -3,11 +3,6 @@ package org.daisy.pipeline.tts.aws.impl;
 import java.util.UUID;
 
 public interface RequestScheduler<RequestType> {
-
-	/**
-	 * Sleep the thread based on exponential backoff.
-	 */
-	void sleep() throws InterruptedException;
 	
 	/**
 	 * Add a new request to the scheduler queue
@@ -20,15 +15,17 @@ public interface RequestScheduler<RequestType> {
 	 * Ask the scheduler to delay the request associated with the requestId
 	 * when the request is polled.
 	 * @param requestId id of the request in the scheduler (as returned by the method add)
+	 * @throws InterruptedException 
 	 */
-	public void delay(UUID requestUuid);
+	public void delay(UUID requestUuid) throws InterruptedException;
 	
 	/**
 	 * Retrieve a request and remove it from the scheduler.
 	 * This function should wait if a delay has been set for the request.
 	 * @param requestId id of the request in the scheduler (as returned by the method add) 
 	 * @return
+	 * @throws InterruptedException 
 	 */
-	public RequestType poll(UUID requestUuid);
+	public RequestType poll(UUID requestUuid) throws InterruptedException;
 
 }
