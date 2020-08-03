@@ -96,7 +96,7 @@ public class AWSRequestBuilder {
 			requestParameters = "{";
 			requestParameters += "\"OutputFormat\": " + '"' + outputFormat + '"' + ",";
 			requestParameters += "\"SampleRate\": " + '"' + sampleRate +'"' + ",";
-			requestParameters += "\"Text\": " + text + ",";
+			requestParameters += "\"Text\": " + '"' + text + '"' + ",";
 			requestParameters += "\"SpeechMarkTypes\": " + speechMarksTypes + ",";
 			requestParameters += "\"TextType\": " + '"' + textType + '"' + ",";
 			requestParameters += "\"VoiceId\": " + '"' + voice + '"';

@@ -39,7 +39,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 	private AudioFormat mAudioFormat;
 	private RequestScheduler<AWSRestRequest> mRequestScheduler;
 	private int mPriority;
-	private AWSRequestBuilder requestBuilder;
+	private AWSRequestBuilder mRequestBuilder;
 	
 	public AWSRestTTSEngine(AWSTTSService awsService, AudioFormat audioFormat, String accessKey, String secretKey, 
 			String region, RequestScheduler<AWSRestRequest> requestScheduler, int priority) {
@@ -47,7 +47,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 		mPriority = priority;
 		mAudioFormat = audioFormat;
 		mRequestScheduler = requestScheduler;
-		requestBuilder = new AWSRequestBuilder(accessKey, secretKey, region, mAudioFormat.getSampleRate(), "ssml");
+		mRequestBuilder = new AWSRequestBuilder(accessKey, secretKey, region, mAudioFormat.getSampleRate(), "ssml");
 	}
 
 	@Override
@@ -76,8 +76,6 @@ public class AWSRestTTSEngine extends TTSEngine {
 			}
 		}
 
-		adaptedSentence = '"' + adaptedSentence + '"';
-
 		String name;
 
 		if (voice != null) {
@@ -103,7 +101,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 		try {
 
-			speechRequest = requestBuilder.newRequest()
+			speechRequest = mRequestBuilder.newRequest()
 					.withAction(Action.SPEECH)
 					.withOutputFormat("pcm")
 					.withSpeechMarksTypes(new ArrayList<>())
@@ -171,18 +169,18 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 		Collection<Voice> result = new ArrayList<Voice>();
 		
-		AWSRestRequest voiceRequest = null;
+		AWSRestRequest voicesRequest = null;
 		AWSRestRequest request = null;
 		UUID requestUuid = null;
 		boolean isNotDone = true;
 		
 		try {
 
-			voiceRequest = requestBuilder.newRequest()
+			voicesRequest = mRequestBuilder.newRequest()
 					.withAction(Action.VOICES)
 					.build();
 
-			requestUuid = mRequestScheduler.add(voiceRequest);
+			requestUuid = mRequestScheduler.add(voicesRequest);
 
 		} catch (Throwable e) {
 			throw new SynthesisException(e.getMessage(), e.getCause());
@@ -275,7 +273,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 		try {
 
-			marksRequest = requestBuilder.newRequest()
+			marksRequest = mRequestBuilder.newRequest()
 					.withAction(Action.SPEECH)
 					.withOutputFormat("json")
 					.withSpeechMarksTypes(speechMarksTypes)
