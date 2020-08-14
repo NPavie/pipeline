@@ -26,6 +26,7 @@ import org.daisy.pipeline.tts.TTSService.Mark;
 import org.daisy.pipeline.tts.TTSService.SynthesisException;
 import org.daisy.pipeline.tts.Voice;
 import org.daisy.pipeline.tts.aws.impl.AWSRequestBuilder.Action;
+import org.daisy.pipeline.tts.RequestScheduler;
 
 /**
  * Connector class to synthesize audio using the amazon polly engine.

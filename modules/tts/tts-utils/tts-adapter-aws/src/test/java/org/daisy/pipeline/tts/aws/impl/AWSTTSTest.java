@@ -20,8 +20,18 @@ import org.daisy.pipeline.tts.Voice;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Before;
+import org.junit.Assume;
 
 public class AWSTTSTest {
+	
+	@Before
+	public void checkForRequiredConfiguration() {
+		Assume.assumeTrue(System.getProperty("org.daisy.pipeline.tts.aws.accesskey") != null);
+		Assume.assumeTrue(System.getProperty("org.daisy.pipeline.tts.aws.secretkey") != null);
+		Assume.assumeTrue(System.getProperty("org.daisy.pipeline.tts.aws.region") != null);
+		
+	}
 
 	static AudioBufferAllocator BufferAllocator = new StraightBufferAllocator();
 
@@ -35,11 +45,16 @@ public class AWSTTSTest {
 
 	private static AWSRestTTSEngine allocateEngine() throws Throwable {
 		AWSTTSService s = new AWSTTSService();
-		return (AWSRestTTSEngine) s.newEngine(new HashMap<String, String>());
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("org.daisy.pipeline.tts.aws.accesskey", System.getProperty("org.daisy.pipeline.tts.aws.accesskey"));
+		params.put("org.daisy.pipeline.tts.aws.secretkey", System.getProperty("org.daisy.pipeline.tts.aws.secretkey"));
+		params.put("org.daisy.pipeline.tts.aws.region", System.getProperty("org.daisy.pipeline.tts.aws.region"));
+		return (AWSRestTTSEngine) s.newEngine(params);
 	}
 	
 	@Test
 	public void convertToIntWithGivenParams() throws Throwable {
+		System.out.println("Test - convertToIntWithGivenParams");
 		Map<String, String> params = new HashMap<>();
 		params.put("org.daisy.pipeline.tts.aws.priority", "20");
 		AWSTTSService s = new AWSTTSService();
@@ -48,6 +63,7 @@ public class AWSTTSTest {
 	
 	@Test(expected=SynthesisException.class)
 	public void convertToIntWithNotValidParams() throws Throwable {
+		System.out.println("Test - convertToIntWithNotValidParams");
 		Map<String, String> params = new HashMap<>();
 		params.put("org.daisy.pipeline.tts.aws.priority", "2T0");
 		AWSTTSService s = new AWSTTSService();
@@ -56,12 +72,14 @@ public class AWSTTSTest {
 
 	@Test
 	public void getVoiceInfo() throws Throwable {
+		System.out.println("Test - getVoiceInfo");
 		Collection<Voice> voices = allocateEngine().getAvailableVoices();
 		Assert.assertTrue(voices.size() > 50);
 	}
 
 	@Test
 	public void speakEasy() throws Throwable {
+		System.out.println("Test - speakEasy");
 		AWSRestTTSEngine engine = allocateEngine();
 
 		TTSResource resource = engine.allocateThreadResources();
@@ -74,6 +92,7 @@ public class AWSTTSTest {
 	
 	@Test
 	public void speakEasyWithVoiceNotNull() throws Throwable {
+		System.out.println("Test - speakEasyWithVoiceNotNull");
 		AWSRestTTSEngine engine = allocateEngine();
 
 		TTSResource resource = engine.allocateThreadResources();
@@ -86,6 +105,7 @@ public class AWSTTSTest {
 
 	@Test
 	public void speakWithVoices() throws Throwable {
+		System.out.println("Test - speakWithVoices");
 		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
 
@@ -109,6 +129,7 @@ public class AWSTTSTest {
 
 	@Test
 	public void speakUnicode() throws Throwable {
+		System.out.println("Test - speakUnicode");
 		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
 		Collection<AudioBuffer> li = engine.synthesize(
@@ -121,9 +142,12 @@ public class AWSTTSTest {
 
 	@Test
 	public void multiSpeak() throws Throwable {
+		System.out.println("Test - multiSpeak");
 		final AWSRestTTSEngine engine = allocateEngine();
 
-		final int[] sizes = new int[16];
+		// there is some limitation on the number of thread that can be used with amazon
+		// (the server returns a 400 error when more than 4 threads are used) 
+		final int[] sizes = new int[4];
 		Thread[] threads = new Thread[sizes.length];
 		for (int i = 0; i < threads.length; ++i) {
 			final int j = i;
@@ -168,6 +192,7 @@ public class AWSTTSTest {
 	
 	@Test(expected=SynthesisException.class)
 	public void tooBigSentence() throws Throwable {
+		System.out.println("Test - tooBigSentence");
 		String sentence = "<s>";
 		for (int i = 0 ; i < 3001; i++) {
 			sentence += 'a';
@@ -181,6 +206,7 @@ public class AWSTTSTest {
 	
 	@Test(expected=SynthesisException.class)
 	public void tooBigSentenceBecauseOfTags() throws Throwable {
+		System.out.println("Test - tooBigSentenceBecauseOfTags");
 		String sentence = "<s>";
 		for (int i = 0 ; i < 2000; i++) {
 			sentence += "<s>a</s>";
@@ -194,6 +220,7 @@ public class AWSTTSTest {
 	
 	@Test
 	public void adaptedSentence() throws Throwable {
+		System.out.println("Test - adaptedSentence");
 		String sentence = "<s>I can pause <break time=\"3s\"/>.</s>";
 		AWSRestTTSEngine engine = allocateEngine();
 		TTSResource resource = engine.allocateThreadResources();
@@ -203,6 +230,7 @@ public class AWSTTSTest {
 	
 	@Test
 	public void speakWithMark() throws Throwable {
+		System.out.println("Test - speakWithMark");
 		AWSRestTTSEngine engine = allocateEngine();
 		List<Mark> marks = new ArrayList<>();
 
@@ -218,6 +246,7 @@ public class AWSTTSTest {
 	
 	@Test(expected=SynthesisException.class)
 	public void speakWithEmptyListMarks() throws Throwable {
+		System.out.println("Test - speakWithEmptyListMarks");
 		AWSRestTTSEngine engine = allocateEngine();
 
 		TTSResource resource = engine.allocateThreadResources();

@@ -9,7 +9,13 @@ import org.daisy.pipeline.tts.TTSEngine;
 import org.daisy.pipeline.tts.TTSService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.daisy.pipeline.tts.ExponentialBackoffScheduler;
 
+/**
+ * OSGI service to instantiate the Amazon Polly engine adapter
+ * @author Louis Caille @ braillenet.org
+ *
+ */
 @Component(
 		name = "aws-tts-service",
 		service = { TTSService.class }
@@ -49,7 +55,7 @@ public class AWSTTSService extends AbstractTTSService {
 
 	@Override
 	public String getVersion() {
-		return "cli";
+		return "rest";
 	}
 	
 	private static int convertToInt(Map<String, String> params, String prop, int defaultVal)
