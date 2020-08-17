@@ -21,32 +21,6 @@ import javax.crypto.spec.SecretKeySpec;
 public class AWSRequestBuilder {
 	
 	/**
-	 * Possible actions to launch using requests
-	 * 
-	 * to create new actions, 
-	 * please see <a href="https://docs.aws.amazon.com/polly/latest/dg/API_Operations.html">The actions list of Amazon Polly</a>
-	 * for methods and domain that can be used.
-	 * 
-	 * @author  Louis Caille @ braillenet.org
-	 *
-	 */
-	public enum Action {
-		VOICES("GET","/v1/voices"),
-		SPEECH("POST","/v1/speech");
-		
-		public String method;
-		public String domain;
-
-		/**
-		 * @param method the HTTP method (usually GET or POST)
-		 * @param domain the domain/endpoint of the requested action
-		 */
-		Action(String method, String domain) {
-			this.method = method;
-			this.domain = domain;
-		}
-	}
-	/**
 	 * User access key
 	 */
 	private String accessKey;
@@ -79,7 +53,7 @@ public class AWSRequestBuilder {
 	/**
 	 * Action requested
 	 */
-	private Action action;
+	private AWSRestAction action;
 	
 	/**
 	 * Parameters of the request
@@ -127,7 +101,7 @@ public class AWSRequestBuilder {
 	 * @param action
 	 * @return
 	 */
-	public AWSRequestBuilder withAction(Action action) {
+	public AWSRequestBuilder withAction(AWSRestAction action) {
 		this.action = action;
 		return this;
 	}
@@ -222,6 +196,7 @@ public class AWSRequestBuilder {
 			break;
 		}
 		restRequest.setRequestParameters(requestParameters);
+		restRequest.setMethod(action.method);
 
 		// request values
 		String service = "polly";

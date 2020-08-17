@@ -27,9 +27,20 @@ public class AWSTTSTest {
 	
 	@Before
 	public void checkForRequiredConfiguration() {
+		if(System.getProperty("org.daisy.pipeline.tts.aws.accesskey") == null
+				|| System.getProperty("org.daisy.pipeline.tts.aws.secretkey") == null
+				|| System.getProperty("org.daisy.pipeline.tts.aws.region") == null) {
+			System.out.println("Test skipped due to mising property. \n"
+					+ "Please set the properties "
+					+ "org.daisy.pipeline.tts.aws.accesskey, "
+					+ "org.daisy.pipeline.tts.aws.secretkey and "
+					+ "org.daisy.pipeline.tts.aws.region to enable the tests");
+		}
 		Assume.assumeTrue(System.getProperty("org.daisy.pipeline.tts.aws.accesskey") != null);
 		Assume.assumeTrue(System.getProperty("org.daisy.pipeline.tts.aws.secretkey") != null);
 		Assume.assumeTrue(System.getProperty("org.daisy.pipeline.tts.aws.region") != null);
+		
+		
 		
 	}
 

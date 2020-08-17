@@ -17,6 +17,7 @@ public class AWSRestRequest {
 	 * Connection objet to Amazon AWS server
 	 */
 	private HttpURLConnection connection;
+	private String method = "GET";
 	private String contentType;
 	private String amzDate;
 	private String authorizationHeader;
@@ -35,6 +36,7 @@ public class AWSRestRequest {
 		connection.setRequestProperty("Content-Type", contentType);
 		connection.setRequestProperty("X-Amz-Date", amzDate);
 		connection.setRequestProperty("Authorization", authorizationHeader);
+		connection.setRequestMethod(method);
 		
 
 		if (requestParameters != null && requestParameters.length() > 0) {
@@ -109,6 +111,14 @@ public class AWSRestRequest {
 	 */
 	public URL getRequestUrl() {
 		return requestUrl;
+	}
+	
+	/**
+	 * 
+	 * @param method
+	 */
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	/**

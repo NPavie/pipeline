@@ -25,7 +25,6 @@ import org.daisy.pipeline.tts.TTSRegistry.TTSResource;
 import org.daisy.pipeline.tts.TTSService.Mark;
 import org.daisy.pipeline.tts.TTSService.SynthesisException;
 import org.daisy.pipeline.tts.Voice;
-import org.daisy.pipeline.tts.aws.impl.AWSRequestBuilder.Action;
 import org.daisy.pipeline.tts.RequestScheduler;
 
 /**
@@ -103,7 +102,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 		try {
 
 			speechRequest = mRequestBuilder.newRequest()
-					.withAction(Action.SPEECH)
+					.withAction(AWSRestAction.SPEECH)
 					.withOutputFormat("pcm")
 					.withSpeechMarksTypes(new ArrayList<>())
 					.withText(adaptedSentence)
@@ -179,7 +178,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 		try {
 
 			voicesRequest = mRequestBuilder.newRequest()
-					.withAction(Action.VOICES)
+					.withAction(AWSRestAction.VOICES)
 					.build();
 
 			requestUuid = mRequestScheduler.add(voicesRequest);
@@ -277,7 +276,7 @@ public class AWSRestTTSEngine extends TTSEngine {
 		try {
 
 			marksRequest = mRequestBuilder.newRequest()
-					.withAction(Action.SPEECH)
+					.withAction(AWSRestAction.SPEECH)
 					.withOutputFormat("json")
 					.withSpeechMarksTypes(speechMarksTypes)
 					.withText(adaptedSentence)
