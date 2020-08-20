@@ -1,5 +1,11 @@
 package org.daisy.pipeline.tts.scheduler;
 
+/**
+ * Exception to be raised by Schedulable object when an error occurred
+ * and the object cannot be rescheduled
+ * @author nicol
+ *
+ */
 public class FatalError extends Exception {
 
 	/**

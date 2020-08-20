@@ -1,5 +1,12 @@
 package org.daisy.pipeline.tts.scheduler;
 
+/**
+ * Exception to be raised by Schedulable object when an error occurred 
+ * but that object can be rescheduled.
+ * 
+ * @author Nicolas Pavie @ braillenet.org
+ *
+ */
 public class RecoverableError extends Exception {
 
 	/**

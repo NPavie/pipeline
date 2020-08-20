@@ -2,7 +2,7 @@ package org.daisy.pipeline.tts.scheduler;
 
 /**
  * Schedulable action interface, used by Scheduler implementation
- * A schedulable action should be automatically reschedule if a RecoverableError is raised
+ * A schedulable action must be rescheduled if a RecoverableError is raised
  *
  */
 public interface Schedulable {
