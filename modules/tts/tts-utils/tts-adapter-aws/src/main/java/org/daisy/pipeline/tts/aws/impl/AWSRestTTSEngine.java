@@ -1,13 +1,13 @@
 package org.daisy.pipeline.tts.aws.impl;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +25,12 @@ import org.daisy.pipeline.tts.TTSRegistry.TTSResource;
 import org.daisy.pipeline.tts.TTSService.Mark;
 import org.daisy.pipeline.tts.TTSService.SynthesisException;
 import org.daisy.pipeline.tts.Voice;
-import org.daisy.pipeline.tts.RequestScheduler;
+import org.daisy.pipeline.tts.rest.Request;
+import org.daisy.pipeline.tts.scheduler.FatalError;
+import org.daisy.pipeline.tts.scheduler.RecoverableError;
+import org.daisy.pipeline.tts.scheduler.Schedulable;
+import org.daisy.pipeline.tts.scheduler.Scheduler;
+import org.daisy.pipeline.tts.scheduler.impl.ExponentialBackoffScheduler;
 
 /**
  * Connector class to synthesize audio using the amazon polly engine.
@@ -37,16 +42,16 @@ import org.daisy.pipeline.tts.RequestScheduler;
 public class AWSRestTTSEngine extends TTSEngine {
 
 	private AudioFormat mAudioFormat;
-	private RequestScheduler<AWSRestRequest> mRequestScheduler;
+	private Scheduler<Schedulable> mRequestScheduler;
 	private int mPriority;
 	private AWSRequestBuilder mRequestBuilder;
 	
 	public AWSRestTTSEngine(AWSTTSService awsService, AudioFormat audioFormat, String accessKey, String secretKey, 
-			String region, RequestScheduler<AWSRestRequest> requestScheduler, int priority) {
+			String region, int priority) {
 		super(awsService);
 		mPriority = priority;
 		mAudioFormat = audioFormat;
-		mRequestScheduler = requestScheduler;
+		mRequestScheduler = new ExponentialBackoffScheduler<Schedulable>();
 		mRequestBuilder = new AWSRequestBuilder(accessKey, secretKey, region, mAudioFormat.getSampleRate(), "ssml");
 	}
 
@@ -93,15 +98,10 @@ public class AWSRestTTSEngine extends TTSEngine {
 		} catch (Exception e) {
 			throw new SynthesisException(e.getMessage(), e.getCause());
 		}
-		
-		AWSRestRequest speechRequest = null;
-		AWSRestRequest request = null;
-		UUID requestUuid = null;
-		boolean isNotDone = true;
 
 		try {
 
-			speechRequest = mRequestBuilder.newRequest()
+			Request speechRequest = mRequestBuilder.newRequest()
 					.withAction(AWSRestAction.SPEECH)
 					.withOutputFormat("pcm")
 					.withSpeechMarksTypes(new ArrayList<>())
@@ -109,52 +109,33 @@ public class AWSRestTTSEngine extends TTSEngine {
 					.withVoice(name)
 					.build();
 
-			requestUuid = mRequestScheduler.add(speechRequest);
-
-		} catch (Throwable e) {
-			throw new SynthesisException(e.getMessage(), e.getCause());
-		}
-
-		// we loop until the request has not been processed 
-		// (aws limits to 80 requests per minute for standard voice and 8 for neural voice or 15000 characters)
-		while(isNotDone) {
-
-			try {
-				
-				request = mRequestScheduler.poll(requestUuid);
-				
-				byte[] bytes = IOUtils.toByteArray(request.send());
-
-				AudioBuffer b = bufferAllocator.allocateBuffer(bytes.length);
-				b.data = bytes;
-				result.add(b);
-
-				isNotDone = false;
-
-			} catch (Throwable e1) {
-
+			mRequestScheduler.launch(()->{
 				try {
-					if (request.getConnection().getResponseCode() == 429) {
-						// if the error "too many requests" is raised
-						requestUuid = mRequestScheduler.add(request);
-						mRequestScheduler.delay(requestUuid);
+					byte[] bytes = IOUtils.toByteArray(speechRequest.send());
+
+					AudioBuffer b = bufferAllocator.allocateBuffer(bytes.length);
+					b.data = bytes;
+					result.add(b);
+				} catch (IOException | MemoryException e) {
+					try {
+						if (speechRequest.getConnection().getResponseCode() == 429) {
+							throw new RecoverableError("Exceeded quotas", e);
+						} else {
+							throw new FatalError(e);
+						}
+					} catch (IOException responseCodeError) {
+						throw new FatalError("could not retrieve response code for request", responseCodeError);
 					}
-					else {
-						SoundUtil.cancelFootPrint(result, bufferAllocator);
-						StringWriter sw = new StringWriter();
-						e1.printStackTrace(new PrintWriter(sw));
-						throw new SynthesisException(e1);
-					}
-				} catch (Exception e2) {
-					SoundUtil.cancelFootPrint(result, bufferAllocator);
-					StringWriter sw = new StringWriter();
-					e2.printStackTrace(new PrintWriter(sw));
-					throw new SynthesisException(e2);
 				}
+				
+			});
 
-			}
-
-		}
+		} catch (Exception e) { // include FatalError
+			SoundUtil.cancelFootPrint(result, bufferAllocator);
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			throw new SynthesisException(e.getMessage(), e.getCause());
+		} 
 
 		return result;
 	}
@@ -170,18 +151,46 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 		Collection<Voice> result = new ArrayList<Voice>();
 		
-		AWSRestRequest voicesRequest = null;
-		AWSRestRequest request = null;
-		UUID requestUuid = null;
-		boolean isNotDone = true;
-		
 		try {
 
-			voicesRequest = mRequestBuilder.newRequest()
+			Request voicesRequest = mRequestBuilder.newRequest()
 					.withAction(AWSRestAction.VOICES)
 					.build();
 
-			requestUuid = mRequestScheduler.add(voicesRequest);
+			mRequestScheduler.launch(()->{
+				try {
+					BufferedReader br = new BufferedReader(new InputStreamReader(voicesRequest.send(), "utf-8"));
+					StringBuilder response = new StringBuilder();
+					String inputLine;
+					while ((inputLine = br.readLine()) != null) {
+						response.append(inputLine.trim());
+					}
+					br.close();
+
+					// we retrieve the names of the voices in the response returned by the API
+					Pattern p = Pattern .compile("\"Id\":\"\\p{L}+\"");
+					Matcher m = p.matcher(response);
+					String s = "";
+					String name = "";
+
+					while (m.find()) {
+						s = response.substring(m.start(), m.end());
+						name = s.substring(6,s.length()-1);
+						result.add(new Voice(getProvider().getName(),name));
+					}
+				} catch (IOException e) {
+					try {
+						if (voicesRequest.getConnection().getResponseCode() == 429) {
+							throw new RecoverableError("Exceeded quotas", e);
+						} else {
+							throw new FatalError(e);
+						}
+					} catch (IOException responseCodeError) {
+						throw new FatalError("could not retrieve response code for request", responseCodeError);
+					}
+				}
+				
+			});
 
 		} catch (Throwable e) {
 			throw new SynthesisException(e.getMessage(), e.getCause());
@@ -189,52 +198,52 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 		// we loop until the request has not been processed 
 		// (aws limits to 80 requests per minute or 15000 characters)
-		while(isNotDone) {
-
-			try {
-				
-				request = mRequestScheduler.poll(requestUuid);
-
-				BufferedReader br = new BufferedReader(new InputStreamReader(request.send(), "utf-8"));
-				StringBuilder response = new StringBuilder();
-				String inputLine;
-				while ((inputLine = br.readLine()) != null) {
-					response.append(inputLine.trim());
-				}
-				br.close();
-
-				// we retrieve the names of the voices in the response returned by the API
-				Pattern p = Pattern .compile("\"Id\":\"\\p{L}+\"");
-				Matcher m = p.matcher(response);
-				String s = "";
-				String name = "";
-
-				while (m.find()) {
-					s = response.substring(m.start(), m.end());
-					name = s.substring(6,s.length()-1);
-					result.add(new Voice(getProvider().getName(),name));
-				}
-
-				isNotDone = false;
-
-			} catch (Throwable e1) {
-
-				try {
-					if (request.getConnection().getResponseCode() == 429) {
-						// if the error "too many requests" is raised
-						requestUuid = mRequestScheduler.add(request);
-						mRequestScheduler.delay(requestUuid);
-					}
-					else {
-						throw new SynthesisException(e1.getMessage(), e1.getCause());
-					}
-				} catch (Exception e2) {
-					throw new SynthesisException(e2.getMessage(), e2.getCause());
-				}
-
-			}
-
-		}
+//		while(isNotDone) {
+//
+//			try {
+//				
+//				request = mRequestScheduler.poll(requestUuid);
+//
+//				BufferedReader br = new BufferedReader(new InputStreamReader(request.send(), "utf-8"));
+//				StringBuilder response = new StringBuilder();
+//				String inputLine;
+//				while ((inputLine = br.readLine()) != null) {
+//					response.append(inputLine.trim());
+//				}
+//				br.close();
+//
+//				// we retrieve the names of the voices in the response returned by the API
+//				Pattern p = Pattern .compile("\"Id\":\"\\p{L}+\"");
+//				Matcher m = p.matcher(response);
+//				String s = "";
+//				String name = "";
+//
+//				while (m.find()) {
+//					s = response.substring(m.start(), m.end());
+//					name = s.substring(6,s.length()-1);
+//					result.add(new Voice(getProvider().getName(),name));
+//				}
+//
+//				isNotDone = false;
+//
+//			} catch (Throwable e1) {
+//
+//				try {
+//					if (request.getConnection().getResponseCode() == 429) {
+//						// if the error "too many requests" is raised
+//						requestUuid = mRequestScheduler.add(request);
+//						mRequestScheduler.delay(requestUuid);
+//					}
+//					else {
+//						throw new SynthesisException(e1.getMessage(), e1.getCause());
+//					}
+//				} catch (Exception e2) {
+//					throw new SynthesisException(e2.getMessage(), e2.getCause());
+//				}
+//
+//			}
+//
+//		}
 
 		return result;
 
@@ -268,14 +277,10 @@ public class AWSRestTTSEngine extends TTSEngine {
 		List<String> speechMarksTypes = new ArrayList<>();
 		speechMarksTypes.add("ssml");
 		
-		AWSRestRequest marksRequest = null;
-		AWSRestRequest request = null;
-		UUID requestUuid = null;
-		boolean isNotDone = true;
 
 		try {
 
-			marksRequest = mRequestBuilder.newRequest()
+			Request marksRequest = mRequestBuilder.newRequest()
 					.withAction(AWSRestAction.SPEECH)
 					.withOutputFormat("json")
 					.withSpeechMarksTypes(speechMarksTypes)
@@ -283,7 +288,59 @@ public class AWSRestTTSEngine extends TTSEngine {
 					.withVoice(voiceName)
 					.build();
 
-			requestUuid = mRequestScheduler.add(marksRequest);
+			mRequestScheduler.launch(()->{
+				try {
+					BufferedReader br = new BufferedReader(new InputStreamReader(marksRequest.send(), "utf-8"));
+					StringBuilder response = new StringBuilder();
+					String inputLine;
+					while ((inputLine = br.readLine()) != null) {
+						response.append(inputLine.trim());
+					}
+					br.close();
+	
+					Pattern pSingleMark = Pattern .compile("\\{[^\\}]*\\}");
+					Matcher mSingleMark = pSingleMark.matcher(response);
+	
+					Pattern pTime = Pattern.compile("\"time\":[0-9]*");
+					Pattern pValue = Pattern.compile("\"value\":[^\\}]*");
+	
+					while (mSingleMark.find()) {
+						String singleMark = response.substring(mSingleMark.start(), mSingleMark.end());
+	
+						Matcher mTime = pTime.matcher(singleMark);
+						mTime.find();
+						// + 7 to start after "time":
+						int timeInMilliSeconds = Integer.parseInt(singleMark.substring(mTime.start() + 7, mTime.end()));
+						// for amazon raw PCM data, 
+						// - default sample rate is 16khz 
+						// - default sample size is 2 bytes (16bits)
+						// - only 1 channel is used
+						int offset = (int) (
+								timeInMilliSeconds * 0.001 * 
+								mAudioFormat.getSampleRate() * 
+								mAudioFormat.getChannels() * 
+								mAudioFormat.getSampleSizeInBits() * 0.125
+								);
+	
+						Matcher mValue = pValue.matcher(singleMark);
+						mValue.find();
+						// + 9 to start after "value":" & - 1 to stop before "
+						String value = singleMark.substring(mValue.start() + 9, mValue.end() - 1);
+	
+						marks.add(new Mark(value, offset));	
+					}
+				}catch (IOException e) {
+					try {
+						if (marksRequest.getConnection().getResponseCode() == 429) {
+							throw new RecoverableError("Exceeded quotas", e);
+						} else {
+							throw new FatalError("Not handled error code : " + marksRequest.getConnection().getResponseCode(),e);
+						}
+					} catch (IOException responseCodeError) {
+						throw new FatalError("could not retrieve response code for request", responseCodeError);
+					}
+				}
+			});
 
 		} catch (Throwable e) {
 			throw new SynthesisException(e.getMessage(), e.getCause());
@@ -291,71 +348,71 @@ public class AWSRestTTSEngine extends TTSEngine {
 
 		// we loop until the request has not been processed 
 		// (aws limits to 80 requests per minute or 15000 characters)
-		while(isNotDone) {
-
-			try {
-				
-				request = mRequestScheduler.poll(requestUuid);
-
-				BufferedReader br = new BufferedReader(new InputStreamReader(request.send(), "utf-8"));
-				StringBuilder response = new StringBuilder();
-				String inputLine;
-				while ((inputLine = br.readLine()) != null) {
-					response.append(inputLine.trim());
-				}
-				br.close();
-
-				Pattern pSingleMark = Pattern .compile("\\{[^\\}]*\\}");
-				Matcher mSingleMark = pSingleMark.matcher(response);
-
-				Pattern pTime = Pattern.compile("\"time\":[0-9]*");
-				Pattern pValue = Pattern.compile("\"value\":[^\\}]*");
-
-				while (mSingleMark.find()) {
-					String singleMark = response.substring(mSingleMark.start(), mSingleMark.end());
-
-					Matcher mTime = pTime.matcher(singleMark);
-					mTime.find();
-					// + 7 to start after "time":
-					int timeInMilliSeconds = Integer.parseInt(singleMark.substring(mTime.start() + 7, mTime.end()));
-					// for amazon raw PCM data, 
-					// - default sample rate is 16khz 
-					// - default sample size is 2 bytes (16bits)
-					// - only 1 channel is used
-					int offset = (int) (
-							timeInMilliSeconds * 0.001 * 
-							mAudioFormat.getSampleRate() * 
-							mAudioFormat.getChannels() * 
-							mAudioFormat.getSampleSizeInBits() * 0.125
-							);
-
-					Matcher mValue = pValue.matcher(singleMark);
-					mValue.find();
-					// + 9 to start after "value":" & - 1 to stop before "
-					String value = singleMark.substring(mValue.start() + 9, mValue.end() - 1);
-
-					marks.add(new Mark(value, offset));	
-				}
-
-				isNotDone = false;
-
-			} catch (Throwable e1) {
-
-				try {
-					if (request.getConnection().getResponseCode() == 429) {
-						requestUuid = mRequestScheduler.add(request);
-						// if the error "too many requests" is raised
-						mRequestScheduler.delay(requestUuid);
-					}
-					else {
-						throw new SynthesisException(e1.getMessage(), e1.getCause());
-					}
-				} catch (Exception e2) {
-					throw new SynthesisException(e2.getMessage(), e2.getCause());
-				}
-
-			}
-		}
+//		while(isNotDone) {
+//
+//			try {
+//				
+//				request = mRequestScheduler.poll(requestUuid);
+//
+//				BufferedReader br = new BufferedReader(new InputStreamReader(request.send(), "utf-8"));
+//				StringBuilder response = new StringBuilder();
+//				String inputLine;
+//				while ((inputLine = br.readLine()) != null) {
+//					response.append(inputLine.trim());
+//				}
+//				br.close();
+//
+//				Pattern pSingleMark = Pattern .compile("\\{[^\\}]*\\}");
+//				Matcher mSingleMark = pSingleMark.matcher(response);
+//
+//				Pattern pTime = Pattern.compile("\"time\":[0-9]*");
+//				Pattern pValue = Pattern.compile("\"value\":[^\\}]*");
+//
+//				while (mSingleMark.find()) {
+//					String singleMark = response.substring(mSingleMark.start(), mSingleMark.end());
+//
+//					Matcher mTime = pTime.matcher(singleMark);
+//					mTime.find();
+//					// + 7 to start after "time":
+//					int timeInMilliSeconds = Integer.parseInt(singleMark.substring(mTime.start() + 7, mTime.end()));
+//					// for amazon raw PCM data, 
+//					// - default sample rate is 16khz 
+//					// - default sample size is 2 bytes (16bits)
+//					// - only 1 channel is used
+//					int offset = (int) (
+//							timeInMilliSeconds * 0.001 * 
+//							mAudioFormat.getSampleRate() * 
+//							mAudioFormat.getChannels() * 
+//							mAudioFormat.getSampleSizeInBits() * 0.125
+//							);
+//
+//					Matcher mValue = pValue.matcher(singleMark);
+//					mValue.find();
+//					// + 9 to start after "value":" & - 1 to stop before "
+//					String value = singleMark.substring(mValue.start() + 9, mValue.end() - 1);
+//
+//					marks.add(new Mark(value, offset));	
+//				}
+//
+//				isNotDone = false;
+//
+//			} catch (Throwable e1) {
+//
+//				try {
+//					if (request.getConnection().getResponseCode() == 429) {
+//						requestUuid = mRequestScheduler.add(request);
+//						// if the error "too many requests" is raised
+//						mRequestScheduler.delay(requestUuid);
+//					}
+//					else {
+//						throw new SynthesisException(e1.getMessage(), e1.getCause());
+//					}
+//				} catch (Exception e2) {
+//					throw new SynthesisException(e2.getMessage(), e2.getCause());
+//				}
+//
+//			}
+//		}
 
 		return marks;
 	}

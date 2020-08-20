@@ -1,14 +1,18 @@
 package org.daisy.pipeline.tts.aws.impl;
 
-import java.net.URL;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
+
+import org.daisy.pipeline.tts.rest.Request;
+import org.json.JSONObject;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -55,10 +59,6 @@ public class AWSRequestBuilder {
 	 */
 	private AWSRestAction action;
 	
-	/**
-	 * Parameters of the request
-	 */
-	private String requestParameters;
 	
 	/**
 	 * Text to synthesize
@@ -165,13 +165,33 @@ public class AWSRequestBuilder {
 	 * @return the new request
 	 * @throws Exception
 	 */
-	public AWSRestRequest build() throws Exception {
+	public Request build() throws Exception {
 		
-		AWSRestRequest restRequest = new AWSRestRequest();
+		HashMap<String, String> headers = new HashMap<String, String>();
+		JSONObject parameters = null;
+		
+
+		// request values
+		String service = "polly";
+		String host = service + '.' + region + ".amazonaws.com";
+		String endpoint = "https://" + host + action.domain;
+		String contentType = "application/json";
+		
+		
+
+		// create a date for headers and the credential string
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		DateFormat amzDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
+		DateFormat datestampFormat = new SimpleDateFormat("yyyyMMdd");
+		amzDateFormat.setTimeZone(tz);
+		datestampFormat.setTimeZone(tz);
+		String amzDate = amzDateFormat.format(new Date());
+		String datestamp = datestampFormat.format(new Date());
+		
 		
 		switch(action) {
 		case VOICES:
-			requestParameters = "";
+			// no specific parameters to send
 			break;
 		case SPEECH:
 			// Mandatory values tests
@@ -185,35 +205,25 @@ public class AWSRequestBuilder {
 				throw new Exception("No audio format provided for a speech request (text : " + text + ")");
 			}
 			
-			requestParameters = "{";
-			requestParameters += "\"OutputFormat\": " + '"' + outputFormat + '"' + ",";
-			if(sampleRate != null) requestParameters += "\"SampleRate\": " + '"' + sampleRate +'"' + ",";
-			requestParameters += "\"Text\": " + '"' + text + '"' + ",";
-			if(speechMarksTypes != null && speechMarksTypes.length() > 0) requestParameters += "\"SpeechMarkTypes\": " + speechMarksTypes + ",";
-			if(textType != null && textType.length() > 0) requestParameters += "\"TextType\": " + '"' + textType + '"' + ",";
-			requestParameters += "\"VoiceId\": " + '"' + voice + '"';
-			requestParameters += "}";
+			String jsonParameters = 
+					"{"
+						+ "\"OutputFormat\":\"" + outputFormat + "\""
+						+ (sampleRate != null 
+							? ",\"SampleRate\":\"" + sampleRate +"\"" 
+							: "")
+						+ ",\"Text\":\"" + text + "\""
+						+ (speechMarksTypes != null && speechMarksTypes.length() > 2 
+							? ",\"SpeechMarkTypes\":" + speechMarksTypes
+							: "")
+						+ (textType != null && textType.length() > 0 
+							? ",\"TextType\":\"" + textType + "\"" 
+							: "")
+						+ ",\"VoiceId\":\"" + voice + "\""
+					+ "}";
+			parameters = new JSONObject(jsonParameters);
 			break;
 		}
-		restRequest.setRequestParameters(requestParameters);
-		restRequest.setMethod(action.method);
-
-		// request values
-		String service = "polly";
-		String host = service + '.' + region + ".amazonaws.com";
-		String endpoint = "https://" + host + action.domain;
-		String contentType = "application/json";
-		restRequest.setContentType(contentType);
-
-		// create a date for headers and the credential string
-		TimeZone tz = TimeZone.getTimeZone("UTC");
-		DateFormat amzDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-		DateFormat datestampFormat = new SimpleDateFormat("yyyyMMdd");
-		amzDateFormat.setTimeZone(tz);
-		datestampFormat.setTimeZone(tz);
-		String amzDate = amzDateFormat.format(new Date());
-		String datestamp = datestampFormat.format(new Date());
-		restRequest.setAmzDate(amzDate);
+		
 
 		// ************* TASK 1: CREATE A CANONICAL REQUEST *************
 		// http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html
@@ -231,7 +241,7 @@ public class AWSRequestBuilder {
 		String signedHeaders = "content-type;host;x-amz-date";
 
 		// create payload hash 
-		String payloadHash = hashSHA256(requestParameters);
+		String payloadHash = hashSHA256(parameters != null ? parameters.toString() : "");
 
 		// combine elements to create create canonical request
 		String canonicalRequest = action.method + '\n' + canonicalUri + '\n' + canonicalQuerystring + '\n' + canonicalHeaders + '\n' 
@@ -258,14 +268,19 @@ public class AWSRequestBuilder {
 
 		String authorizationHeader = algorithm + ' ' + "Credential=" + accessKey + '/' + credentialScope + ", " 
 				+ "SignedHeaders=" + signedHeaders + ", " + "Signature=" + signature;
-		restRequest.setAuthorizationHeader(authorizationHeader);
+		
 
 		// ************* SEND THE REQUEST *************
 
 		String requestUrl = endpoint + "?" + canonicalQuerystring;	
-		restRequest.setRequestUrl(new URL(requestUrl));
-
-		return restRequest;
+		
+		
+		headers.put("Accept", "application/json");
+		headers.put("Content-Type", contentType);
+		headers.put("X-Amz-Date", amzDate);
+		headers.put("Authorization",authorizationHeader);
+		
+		return new Request(action.method, requestUrl, headers, parameters);
 	}
 	
 	// 

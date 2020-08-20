@@ -9,7 +9,6 @@ import org.daisy.pipeline.tts.TTSEngine;
 import org.daisy.pipeline.tts.TTSService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.daisy.pipeline.tts.ExponentialBackoffScheduler;
 
 /**
  * OSGI service to instantiate the Amazon Polly engine adapter
@@ -42,9 +41,7 @@ public class AWSTTSService extends AbstractTTSService {
 
 		AudioFormat audioFormat = new AudioFormat((float) sampleRate, 16, 1, true, false);
 		
-		ExponentialBackoffScheduler<AWSRestRequest> scheduler = new ExponentialBackoffScheduler<AWSRestRequest>();
-		
-		return new AWSRestTTSEngine(this, audioFormat, accessKey, secretKey, region, scheduler, priority);
+		return new AWSRestTTSEngine(this, audioFormat, accessKey, secretKey, region, priority);
 
 	}
 
