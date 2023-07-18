@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,9 +36,9 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 /**
- * A simplified Java API consisting of a {@link #startJob()} method that starts a job based on a
+ * A simplified Java API consisting of a {@link #startJob(String, Map<String,Object>)} method that starts a job based on a
  * script name and a list of options, and {@link #getNewMessages()} and {@link #getLastJobStatus()}
- * methods. It is used to build a simple Java CLI (see the {@link #main()} method). The simplified
+ * methods. It is used to build a simple Java CLI (see the {@link #main(String[])} method). The simplified
  * API also makes it easier to bridge with other programming languages using JNI.
  */
 @Component(
@@ -71,16 +72,22 @@ public class SimpleAPI {
 		this.jobFactory = jobFactory;
 	}
 
-	private void _startJob(String scriptName, Map<String,? extends Iterable<String>> options) throws IllegalArgumentException, FileNotFoundException {
+	private CommandLineJob _startJob(String scriptName, Map<String, Object> options) throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
 		ScriptService<?> scriptService = scriptRegistry.getScript(scriptName);
 		if (scriptService == null)
 			throw new IllegalArgumentException(scriptName + " script not found");
 		Script script = scriptService.load();
 		File fileBase = new File(System.getProperty("org.daisy.pipeline.cli.cwd", "."));
 		CommandLineJobParser parser = new CommandLineJobParser(script, fileBase);
-		for (Map.Entry<String,? extends Iterable<String>> e : options.entrySet())
-			for (String value : e.getValue())
+		for (Map.Entry<String,Object> e : options.entrySet()){
+			Object value = e.getValue();
+			if(value instanceof List){
+				for (Object subValue : (List<Object>)value)
+					parser.withArgument(e.getKey(), subValue);
+			} else {
 				parser.withArgument(e.getKey(), value);
+			}
+		}
 		CommandLineJob job = parser.createJob(jobFactory);
 		MessageAccessor accessor = job.getMonitor().getMessageAccessor();
 		accessor.listen(
@@ -90,10 +97,11 @@ public class SimpleAPI {
 		);
 		job.getMonitor().getStatusUpdates().listen(s -> updateJobStatus(s));
 		new Thread(job).start();
+		return job;
 	}
 
-	public static void startJob(String scriptName, Map<String,? extends Iterable<String>> options) throws IllegalArgumentException, FileNotFoundException {
-		getInstance()._startJob(scriptName, options);
+	public static CommandLineJob startJob(String scriptName, Map<String,Object> options) throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
+		return getInstance()._startJob(scriptName, options);
 	}
 
 	/**
@@ -153,7 +161,7 @@ public class SimpleAPI {
 			System.exit(1);
 		}
 		String script = args[0];
-		Map<String,List<String>> options = new HashMap<>();
+		Map<String,Object> options = new HashMap<>();
 		for (int i = 1; i < args.length; i += 2) {
 			if (!args[i].startsWith("--")) {
 				System.err.println("Expected option name argument, got " + args[i]);
@@ -164,7 +172,7 @@ public class SimpleAPI {
 				System.err.println("Expected option value argument");
 				System.exit(1);
 			}
-			List<String> list = options.get(option);
+			List<String> list = (List<String>)options.get(option);
 			if (list == null) {
 				list = new ArrayList<>();
 				options.put(option, list);
@@ -176,7 +184,7 @@ public class SimpleAPI {
 		} catch (IllegalArgumentException e) {
 			System.err.println(e.getMessage());
 			System.exit(1);
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException | URISyntaxException e) {
 			System.err.println("File does not exist: " + e.getMessage());
 			System.exit(1);
 		}
@@ -214,13 +222,13 @@ public class SimpleAPI {
 		/**
 		 * Parse command line argument
 		 */
-		public CommandLineJobParser withArgument(String key, String value) throws IllegalArgumentException, FileNotFoundException {
+		public CommandLineJobParser withArgument(String key, Object value) throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
 			if (script.getInputPort(key) != null)
-				return withInput(key, value);
+				return withInput(key, value.toString());
 			else if (script.getOption(key) != null)
 				return withOption(key, value);
 			else if (script.getOutputPort(key) != null)
-				return withOutput(key, value);
+				return withOutput(key, value.toString());
 			else
 				throw new IllegalArgumentException("Unknown argument: " + key);
 		}
@@ -257,12 +265,19 @@ public class SimpleAPI {
 		 * @throws FileNotFoundException if the option type is "anyFileURI" and the value can not be
 		 *         resolved to a document.
 		 */
-		private CommandLineJobParser withOption(String name, String value) throws IllegalArgumentException, FileNotFoundException {
+		private CommandLineJobParser withOption(String name, Object value) throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
 			ScriptOption o = script.getOption(name);
 			if (o != null) {
 				String type = o.getType().getId();
 				if ("anyFileURI".equals(type)) {
-					File file = new File(value);
+					String pathValue = value.toString();
+
+					File file;
+					if(pathValue.startsWith("file:/")){
+						file = new File(new URI(pathValue));
+					} else {
+						file = new File(pathValue);
+					}
 					if (!file.isAbsolute()) {
 						if (fileBase == null)
 							throw new FileNotFoundException("File must be an absolute path, but got " + file);
@@ -274,7 +289,13 @@ public class SimpleAPI {
 						throw new UncheckedIOException(e);
 					}
 				} else if ("anyDirURI".equals(type)) {
-					File dir = new File(value);
+					String pathValue = value.toString();
+					File dir;
+					if(pathValue.startsWith("file:/")){
+						dir = new File(new URI(pathValue));
+					} else {
+						dir = new File(pathValue);
+					}
 					if (!dir.isAbsolute()) {
 						if (fileBase == null)
 							throw new FileNotFoundException("File must be an absolute path, but got " + dir);
@@ -292,7 +313,7 @@ public class SimpleAPI {
 					}
 				}
 			}
-			builder.withOption(name, value);
+			builder.withOption(name, value.toString());
 			return this;
 		}
 
@@ -334,7 +355,7 @@ public class SimpleAPI {
 					if (file.isDirectory()) {
 						if (file.list().length > 0)
 							throw new IllegalArgumentException("Directory is not empty: " + file);
-						resultLocations.put(port, URI.create(file.toURI() + "/"));
+						resultLocations.put(port, file.toURI());
 					} else {
 						if (p.isSequence())
 							throw new IllegalArgumentException("Not a directory: " + file);
@@ -342,9 +363,9 @@ public class SimpleAPI {
 							throw new IllegalArgumentException("File exists: " + file);
 					}
 				} else {
-					if (p.isSequence())
+					/*if (p.isSequence())
 						resultLocations.put(port, URI.create(file.toURI() + "/"));
-					else
+					else*/
 						resultLocations.put(port, file.toURI());
 				}
 			}
