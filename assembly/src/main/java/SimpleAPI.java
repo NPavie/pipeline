@@ -223,6 +223,7 @@ public class SimpleAPI {
 		 * Parse command line argument
 		 */
 		public CommandLineJobParser withArgument(String key, Object value) throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
+			if(value == null) return this;
 			if (script.getInputPort(key) != null)
 				return withInput(key, value.toString());
 			else if (script.getOption(key) != null)
