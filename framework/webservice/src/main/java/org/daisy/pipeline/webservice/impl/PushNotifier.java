@@ -75,6 +75,7 @@ public class PushNotifier implements CallbackHandler {
                 timer = new Timer();
                 timer.schedule(new NotifyTask(), 0, PUSH_INTERVAL);
         }
+
         private synchronized void cancelTimer() {
                 if (timer != null) {
                         timer.cancel();
@@ -253,7 +254,13 @@ public class PushNotifier implements CallbackHandler {
                         this.finishedJobs.clear();
                         postMessages();
                         postStatus();
-                        for (JobId j : finishedJobs) unlistenJob(j);
+                        for (JobId j : finishedJobs)
+                                try {
+                                        unlistenJob(j);
+                                } catch (Throwable e) {
+                                        // if for any reason this results in an exception,
+                                        // don't escalate as this would stop the timer
+                                }
                 }
 
                 private void postStatus() {
@@ -276,7 +283,13 @@ public class PushNotifier implements CallbackHandler {
                                 if (callbacks != null) {
                                         for (Callback callback : callbacks) {
                                                 if (callback.getType() == CallbackType.STATUS) {
-                                                        callback.postStatusUpdate(status);
+                                                        try {
+                                                                callback.postStatusUpdate(status);
+                                                        } catch (Throwable e) {
+                                                                // if for any reason the callback
+                                                                // results in an exception, don't escalate
+                                                                // as this would stop the timer
+                                                        }
                                                 }
                                         }
                                 }
@@ -322,8 +335,14 @@ public class PushNotifier implements CallbackHandler {
                                                 case PROGRESS: {
                                                         BigDecimal from = currentProgress.get(callback);
                                                         if (from == null || progress.compareTo(from) > 0) {
-                                                                callback.postProgress(progress);
-                                                                currentProgress.put(callback, progress);
+                                                                try {
+                                                                        callback.postProgress(progress);
+                                                                        currentProgress.put(callback, progress);
+                                                                } catch (Throwable e) {
+                                                                        // if for any reason the callback
+                                                                        // results in an exception, don't escalate
+                                                                        // as this would stop the timer
+                                                                }
                                                         }
                                                         break; }
                                                 case MESSAGES: {
@@ -340,8 +359,14 @@ public class PushNotifier implements CallbackHandler {
                                                                 }
                                                                 messagesFrom.put(from, messages);
                                                         }
-                                                        callback.postMessages(messages, from - 1, progress);
-                                                        lastPushedMessage.put(callback, to);
+                                                        try {
+                                                                callback.postMessages(messages, from - 1, progress);
+                                                                lastPushedMessage.put(callback, to);
+                                                        } catch (Throwable e) {
+                                                                // if for any reason the callback
+                                                                // results in an exception, don't escalate
+                                                                // as this would stop the timer
+                                                        }
                                                         break; }
                                                 }
                                         }
