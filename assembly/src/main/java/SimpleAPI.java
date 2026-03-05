@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,6 +13,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +28,11 @@ import java.util.Map;
 import org.daisy.common.messaging.Message;
 import org.daisy.common.messaging.Message.Level;
 import org.daisy.common.messaging.MessageAccessor;
+import org.daisy.common.messaging.ProgressMessage;
 import org.daisy.common.spi.CreateOnStart;
 import org.daisy.common.spi.ServiceLoader;
+import org.daisy.pipeline.datatypes.DatatypeRegistry;
+import org.daisy.pipeline.datatypes.DatatypeService;
 import org.daisy.pipeline.job.Job;
 import org.daisy.pipeline.job.JobFactory;
 import org.daisy.pipeline.job.JobMonitor;
@@ -32,14 +44,19 @@ import org.daisy.pipeline.script.ScriptPort;
 import org.daisy.pipeline.script.ScriptRegistry;
 import org.daisy.pipeline.script.ScriptService;
 
+import api.ScriptsXmlWriter;
+import api.ScriptXmlWriter;
+import api.DatatypesXmlWriter;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.w3c.dom.Document;
 
 /**
  * A simplified Java API consisting of a {@link #startJob()} method that starts a job based on a
- * script name and a list of options and returns a {@link CommandLineJob}. This object provices
+ * script name and a list of options and returns a {@link CommandLineJob}. This object provides
  * convenience methods for monitoring the status and messages. This class is used to build a simple
  * Java CLI (see the {@link #main()} method). The simplified API also makes it easier to bridge with
  * other programming languages using JNI.
@@ -52,6 +69,7 @@ public class SimpleAPI {
 
 	private ScriptRegistry scriptRegistry;
 	private JobFactory jobFactory;
+	private DatatypeRegistry datatypeRegistry;
 
 	@Reference(
 		name = "script-registry",
@@ -73,6 +91,17 @@ public class SimpleAPI {
 	)
 	public void setJobFactory(JobFactory jobFactory) {
 		this.jobFactory = jobFactory;
+	}
+
+	@Reference(
+		name = "datatype-registry",
+		unbind = "-",
+		service = DatatypeRegistry.class,
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
+	)
+	public void setDatatypeRegistry(DatatypeRegistry datatypeRegistry) {
+		this.datatypeRegistry = datatypeRegistry;
 	}
 
 	private CommandLineJob _startJob(String scriptName, Map<String,? extends Iterable<String>> options)
@@ -123,25 +152,97 @@ public class SimpleAPI {
 		return INSTANCE;
 	}
 
+	private static enum Error {
+		OK(0),
+		INVALID_ARGUMENTS(1),
+		CANNOT_EXPORT_DESCRIPTORS(2),
+		FILE_NOT_FOUND(3),
+		JOB_FAILED(4),
+		JOB_ERROR(5);
+
+
+		private final int code;
+		Error(int code) {
+			this.code = code;
+		}
+		public int getCode() {
+			return code;
+		}
+	}
+
+	// Additionnal command interface to get xml descriptor for scripts and datatypes
+	// - descriptors [output folder]
+
 	/**
 	 * Simple command line interface
 	 */
 	public static void main(String[] args) throws InterruptedException, IOException {
 		if (args.length < 1) {
-			System.err.println("Expected script argument");
-			System.exit(1);
+			System.err.println("Expected script argument with options or 'descriptors' [output folder]");
+			System.exit(Error.INVALID_ARGUMENTS.getCode());
 		}
 		String script = args[0];
+		// Export des descripteurs de scripts
+		if ("descriptors".equals(script)) {
+			File output = new File("descriptors");
+			if (args.length >= 2) {
+				output = new File(args[1]);
+			}
+			
+			if (!output.isAbsolute()) {
+				output = new File(new File(System.getProperty("user.dir")), output.getPath());
+			}
+			try {
+				output = output.getCanonicalFile();
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+			if (output.exists() && !output.isDirectory()) {
+				System.err.println("Output must be a directory: " + output);
+				System.exit(Error.INVALID_ARGUMENTS.getCode());
+			}
+			output.mkdirs();
+
+			List<Script> scripts = new ArrayList<>();
+			for (ScriptService<?> s : getInstance().scriptRegistry.getScripts()) {
+				ScriptService<?> _s = getInstance().scriptRegistry.getScript(s.getId());
+				scripts.add(_s.load());
+			}
+
+			TransformerFactory t = TransformerFactory.newInstance();
+			try {
+				Transformer transformer = t.newTransformer();
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+				Document scriptsXml = new ScriptsXmlWriter(scripts,"file:///.").getXmlDocument();
+				DOMSource source = new DOMSource(scriptsXml);
+				FileWriter writer = new FileWriter(new File(output, "scripts.xml"));
+				StreamResult result = new StreamResult(writer);
+				transformer.transform(source, result);
+				writer.close();
+
+				Document datatypesXml = new DatatypesXmlWriter(getInstance().datatypeRegistry.getDatatypes(),"file:///.").getXmlDocument();
+				source = new DOMSource(datatypesXml);
+				writer = new FileWriter(new File(output, "datatypes.xml"));
+				result = new StreamResult(writer);
+				transformer.transform(source, result);
+				writer.close();
+			} catch (TransformerException e) {
+				e.printStackTrace();
+				System.exit(Error.CANNOT_EXPORT_DESCRIPTORS.getCode());
+			}
+			System.exit(Error.OK.getCode());
+		}
 		Map<String,List<String>> options = new HashMap<>();
 		for (int i = 1; i < args.length; i += 2) {
 			if (!args[i].startsWith("--")) {
 				System.err.println("Expected option name argument, got " + args[i]);
-				System.exit(1);
+				System.exit(Error.INVALID_ARGUMENTS.getCode());
 			}
 			String option = args[i].substring(2);
 			if (i + 1 >= args.length) {
 				System.err.println("Expected option value argument");
-				System.exit(1);
+				System.exit(Error.INVALID_ARGUMENTS.getCode());
 			}
 			List<String> list = options.get(option);
 			if (list == null) {
@@ -152,23 +253,41 @@ public class SimpleAPI {
 		}
 		CommandLineJob job = null;
 		try {
+			System.out.println("INFO > Starting " + script + " conversion ...");
 			job = SimpleAPI.startJob(script, options);
 		} catch (IllegalArgumentException e) {
-			System.err.println(e.getMessage());
-			System.exit(1);
+			System.err.println("ERROR > " + e.getMessage());
+			System.exit(Error.INVALID_ARGUMENTS.getCode());
 		} catch (FileNotFoundException|URISyntaxException e) {
-			System.err.println("File does not exist: " + e.getMessage());
-			System.exit(1);
+			System.err.println("ERROR > File does not exist: " + e.getMessage());
+			System.exit(Error.FILE_NOT_FOUND.getCode());
 		}
 		while (true) {
 			for (Message m : job.getNewMessages()) {
-				System.err.println(m.getText());
+				if(m instanceof ProgressMessage) {
+					ProgressMessage pm = (ProgressMessage)m;
+					System.out.println("progress " + pm.getLevel() + " > " + pm.getText() + " | " + pm.getProgress() + " | " + pm.getPortion());
+					for(Message m2: pm.getMessages()) {
+						if(m2 instanceof ProgressMessage) {
+							ProgressMessage pm2 = (ProgressMessage)m2;
+							System.out.println("subprogress " + pm2.getLevel() + " > " + pm2.getText() + " | " + pm2.getProgress() + " | " + pm2.getPortion());
+						} else {
+							System.out.println("subprogress " + m2.getLevel() + " > " + m2.getText() + " | " + m2.getSequence());
+						}
+					}
+				} else {
+					System.out.println(m.getLevel() + " > " + m.getText());
+				}
 			}
 			switch (job.getStatus()) {
 			case SUCCESS:
+				System.exit(Error.OK.getCode());
 			case FAIL:
+				job.getErrors().forEach(m -> System.err.println(m.getLevel() + " > " + m.getText()));
+				System.exit(Error.JOB_FAILED.getCode());
 			case ERROR:
-				System.exit(0);
+				job.getErrors().forEach(m -> System.err.println(m.getLevel() + " > " + m.getText()));
+				System.exit(Error.JOB_ERROR.getCode());
 			case IDLE:
 			case RUNNING:
 			default:
@@ -378,6 +497,10 @@ public class SimpleAPI {
 			);
 		}
 
+		public MessageAccessor getMessageAccessor() {
+			return job.getMonitor().getMessageAccessor();
+		}
+
 		/**
 		 * Run the job and store the results
 		 */
@@ -394,7 +517,7 @@ public class SimpleAPI {
 							File f = new File(u);
 							if (u.toString().endsWith("/"))
 								for (JobResult r : job.getResults().getResults(port)) {
-									File dest = new File(f, URLDecoder.decode(r.strip().getIdx(), StandardCharsets.UTF_8));
+									File dest = new File(f, URLDecoder.decode(r.strip().getIdx(), "utf-8"));
 									if (dest.exists())
 										existingFiles.add(dest);
 									else
@@ -436,6 +559,7 @@ public class SimpleAPI {
 		}
 
 		private final List<Message> messagesQueue = new ArrayList<>();
+		private int messageCount = 0;
 		private int lastMessage = -1;
 
 		/**
@@ -446,24 +570,35 @@ public class SimpleAPI {
 		 * @param seqNum see {@link MessageAccessor#listen()}
 		 */
 		private synchronized void consumeMessage(MessageAccessor accessor, int seqNum) {
+			messageCount = accessor.getAll().size();
 			for (Message m :
 					accessor.createFilter()
 					        .greaterThan(lastMessage)
 					        .filterLevels(Collections.singleton(Level.INFO))
 					        .getMessages()) {
-				if (m.getSequence() > lastMessage) {
-					messagesQueue.add(m);
-				}
+				addMessage(m);
 			}
 			lastMessage = seqNum;
 		}
+		private synchronized void addMessage(Message m) {
+			if(m instanceof ProgressMessage) {
+				ProgressMessage pm = (ProgressMessage)m;
+				for(Message m2: pm.getMessages()) {
+					messagesQueue.add(m2);
+				}
+			} else if (m.getSequence() > lastMessage) {
+				messagesQueue.add(m);
+			}
+		}
+		
 
 		/**
 		 * Get the list of new top-level messages (messages that have not been returned yet by a
 		 * previous call to {@link #getNewMessages()}).
 		 */
 		public synchronized List<Message> getNewMessages() {
-			List<Message> result = List.copyOf(messagesQueue);
+			List<Message> result = new ArrayList<>(messagesQueue);
+			System.out.println("getNewMessages: " + result.size() + " new messages" + " | total messages: " + messageCount);
 			messagesQueue.clear();
 			return result;
 		}

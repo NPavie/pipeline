@@ -12,6 +12,8 @@ $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/assembly/$(assembly/VERSION)/assembly
 $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/assembly/$(assembly/VERSION)/assembly-$(assembly/VERSION)-mac.zip     : assembly/SOURCES
 $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/assembly/$(assembly/VERSION)/assembly-$(assembly/VERSION)-win.zip     : assembly/SOURCES
 $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/assembly/$(assembly/VERSION)/assembly-$(assembly/VERSION)-minimal.zip : assembly/SOURCES
+$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/assembly/$(assembly/VERSION)/assembly-$(assembly/VERSION)-sad.zip     : assembly/SOURCES
+$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/assembly/$(assembly/VERSION)/assembly-$(assembly/VERSION)-sad     : assembly/SOURCES
 
 $(assembly/BASEDIR)/target/assembly-$(assembly/VERSION)-mac/daisy-pipeline/bin/pipeline2   : assembly/SOURCES
 $(assembly/BASEDIR)/target/assembly-$(assembly/VERSION)-linux/daisy-pipeline/bin/pipeline2 : assembly/SOURCES

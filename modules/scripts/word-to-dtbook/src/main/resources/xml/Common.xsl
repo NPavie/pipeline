@@ -15,8 +15,13 @@
 				xmlns:dcmitype="http://purl.org/dc/dcmitype/"
 				xmlns:o="urn:schemas-microsoft-com:office:office"
 				xmlns:d="org.daisy.pipeline.word_to_dtbook.impl.DaisyClass"
+				xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
 				xmlns="http://www.daisy.org/z3986/2005/dtbook/"
-				exclude-result-prefixes="w pic wp dcterms xsi cp dc a r v dcmitype d xsl m o xs">
+				exclude-result-prefixes="w pic wp dcterms xsi cp dc a r v dcmitype d xsl m o xs pf">
+
+	<!--Importing library.xsl for using common pipeline extension functions (like pf:info)-->
+	<xsl:include href="http://www.daisy.org/pipeline/modules/common-utils/library.xsl"/>
+
 	<!--Parameter citation-->
 	<xsl:param name="Cite_style" as="xs:string" select="d:Citation($myObj)"/>
 
@@ -128,6 +133,15 @@
 			</xsl:if>
 			<!-- If the node parsing context match the wanted matter context (i.e. node context is Bodymatter and requested matter type is Bodymatter ) -->
 			<xsl:if test="d:GetCurrentMatterType($myObj)=$matterType">
+				<xsl:call-template name="pf:progress">
+					<xsl:with-param name="progress" select="concat(position(),'/',$ElementCountToConvert)"/>
+				</xsl:call-template>
+				<xsl:call-template name="pf:info">
+					<xsl:with-param name="msg">
+						Converting element {} - {} / {}
+					</xsl:with-param>
+					<xsl:with-param name="args" select="(name(),position(),$ElementCountToConvert)"/>
+				</xsl:call-template>
 				<!-- <xsl:message terminate="no">progress:Converting element <xsl:value-of select="name()"/> - <xsl:value-of select="position()"/> / <xsl:value-of select="$ElementCountToConvert"/></xsl:message> -->
 				<xsl:choose>
 					<!--Checking for Paragraph element-->

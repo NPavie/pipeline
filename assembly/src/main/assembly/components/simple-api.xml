@@ -5,5 +5,14 @@
       <directory>target/simple-api</directory>
       <outputDirectory>system/simple-api</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>src/main/resources</directory>
+      <includes>
+        <include>bin/simplecli.bat</include>
+      </includes>
+      <outputDirectory></outputDirectory>
+      <fileMode>0755</fileMode>
+      <filtered>true</filtered>
+    </fileSet>
   </fileSets>
 </component>

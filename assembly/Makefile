@@ -62,13 +62,15 @@ INSTALL_DIR                  := $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/assem
 
 include deps.mk
 
-.PHONY : deb rpm zip-linux zip-mac zip-win deb-cli rpm-cli
+.PHONY : deb rpm zip-linux zip-mac zip-win zip-sad deb-cli rpm-cli
 
 deb         : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER).deb
 rpm         : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER).rpm
 zip-linux   : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-linux.zip
 zip-mac     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-mac.zip
 zip-win     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-win.zip
+zip-sad     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-sad.zip
+dir-sad     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-sad
 deb-cli     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-cli.deb
 rpm-cli     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-cli.rpm
 
@@ -79,6 +81,7 @@ target/release-descriptor/releaseDescriptor.xml : mvn -Pgenerate-release-descrip
 # some artifacts are installed through command line
 $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-linux.zip   \
 $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-mac.zip     \
+$(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-sad.zip     \
 $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-win.zip     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)% : target/assembly-$(assembly/VERSION)%
 ifndef DUMP_PROFILES
 	exec("$(SHELL)", $(call quote-for-java,$(MVN)), "--",                                                      \
@@ -204,6 +207,36 @@ ifndef DUMP_PROFILES
 	exit(new File("$@").exists());
 endif
 endif # --without-jre
+
+target/assembly-$(assembly/VERSION)-sad.zip                                   : mvn -Pwithout-persistence \
+                                                                                    -Pwithout-webservice \
+                                                                                    -Pwithout-cli \
+                                                                                    -Pwith-simple-api \
+                                                                                    -Pcopy-artifacts \
+                                                                                    -Pbuild-jre-win32 \
+                                                                                    -Pbuild-jre-win64
+ifndef DUMP_PROFILES
+	exec("$(SHELL)", $(call quote-for-java,$(MVN)), "--", "assembly:single", "-Passemble-sad-zip");
+endif
+
+$(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-sad : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)% : target/assembly-$(assembly/VERSION)%
+ifndef DUMP_PROFILES
+	exec("powershell.exe", "cp", "$<", "$@", "-Recurse", "-Force");
+endif
+
+target/assembly-$(assembly/VERSION)-sad                                   : mvn -Pwithout-persistence \
+                                                                                    -Pwithout-webservice \
+                                                                                    -Pwithout-cli \
+                                                                                    -Pwith-simple-api \
+                                                                                    -Pcopy-artifacts \
+                                                                                    -Pbuild-jre-win32 \
+                                                                                    -Pbuild-jre-win64
+ifndef DUMP_PROFILES
+	exec("$(SHELL)", $(call quote-for-java,$(MVN)), "--", "assembly:single", "-Passemble-sad-dir");
+endif
+
+
+
 $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-cli.deb              : mvn -Pcopy-artifacts \
                                                                                     -Pgenerate-release-descriptor \
                                                                                     -Punpack-cli-linux \
@@ -478,7 +511,7 @@ endif
 
 ifdef DUMP_PROFILES
 ifeq ($(shell println($(JAVA_VERSION) >= 10);), false)
---with-simple-api : require-java-10
+# --with-simple-api : require-java-10
 .PHONY : require-java-10
 require-java-10 :
 	@err.println("Java 10 is required to compile SimpleAPI.java"); \
