@@ -264,20 +264,7 @@ public class SimpleAPI {
 		}
 		while (true) {
 			for (Message m : job.getNewMessages()) {
-				if(m instanceof ProgressMessage) {
-					ProgressMessage pm = (ProgressMessage)m;
-					System.out.println("progress " + pm.getLevel() + " > " + pm.getText() + " | " + pm.getProgress() + " | " + pm.getPortion());
-					for(Message m2: pm.getMessages()) {
-						if(m2 instanceof ProgressMessage) {
-							ProgressMessage pm2 = (ProgressMessage)m2;
-							System.out.println("subprogress " + pm2.getLevel() + " > " + pm2.getText() + " | " + pm2.getProgress() + " | " + pm2.getPortion());
-						} else {
-							System.out.println("subprogress " + m2.getLevel() + " > " + m2.getText() + " | " + m2.getSequence());
-						}
-					}
-				} else {
-					System.out.println(m.getLevel() + " > " + m.getText());
-				}
+				System.out.println(m.getLevel() + " > " + m.getText());
 			}
 			switch (job.getStatus()) {
 			case SUCCESS:
@@ -291,7 +278,7 @@ public class SimpleAPI {
 			case IDLE:
 			case RUNNING:
 			default:
-				Thread.sleep(1000);
+				Thread.sleep(30);
 			}
 		}
 	}
@@ -584,7 +571,9 @@ public class SimpleAPI {
 			if(m instanceof ProgressMessage) {
 				ProgressMessage pm = (ProgressMessage)m;
 				for(Message m2: pm.getMessages()) {
-					messagesQueue.add(m2);
+					if(m2.getSequence() > lastMessage){
+						messagesQueue.add(m2);
+					}
 				}
 			} else if (m.getSequence() > lastMessage) {
 				messagesQueue.add(m);
@@ -598,7 +587,6 @@ public class SimpleAPI {
 		 */
 		public synchronized List<Message> getNewMessages() {
 			List<Message> result = new ArrayList<>(messagesQueue);
-			System.out.println("getNewMessages: " + result.size() + " new messages" + " | total messages: " + messageCount);
 			messagesQueue.clear();
 			return result;
 		}
