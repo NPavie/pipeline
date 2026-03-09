@@ -1,6 +1,7 @@
 ROOT_DIR          := $(CURDIR)
 MY_DIR            := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 TARGET_DIR        ?= $(MY_DIR)/target
+FIXED_DIR         := $(MY_DIR)/fixed
 GRADLE_FILES      := $(shell for (File f : glob("**/{build.gradle,settings.gradle,gradle.properties}")) println(f.toString().replace('\\', '/'));)
 GRADLE_MODULES    := $(filter $(patsubst %/build.gradle,%,$(filter %/build.gradle,$(GRADLE_FILES))), \
                               $(patsubst %/gradle.properties,%,$(filter %/gradle.properties,$(GRADLE_FILES))))
@@ -28,15 +29,18 @@ CLASSPATH := $(shell                                                            
         List<String> cmd = new ArrayList<>();                                                     \
         cmd.add(javac);                                                                           \
         cmd.add("-cp");                                                                           \
-        cmd.add(classPath.getPath() + File.pathSeparator + "$(MY_DIR)/lib"                        \
-                                    + File.pathSeparator + "$(MY_DIR)/lib/Saxon-HE-9.8.0-8.jar"); \
+        cmd.add(classPath.getPath()                                                               \
+                + File.pathSeparator + "$(MY_DIR)/lib"                                            \
+                + File.pathSeparator + "$(MY_DIR)/lib/Saxon-HE-9.8.0-8.jar"                       \
+                + File.pathSeparator + "$(MY_DIR)/lib/gitignore-file-filter-1.0.0.jar");          \
         cmd.add("-d");                                                                            \
         cmd.add(classPath.getPath());                                                             \
         for (File f : javaFiles) cmd.add(f.getPath());                                            \
         exitOnError(captureOutput(err::println, cmd)); }                                          \
     println(classPath.getPath().replace('\\', '/'));                                              )
 CLASSPATH += $(MY_DIR)/lib/Saxon-HE-9.8.0-8.jar
-IMPORTS := build.mvn build.gradle build.mvn.Coords
+CLASSPATH += $(MY_DIR)/lib/gitignore-file-filter-1.0.0.jar
+IMPORTS := build.mvn build.gradle build.mvn.Coords com.neva.commons.gitignore.GitIgnore
 STATIC_IMPORTS := build.core.*
 # for use in mvn-release.sh
 SAXON = $(MY_DIR)/lib/Saxon-HE-9.8.0-8.jar
@@ -53,6 +57,27 @@ endif
 
 eval-java = $(ROOT_DIR)/$(SHELL) $(call quote-for-bash,$1)
 
+# if maven.mk does not exist yet or is out of date, make will restart after the file has been created/changed
+# (see https://www.gnu.org/software/make/manual/html_node/Remaking-Makefiles.html)
+include $(TARGET_DIR)/maven.mk
+
+ifdef FIXED_BUILD
+
+$(TARGET_DIR)/maven.mk : $(FIXED_DIR)/mk/maven.mk
+	mkdirs("$(dir $@)"); \
+	rm("$@"); \
+	cp("$<", "$@");
+
+$(TARGET_DIR)/mk/% : $(FIXED_DIR)/mk/%
+	mkdirs("$(dir $@)"); \
+	rm("$@"); \
+	cp("$<", "$@");
+
+$(TARGET_DIR)/optimized/% : $(FIXED_DIR)/pom/%
+	+$(EVAL) mkdirs("$(dir $@)"); rm("$@"); cp("$<", "$@");
+
+else
+
 # always execute this recipe (but only update the file it actually changes)
 .PHONY : $(TARGET_DIR)/state/properties
 $(TARGET_DIR)/state/properties :
@@ -67,10 +92,6 @@ $(TARGET_DIR)/effective-settings.xml : $(MVN_SETTINGS) $(TARGET_DIR)/state/prope
 		mvn(new File("$(TARGET_DIR)"), \
 		    "org.apache.maven.plugins:maven-help-plugin:2.2:effective-settings", "-Doutput=$(ROOT_DIR)/$@");
 
-# if maven.mk does not exist yet or is out of date, make will restart after the file has been created/changed
-# (see https://www.gnu.org/software/make/manual/html_node/Remaking-Makefiles.html)
-include $(TARGET_DIR)/maven.mk
-
 # effective-pom.xml is updated when any of the prerequisites of `poms` (defined in maven.mk) change
 .SECONDARY : poms
 poms :
@@ -84,32 +105,55 @@ $(TARGET_DIR)/maven.mk : $(TARGET_DIR)/effective-settings.xml
 		                   .replace("$(ROOT_DIR)/", ""); \
 		s.println("MVN_LOCAL_REPOSITORY := " + localRepo); \
 		s.println("export MVN_LOCAL_REPOSITORY"); \
+		List<String> aggregators = new ArrayList<>(); \
+		List<String> boms = new ArrayList<>(); \
+		List<String> modules = new ArrayList<>(); \
 		traverseModules( \
 			new File("."), \
 			(m, isAggregator) -> { \
 				String module = m.toString().replace('\\', '/'); \
-				s.println("MAVEN_" + (isAggregator ? "AGGREGATORS" : "MODULES") + " += " + module); \
-				if ("bom".equals(m.getName())) { \
-					String optimized = "$$(TARGET_DIR)/optimized/" + module + "/pom.xml"; \
-					s.println("poms : " + optimized); \
-					/* assuming there is an aggregator pom one level up */ \
-					try { \
-						traverseModules( \
-							m.getParentFile(), \
-							(mm, aggr) -> { \
-								if (!aggr && !"bom".equals(mm.getName())) { \
-									/* assume that all modules are in the BOM */ \
-									s.println(optimized + " : $$(TARGET_DIR)/state/" + mm.toString().replace('\\', '/') \
-									          + "/modified-since-release"); }}); \
-					} catch (javax.xml.xpath.XPathExpressionException e) { \
-						throw new RuntimeException(e); \
-					} \
-				} else if (isAggregator) \
-					s.println("poms : $$(TARGET_DIR)/optimized/" + module + "/pom.xml"); \
+				if (isAggregator) \
+					aggregators.add(module); \
+				else if ("bom".equals(m.getName())) \
+					boms.add(module); \
 				else \
-					s.println("poms : " + module + "/pom.xml"); \
-				/* maven.mk should not be updated when optimized POMs change, only when the originals change */ \
-				s.println("$$(TARGET_DIR)/maven.mk : " + module + "/pom.xml"); }); \
+					modules.add(module); }); \
+		for (String m : aggregators) \
+			s.println("MAVEN_AGGREGATORS += " + m); \
+		for (String m : boms) \
+			s.println("MAVEN_MODULES += " + m); \
+		for (String m : modules) \
+			s.println("MAVEN_MODULES += " + m); \
+		s.println("ifndef FIXED_BUILD"); \
+		for (String m : aggregators) \
+			s.println("poms : $$(TARGET_DIR)/optimized/" + m + "/pom.xml"); \
+		for (String m : boms) \
+			s.println("poms : $$(TARGET_DIR)/optimized/" + m + "/pom.xml"); \
+		for (String m : modules) \
+			s.println("poms : " + m + "/pom.xml"); \
+		for (String m : boms) { \
+			/* assuming there is an aggregator pom one level up */ \
+			String optimized = "$$(TARGET_DIR)/optimized/" + m + "/pom.xml"; \
+			try { \
+				traverseModules( \
+					new File(m).getParentFile(), \
+					(mm, aggr) -> { \
+						if (!aggr && !"bom".equals(mm.getName())) { \
+							/* assume that all modules are in the BOM */ \
+							s.println(optimized + " : $$(TARGET_DIR)/state/" + mm.toString().replace('\\', '/') \
+							          + "/modified-since-release"); }}); \
+			} catch (javax.xml.xpath.XPathExpressionException e) { \
+				throw new RuntimeException(e); \
+			} \
+		} \
+		/* maven.mk should not be updated when optimized POMs change, only when the originals change */ \
+		for (String m : aggregators) \
+			s.println("$$(TARGET_DIR)/maven.mk : " + m + "/pom.xml"); \
+		for (String m : modules) \
+			s.println("$$(TARGET_DIR)/maven.mk : " + m + "/pom.xml"); \
+		for (String m : boms) \
+			s.println("$$(TARGET_DIR)/maven.mk : " + m + "/pom.xml"); \
+		s.println("endif"); \
 	}
 
 $(TARGET_DIR)/optimized/%/pom.xml : %/pom.xml
@@ -207,16 +251,6 @@ $(TARGET_DIR)/gradle-pom.xml : $(GRADLE_FILES)
 		s.println("</projects>"); \
 	}
 
-.SECONDARY : .maven-init .gradle-init
-
-.maven-init :
-
-.gradle-init : | .maven-init $(TARGET_DIR)/gradle-settings/conf/settings.xml
-$(TARGET_DIR)/gradle-settings/conf/settings.xml : $(MVN_SETTINGS)
-	mkdirs("$(dir $@)"); \
-	rm("$@"); \
-	cp("$<", "$@");
-
 # this recipe is executed when any poms (including optimized ones) change (causing effective-pom.xml
 # to be regenerated)
 # note that it may need to be run multiple times to get everything right, because boms are optimized
@@ -256,15 +290,18 @@ $(addsuffix /sources.mk,$(addprefix $(TARGET_DIR)/mk/,$(MAVEN_MODULES))) : $(TAR
 			List<String> otherSourceFiles = new ArrayList<>(); \
 			if (srcDir.isDirectory()) { \
 				String mainDir = new File(srcDir, "main").getPath() + "/"; \
+				GitIgnore gitignore = findGitIgnore(srcDir.getAbsoluteFile()); \
 				Files.walk(srcDir.toPath()).forEach( \
 					f -> { \
-						String path = f.toString().replace(" ", "\\ "); \
-						if (Files.isDirectory(f)) \
-							sourceDirs.add(path); \
-						else if (isSnapshot && path.startsWith(mainDir)) \
-							mainSourceFiles.add(path); \
-						else \
-							otherSourceFiles.add(path); \
+						if (gitignore == null || !gitignore.isExcluded(f.toFile().getAbsoluteFile())) { \
+							String path = f.toString().replace(" ", "\\ "); \
+							if (Files.isDirectory(f)) \
+								sourceDirs.add(path); \
+							else if (isSnapshot && path.startsWith(mainDir)) \
+								mainSourceFiles.add(path); \
+							else \
+								otherSourceFiles.add(path); \
+						} \
 					} \
 				); \
 			} \
@@ -394,6 +431,18 @@ $(addsuffix /sources.mk,$(addprefix $(TARGET_DIR)/mk/,$(GRADLE_MODULES))) : $(GR
 	}
 
 endif
+
+endif
+
+.SECONDARY : .maven-init .gradle-init
+
+.maven-init :
+
+.gradle-init : | .maven-init $(TARGET_DIR)/gradle-settings/conf/settings.xml
+$(TARGET_DIR)/gradle-settings/conf/settings.xml : $(MVN_SETTINGS)
+	mkdirs("$(dir $@)"); \
+	rm("$@"); \
+	cp("$<", "$@");
 
 # FIXME: specifying "--debug" option breaks this code
 # - passing "MAKEFLAGS=" does not fix it for some reason, and also has unwanted side effects

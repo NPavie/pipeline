@@ -409,7 +409,7 @@
 							<xsl:value-of select="concat($dirname,'.install.jar')"/>
 							<xsl:text>&#x0A;</xsl:text>
 							<xsl:value-of select="concat($dirname,'.install.jar')"/>
-							<xsl:text> : %/.install.jar : %/.install </xsl:text>
+							<xsl:text> : %/.install.jar : %/.install</xsl:text>
 							<xsl:text>&#x0A;</xsl:text>
 							<xsl:text>&#x0A;</xsl:text>
 							<xsl:text>.SECONDARY : </xsl:text>
@@ -477,7 +477,7 @@
 								<xsl:value-of select="concat($dirname,'.install-javadoc.jar')"/>
 								<xsl:text>&#x0A;</xsl:text>
 								<xsl:value-of select="concat($dirname,'.install-javadoc.jar')"/>
-								<xsl:text> : %/.install-javadoc.jar : %/.install-doc </xsl:text>
+								<xsl:text> : %/.install-javadoc.jar : %/.install-doc</xsl:text>
 								<xsl:text>&#x0A;</xsl:text>
 							</xsl:if>
 						</xsl:if>
