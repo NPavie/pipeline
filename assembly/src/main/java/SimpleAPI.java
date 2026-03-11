@@ -1,9 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,12 +17,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.daisy.common.messaging.Message;
 import org.daisy.common.messaging.Message.Level;
 import org.daisy.common.messaging.MessageAccessor;
 import org.daisy.common.spi.CreateOnStart;
 import org.daisy.common.spi.ServiceLoader;
+import org.daisy.pipeline.datatypes.DatatypeRegistry;
 import org.daisy.pipeline.job.Job;
 import org.daisy.pipeline.job.JobFactory;
 import org.daisy.pipeline.job.JobMonitor;
@@ -32,10 +43,18 @@ import org.daisy.pipeline.script.ScriptPort;
 import org.daisy.pipeline.script.ScriptRegistry;
 import org.daisy.pipeline.script.ScriptService;
 
+import org.daisy.common.properties.Properties;
+import org.daisy.common.properties.Properties.SettableProperty;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+
+import xml.DatatypesXmlWriter;
+import xml.PropertiesXmlWriter;
+import xml.ScriptsXmlWriter;
+import org.w3c.dom.Document;
 
 /**
  * A simplified Java API consisting of a {@link #startJob()} method that starts a job based on a
@@ -51,6 +70,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 public class SimpleAPI {
 
 	private ScriptRegistry scriptRegistry;
+	private DatatypeRegistry datatypeRegistry;
 	private JobFactory jobFactory;
 
 	@Reference(
@@ -65,6 +85,17 @@ public class SimpleAPI {
 	}
 
 	@Reference(
+		name = "datatype-registry",
+		unbind = "-",
+		service = DatatypeRegistry.class,
+		cardinality = ReferenceCardinality.MANDATORY,
+		policy = ReferencePolicy.STATIC
+	)
+	public void setDatatypeRegistry(DatatypeRegistry datatypeRegistry) {
+		this.datatypeRegistry = datatypeRegistry;
+	}
+
+	@Reference(
 		name = "job-factory",
 		unbind = "-",
 		service = JobFactory.class,
@@ -75,7 +106,7 @@ public class SimpleAPI {
 		this.jobFactory = jobFactory;
 	}
 
-	private CommandLineJob _startJob(String scriptName, Map<String,? extends Iterable<String>> options)
+	public CommandLineJob startJob(String scriptName, Map<String,? extends Iterable<String>> options)
 			throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
 		ScriptService<?> scriptService = scriptRegistry.getScript(scriptName);
 		if (scriptService == null)
@@ -99,9 +130,107 @@ public class SimpleAPI {
 	 *                job, and file locations where results must be stored.
 	 * @return The job, wrapped in a {@link CommandLineJob} object for easy monitoring.
 	 */
-	public static CommandLineJob startJob(String scriptName, Map<String,? extends Iterable<String>> options)
-			throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
-		return getInstance()._startJob(scriptName, options);
+	// public static CommandLineJob startJob(String scriptName, Map<String,? extends Iterable<String>> options)
+	// 		throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
+	// 	return getInstance()._startJob(scriptName, options);
+	// }
+
+	/**
+	 * Get the XML descriptors for all available scripts.
+	 *
+	 * @return A string containing the XML descriptors for all scripts.
+	 * @throws Exception If an error occurs while generating the XML descriptors.
+	 */
+	public String getScriptDescriptors() throws Exception {
+		List<Script> scripts = new ArrayList<>();
+		for (ScriptService<?> s : this.scriptRegistry.getScripts()) {
+			ScriptService<?> _s = this.scriptRegistry.getScript(s.getId());
+			scripts.add(_s.load());
+		}
+		TransformerFactory t = TransformerFactory.newInstance();
+		try {
+			Transformer transformer = t.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+			Document scriptsXml = new ScriptsXmlWriter(scripts,"file:///.").getXmlDocument();
+			DOMSource source = new DOMSource(scriptsXml);
+			StringWriter writer = new StringWriter();
+			StreamResult result = new StreamResult(writer);
+			transformer.transform(source, result);
+			writer.close();
+			return writer.toString();
+		} catch (TransformerException e) {
+			throw new Exception("Could not export scripts xml descriptors", e);
+		}
+	}
+
+	public boolean isScriptAvailable(String scriptName) {
+		try {
+			this.scriptRegistry.getScript(scriptName).load();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Get the XML descriptors for all available datatypes.
+	 *
+	 * @return A string containing the XML descriptors for all datatypes.
+	 * @throws Exception If an error occurs while generating the XML descriptors.
+	 */
+	public String getDatatypesDescriptors() throws Exception {
+		TransformerFactory t = TransformerFactory.newInstance();
+		try {
+			Transformer transformer = t.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+			Document datatypesXml = new DatatypesXmlWriter(getInstance().datatypeRegistry.getDatatypes(),"file:///.").getXmlDocument();
+			DOMSource source = new DOMSource(datatypesXml);
+			StringWriter writer = new StringWriter();
+			StreamResult result = new StreamResult(writer);
+			transformer.transform(source, result);
+			writer.close();
+			return writer.toString();
+		} catch (TransformerException e) {
+			throw new Exception("Could not export datatypes xml descriptors", e);
+		}
+	}
+
+	/**
+	 * Get the XML descriptors for all settable properties.
+	 *
+	 * @return A string containing the XML descriptors for all settable properties.
+	 * @throws Exception If an error occurs while generating the XML descriptors.
+	 */
+	public String getSettablePropertiesDescriptors() throws Exception {
+		TransformerFactory t = TransformerFactory.newInstance();
+		try {
+			Transformer transformer = t.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+			List<SettableProperty> properties = new ArrayList<>(Properties.getSettableProperties());
+			Document propertiesXml = new PropertiesXmlWriter(properties,"file:///.",true).getXmlDocument();
+			DOMSource source = new DOMSource(propertiesXml);
+			StringWriter writer = new StringWriter();
+			StreamResult result = new StreamResult(writer);
+			transformer.transform(source, result);
+			writer.close();
+			return writer.toString();
+		} catch (TransformerException e) {
+			throw new Exception("Could not export settable properties xml descriptors", e);
+		}
+	}
+
+	public void setProperty(String name, String value) throws IllegalArgumentException {
+		Set<Properties.SettableProperty> properties = Properties.getSettableProperties();
+		for (Properties.SettableProperty p : properties) {
+			if (p.getName().equals(name)) {
+				p.setValue(value);
+				return;
+			}
+		}
+		throw new IllegalArgumentException("Unknown or unsettable property: " + name);
 	}
 
 	/**
@@ -152,7 +281,7 @@ public class SimpleAPI {
 		}
 		CommandLineJob job = null;
 		try {
-			job = SimpleAPI.startJob(script, options);
+			job = SimpleAPI.getInstance().startJob(script, options);
 		} catch (IllegalArgumentException e) {
 			System.err.println(e.getMessage());
 			System.exit(1);
@@ -394,7 +523,7 @@ public class SimpleAPI {
 							File f = new File(u);
 							if (u.toString().endsWith("/"))
 								for (JobResult r : job.getResults().getResults(port)) {
-									File dest = new File(f, URLDecoder.decode(r.strip().getIdx(), StandardCharsets.UTF_8));
+									File dest = new File(f, URLDecoder.decode(r.strip().getPath().toString(), "utf-8"));
 									if (dest.exists())
 										existingFiles.add(dest);
 									else
@@ -463,7 +592,8 @@ public class SimpleAPI {
 		 * previous call to {@link #getNewMessages()}).
 		 */
 		public synchronized List<Message> getNewMessages() {
-			List<Message> result = List.copyOf(messagesQueue);
+			List<Message> result = new ArrayList<>(messagesQueue);
+			//List.copyOf(messagesQueue);
 			messagesQueue.clear();
 			return result;
 		}
@@ -491,7 +621,7 @@ public class SimpleAPI {
 
 		private void writeResult(JobResult result, File dest) throws IOException {
 			dest.getParentFile().mkdirs();
-			try (InputStream is = result.asStream();
+			try (InputStream is = result.read();
 			     OutputStream os = new FileOutputStream(dest)) {
 				byte buff[] = new byte[1024];
 				int read = 0;
