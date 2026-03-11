@@ -71,6 +71,9 @@ dist-zip-mac : pipeline2-$(assembly/VERSION)_mac.zip
 .PHONY : dist-zip-win
 dist-zip-win : pipeline2-$(assembly/VERSION)_windows.zip
 
+.PHONY : dist-zip-sad
+dist-zip-sad : pipeline2-$(assembly/VERSION)_sad.zip
+
 .PHONY : dist-deb
 dist-deb : pipeline2-$(assembly/VERSION)_debian.deb
 
@@ -215,6 +218,11 @@ pipeline2-$(assembly/VERSION)_windows.zip \
 	| .group-eval
 	+$(EVAL) cp("$<", "$@");
 
+pipeline2-$(assembly/VERSION)_sad.zip \
+	: $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/assembly/$(assembly/VERSION)/assembly-$(assembly/VERSION)-sad.zip \
+	| .group-eval
+	+$(EVAL) cp("$<", "$@");
+
 pipeline2-$(assembly/VERSION)_minimal.zip \
 	: $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/assembly/$(assembly/VERSION)/assembly-$(assembly/VERSION)-minimal.zip \
 	| .group-eval
@@ -259,6 +267,10 @@ assembly/.install-mac.zip : | .maven-init .group-eval
 .SECONDARY : assembly/.install-win.zip
 assembly/.install-win.zip : | .maven-init .group-eval
 	+$(EVAL) $(call make-assembly, "zip-win"$(comma) "--"$(comma) "--without-persistence")
+
+.SECONDARY : assembly/.install-sad.zip
+assembly/.install-sad.zip : | .maven-init .group-eval
+	+$(EVAL) $(call make-assembly, "zip-sad"$(comma) "--"$(comma) "--without-persistence")
 
 .SECONDARY : assembly/.install-cli.deb
 assembly/.install-cli.deb : | .maven-init .group-eval

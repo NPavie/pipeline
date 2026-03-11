@@ -69,6 +69,7 @@ rpm         : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER).rpm
 zip-linux   : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-linux.zip
 zip-mac     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-mac.zip
 zip-win     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-win.zip
+zip-sad     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-sad.zip
 deb-cli     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-cli.deb
 rpm-cli     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-cli.rpm
 
@@ -79,6 +80,7 @@ target/release-descriptor/releaseDescriptor.xml : mvn -Pgenerate-release-descrip
 # some artifacts are installed through command line
 $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-linux.zip   \
 $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-mac.zip     \
+$(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-sad.zip     \
 $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)-win.zip     : $(INSTALL_DIR)/assembly-$(assembly/VERSION)$(CLASSIFIER)% : target/assembly-$(assembly/VERSION)%
 ifndef DUMP_PROFILES
 	exec("$(SHELL)", $(call quote-for-java,$(MVN)), "--",                                                      \
@@ -185,6 +187,17 @@ endif
 	exec("$(SHELL)", $(call quote-for-java,$(MVN)), "--", "assembly:single", "-Passemble-mac-zip");
 	exit(new File("$@").exists());
 endif
+
+target/assembly-$(assembly/VERSION)-sad.zip                                   : mvn -Pwithout-persistence \
+                                                                                     -Pwithout-cli \
+                                                                                     -Pwith-simple-api \
+                                                                                     -Pcopy-artifacts \
+                                                                                     -Pbuild-jre-win32 \
+                                                                                     -Pbuild-jre-win64
+ifndef DUMP_PROFILES
+	exec("$(SHELL)", $(call quote-for-java,$(MVN)), "--", "assembly:single", "-Passemble-sad-zip");
+endif																				 
+
 target/assembly-$(assembly/VERSION)-win.zip                                   : mvn -Pcopy-artifacts \
                                                                                     -Pgenerate-release-descriptor \
                                                                                     -Punpack-cli-win
