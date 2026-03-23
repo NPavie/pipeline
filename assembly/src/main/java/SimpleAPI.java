@@ -15,9 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import java.lang.Thread;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -53,6 +56,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import xml.DatatypesXmlWriter;
 import xml.PropertiesXmlWriter;
+import xml.ScriptXmlWriter;
 import xml.ScriptsXmlWriter;
 import org.w3c.dom.Document;
 
@@ -138,10 +142,11 @@ public class SimpleAPI {
 	/**
 	 * Get the XML descriptors for all available scripts.
 	 *
+	 * @param withDetails whether to include detailed information about the scripts in the XML descriptors
 	 * @return A string containing the XML descriptors for all scripts.
 	 * @throws Exception If an error occurs while generating the XML descriptors.
 	 */
-	public String getScriptDescriptors() throws Exception {
+	public String getScriptsDescriptors(boolean withDetails) throws Exception {
 		List<Script> scripts = new ArrayList<>();
 		for (ScriptService<?> s : this.scriptRegistry.getScripts()) {
 			ScriptService<?> _s = this.scriptRegistry.getScript(s.getId());
@@ -164,13 +169,29 @@ public class SimpleAPI {
 		}
 	}
 
-	public boolean isScriptAvailable(String scriptName) {
+	public String getScriptDescriptor(String scriptName, boolean withDetails) throws Exception {
+		ScriptService<?> scriptService = this.scriptRegistry.getScript(scriptName);
+		if (scriptService == null)
+			throw new IllegalArgumentException(scriptName + " script not found");
+		Script script = scriptService.load();
+		TransformerFactory t = TransformerFactory.newInstance();
 		try {
-			this.scriptRegistry.getScript(scriptName).load();
-		} catch (Exception e) {
-			return false;
+			Transformer transformer = t.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			ScriptXmlWriter scriptwriter = new ScriptXmlWriter(script,"file:///.");
+			if (withDetails) {
+				scriptwriter.withDetails();
+			}
+			Document scriptXml = scriptwriter.getXmlDocument();
+			DOMSource source = new DOMSource(scriptXml);
+			StringWriter writer = new StringWriter();
+			StreamResult result = new StreamResult(writer);
+			transformer.transform(source, result);
+			writer.close();
+			return writer.toString();
+		} catch (TransformerException e) {
+			throw new Exception("Could not export script xml descriptor", e);
 		}
-		return true;
 	}
 
 	/**
@@ -241,7 +262,7 @@ public class SimpleAPI {
 	/**
 	 * Get the singleton {@link SimpleAPI} instance.
 	 */
-	private static SimpleAPI getInstance() {
+	public static SimpleAPI getInstance() {
 		if (INSTANCE == null) {
 			for (CreateOnStart o : ServiceLoader.load(CreateOnStart.class))
 				if (INSTANCE == null && o instanceof SimpleAPI)
@@ -251,6 +272,7 @@ public class SimpleAPI {
 		}
 		return INSTANCE;
 	}
+
 
 	/**
 	 * Simple command line interface

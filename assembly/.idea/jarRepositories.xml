@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteRepositoriesConfiguration">
+    <remote-repository>
+      <option name="id" value="maven.cyberduck.io-release" />
+      <option name="name" value="maven.cyberduck.io-release" />
+      <option name="url" value="https://s3.eu-west-1.amazonaws.com/repo.maven.cyberduck.io/releases" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="eclipse-gemini-repo" />
+      <option name="name" value="Eclipse Gemini Maven repository" />
+      <option name="url" value="https://download.eclipse.org/gemini/mvn/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="sonatype-snapshots" />
+      <option name="name" value="OSS Sonatype repo (snapshots)" />
+      <option name="url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="eclipse-gemini-dbaccess" />
+      <option name="name" value="Eclipse Gemini DBAccess Milestones" />
+      <option name="url" value="https://download.eclipse.org/gemini/dbaccess/mvn/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="sonatype-nexus-staging" />
+      <option name="name" value="Nexus Release Repository" />
+      <option name="url" value="https://oss.sonatype.org/content/groups/staging/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="restlet-repo" />
+      <option name="name" value="Public online Restlet repository" />
+      <option name="url" value="https://maven.restlet.talend.com" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Maven Central repository" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central-https" />
+      <option name="name" value="central-https" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="eclipselink" />
+      <option name="name" value="EclipseLink Releases" />
+      <option name="url" value="https://download.eclipse.org/rt/eclipselink/maven.repo" />
+    </remote-repository>
+  </component>
+</project>
