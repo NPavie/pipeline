@@ -32,6 +32,7 @@
               <addModule>jdk.management.agent</addModule>
               <addModule>jdk.zipfs</addModule>
               <addModule>jdk.crypto.ec</addModule>
+              <addModule>jdk.jdwp.agent</addModule>
             </addModules>
           </configuration>
         </plugin>

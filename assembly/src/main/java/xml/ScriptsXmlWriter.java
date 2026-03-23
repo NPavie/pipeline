@@ -12,6 +12,7 @@ public class ScriptsXmlWriter {
 	
 	private final String baseUrl;
 	Iterable<Script> scripts = null;
+	private final boolean includeDetails;
 	private static Logger logger = LoggerFactory.getLogger(ScriptsXmlWriter.class.getName());
 
 	/**
@@ -20,9 +21,10 @@ public class ScriptsXmlWriter {
 	 *                to get fully qualified URLs. Set this to {@link Routes#getPath()} to get
 	 *                absolute paths relative to the domain name.
 	 */
-	public ScriptsXmlWriter(Iterable<Script> scripts, String baseUrl) {
+	public ScriptsXmlWriter(Iterable<Script> scripts, String baseUrl, boolean includeDetails) {
 		this.scripts = scripts;
 		this.baseUrl = baseUrl;
+		this.includeDetails = includeDetails;
 	}
 	
 	public Document getXmlDocument() {
@@ -39,7 +41,10 @@ public class ScriptsXmlWriter {
 		scriptsElm.setAttribute("href", baseUrl + "/scripts");
 		
 		for (Script script : scripts) {
-			ScriptXmlWriter writer = new ScriptXmlWriter(script, baseUrl).withDetails();
+			ScriptXmlWriter writer = new ScriptXmlWriter(script, baseUrl);
+			if (includeDetails) {
+				writer.withDetails();
+			}
 			writer.addAsElementChild(scriptsElm);
 		}
 		
