@@ -35,6 +35,7 @@ import org.daisy.common.messaging.MessageAccessor;
 import org.daisy.common.spi.CreateOnStart;
 import org.daisy.common.spi.ServiceLoader;
 import org.daisy.pipeline.datatypes.DatatypeRegistry;
+import org.daisy.pipeline.datatypes.DatatypeService;
 import org.daisy.pipeline.job.Job;
 import org.daisy.pipeline.job.JobFactory;
 import org.daisy.pipeline.job.JobMonitor;
@@ -59,6 +60,7 @@ import xml.PropertiesXmlWriter;
 import xml.ScriptXmlWriter;
 import xml.ScriptsXmlWriter;
 import org.w3c.dom.Document;
+import com.google.common.base.Optional;
 
 /**
  * A simplified Java API consisting of a {@link #startJob()} method that starts a job based on a
@@ -146,7 +148,7 @@ public class SimpleAPI {
 	 * @return A string containing the XML descriptors for all scripts.
 	 * @throws Exception If an error occurs while generating the XML descriptors.
 	 */
-	public String getScriptsDescriptors(boolean withDetails) throws Exception {
+	public String getScripts(boolean withDetails) throws Exception {
 		List<Script> scripts = new ArrayList<>();
 		for (ScriptService<?> s : this.scriptRegistry.getScripts()) {
 			ScriptService<?> _s = this.scriptRegistry.getScript(s.getId());
@@ -157,7 +159,7 @@ public class SimpleAPI {
 			Transformer transformer = t.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
-			Document scriptsXml = new ScriptsXmlWriter(scripts,"file:///.").getXmlDocument();
+			Document scriptsXml = new ScriptsXmlWriter(scripts,"file:///.", withDetails).getXmlDocument();
 			DOMSource source = new DOMSource(scriptsXml);
 			StringWriter writer = new StringWriter();
 			StreamResult result = new StreamResult(writer);
@@ -169,7 +171,7 @@ public class SimpleAPI {
 		}
 	}
 
-	public String getScriptDescriptor(String scriptName, boolean withDetails) throws Exception {
+	public String getScriptDetails(String scriptName) throws Exception {
 		ScriptService<?> scriptService = this.scriptRegistry.getScript(scriptName);
 		if (scriptService == null)
 			throw new IllegalArgumentException(scriptName + " script not found");
@@ -178,10 +180,7 @@ public class SimpleAPI {
 		try {
 			Transformer transformer = t.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			ScriptXmlWriter scriptwriter = new ScriptXmlWriter(script,"file:///.");
-			if (withDetails) {
-				scriptwriter.withDetails();
-			}
+			ScriptXmlWriter scriptwriter = new ScriptXmlWriter(script,"file:///.").withDetails();
 			Document scriptXml = scriptwriter.getXmlDocument();
 			DOMSource source = new DOMSource(scriptXml);
 			StringWriter writer = new StringWriter();
@@ -200,13 +199,39 @@ public class SimpleAPI {
 	 * @return A string containing the XML descriptors for all datatypes.
 	 * @throws Exception If an error occurs while generating the XML descriptors.
 	 */
-	public String getDatatypesDescriptors() throws Exception {
+	public String getDatatypes() throws Exception {
 		TransformerFactory t = TransformerFactory.newInstance();
 		try {
 			Transformer transformer = t.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			Document datatypesXml = new DatatypesXmlWriter(this.datatypeRegistry.getDatatypes(),"file:///.").getXmlDocument();
+			DOMSource source = new DOMSource(datatypesXml);
+			StringWriter writer = new StringWriter();
+			StreamResult result = new StreamResult(writer);
+			transformer.transform(source, result);
+			writer.close();
+			return writer.toString();
+		} catch (TransformerException e) {
+			throw new Exception("Could not export datatypes xml descriptors", e);
+		}
+	}
 
-			Document datatypesXml = new DatatypesXmlWriter(getInstance().datatypeRegistry.getDatatypes(),"file:///.").getXmlDocument();
+	/**
+	 * Get the XML descriptors for all available datatypes.
+	 *
+	 * @return A string containing the XML descriptors for all datatypes.
+	 * @throws Exception If an error occurs while generating the XML descriptors.
+	 */
+	public String getDatatypeDetails(String id) throws Exception {
+		Optional<DatatypeService> datatypeService = this.datatypeRegistry.getDatatype(id);
+		if (!datatypeService.isPresent())
+			throw new IllegalArgumentException(id + " datatype not found");
+		
+		TransformerFactory t = TransformerFactory.newInstance();
+		try {
+			Transformer transformer = t.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			Document datatypesXml = datatypeService.get().asDocument();
 			DOMSource source = new DOMSource(datatypesXml);
 			StringWriter writer = new StringWriter();
 			StreamResult result = new StreamResult(writer);
@@ -224,7 +249,7 @@ public class SimpleAPI {
 	 * @return A string containing the XML descriptors for all settable properties.
 	 * @throws Exception If an error occurs while generating the XML descriptors.
 	 */
-	public String getSettablePropertiesDescriptors() throws Exception {
+	public String getSettableProperties() throws Exception {
 		TransformerFactory t = TransformerFactory.newInstance();
 		try {
 			Transformer transformer = t.newTransformer();
