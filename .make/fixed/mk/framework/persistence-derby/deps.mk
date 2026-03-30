@@ -6,10 +6,7 @@ $(TARGET_DIR)/state/framework/persistence-derby/last-tested : $(TARGET_DIR)/stat
 # this rule overrides the implicit rule in main.mk
 # note that because the modified-since-release_ files created by main.mk, are deleted,
 # this rule gets executed at least once
-$(TARGET_DIR)/state/framework/persistence-derby/modified-since-release_ : framework/persistence-derby/pom.xml \
-	$(TARGET_DIR)/state/framework/parent/modified-since-release \
-	$(TARGET_DIR)/state/framework/common-utils/modified-since-release \
-	$(TARGET_DIR)/state/framework/framework-persistence/modified-since-release
+$(TARGET_DIR)/state/framework/persistence-derby/modified-since-release_ : framework/persistence-derby/pom.xml $(TARGET_DIR)/state/framework/parent/modified-since-release
 	mkdirs("$(dir $@)"); \
 	try (OutputStream s = new FileOutputStream("$@")) { \
 		ModificationType modified = isModifiedSinceLastRelease(new File("$<").getParentFile()); \
@@ -54,15 +51,8 @@ framework/persistence-derby/.install-doc : | .maven-init .group-eval
 framework/persistence-derby/.install-doc : %/.install-doc : %/pom.xml | %/.compile-dependencies %/.test-dependencies
 
 .SECONDARY : framework/persistence-derby/.compile-dependencies framework/persistence-derby/.test-dependencies
-framework/persistence-derby/.compile-dependencies : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.5-SNAPSHOT/framework-parent-1.15.5-SNAPSHOT.pom \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1-SNAPSHOT/common-utils-6.4.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-persistence/2.1.13-SNAPSHOT/framework-persistence-2.1.13-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-core/11.0.1-SNAPSHOT/framework-core-11.0.1-SNAPSHOT.jar
-framework/persistence-derby/.test-dependencies : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/saxon-adapter/5.8.1-SNAPSHOT/saxon-adapter-5.8.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1-SNAPSHOT/common-utils-6.4.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules-registry/5.0.1-SNAPSHOT/modules-registry-5.0.1-SNAPSHOT.jar
+framework/persistence-derby/.compile-dependencies : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.7-SNAPSHOT/framework-parent-1.15.7-SNAPSHOT.pom
+framework/persistence-derby/.test-dependencies : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/saxon-adapter/5.8.2-SNAPSHOT/saxon-adapter-5.8.2-SNAPSHOT.jar
 
 $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/persistence-derby/2.0.12/persistence-derby-2.0.12.% \
 $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/persistence-derby/2.0.12/persistence-derby-2.0.12-% : framework/persistence-derby/.release
@@ -73,12 +63,8 @@ framework/persistence-derby/.release : framework/.release
 	+$(EVAL) mvn.releaseModulesInDir("framework").apply("persistence-derby");
 
 framework/persistence-derby/.release : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.5/framework-parent-1.15.5.pom \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1/common-utils-6.4.1.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-persistence/2.1.13/framework-persistence-2.1.13.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-core/11.0.1/framework-core-11.0.1.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/saxon-adapter/5.8.1/saxon-adapter-5.8.1.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules-registry/5.0.1/modules-registry-5.0.1.jar
+	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.7/framework-parent-1.15.7.pom \
+	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/saxon-adapter/5.8.2/saxon-adapter-5.8.2.jar
 
 clean : framework/persistence-derby/.clean
 .PHONY : framework/persistence-derby/.clean

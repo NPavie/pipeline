@@ -51,7 +51,7 @@ framework/woodstox-osgi-adapter/.install-doc : | .maven-init .group-eval
 framework/woodstox-osgi-adapter/.install-doc : %/.install-doc : %/pom.xml | %/.compile-dependencies %/.test-dependencies
 
 .SECONDARY : framework/woodstox-osgi-adapter/.compile-dependencies framework/woodstox-osgi-adapter/.test-dependencies
-framework/woodstox-osgi-adapter/.compile-dependencies : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.5-SNAPSHOT/framework-parent-1.15.5-SNAPSHOT.pom
+framework/woodstox-osgi-adapter/.compile-dependencies : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.7-SNAPSHOT/framework-parent-1.15.7-SNAPSHOT.pom
 framework/woodstox-osgi-adapter/.test-dependencies :
 
 $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/woodstox-osgi-adapter/2.1.1/woodstox-osgi-adapter-2.1.1.% \
@@ -62,7 +62,7 @@ $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/woodstox-osgi-adapter/2.1.1/woodstox-
 framework/woodstox-osgi-adapter/.release : framework/.release
 	+$(EVAL) mvn.releaseModulesInDir("framework").apply("woodstox-osgi-adapter");
 
-framework/woodstox-osgi-adapter/.release : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.5/framework-parent-1.15.5.pom
+framework/woodstox-osgi-adapter/.release : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.7/framework-parent-1.15.7.pom
 
 clean : framework/woodstox-osgi-adapter/.clean
 .PHONY : framework/woodstox-osgi-adapter/.clean

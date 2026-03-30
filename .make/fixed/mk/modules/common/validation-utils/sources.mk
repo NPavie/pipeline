@@ -1,4 +1,13 @@
-modules/common/validation-utils/.test modules/common/validation-utils/.install modules/common/validation-utils/.install-doc $(TARGET_DIR)/state/modules/common/validation-utils/modified-since-release_ : \
+modules/common/validation-utils/.test : \
+	modules/common/validation-utils/src/test/sample-output-from-combine-validation-reports2.xml \
+	modules/common/validation-utils/src/test/sample-fileset.xml \
+	modules/common/validation-utils/src/test/badxml.xml \
+	modules/common/validation-utils/src/test/xprocspec/test_validate-with-relax-ng.xprocspec \
+	modules/common/validation-utils/src/test/sample-schematron-report.xml \
+	modules/common/validation-utils/src/test/sample-rng-report.xml \
+	modules/common/validation-utils/src/test/sample-images-report.xml \
+	modules/common/validation-utils/src/test/sample-output-from-validation-report-to-html.html \
+	modules/common/validation-utils/src/test/sample-output-from-combine-validation-reports.xml \
 	modules/common/validation-utils/src/main/resources/META-INF/catalog.xml \
 	modules/common/validation-utils/src/main/resources/xml/xproc/check-files-wellformed.xpl \
 	modules/common/validation-utils/src/main/resources/xml/xproc/create-validation-report-error.xpl \
@@ -15,16 +24,6 @@ modules/common/validation-utils/.test modules/common/validation-utils/.install m
 	modules/common/validation-utils/src/main/resources/xml/xslt/cerrors-to-derrors.xsl \
 	modules/common/validation-utils/src/main/resources/xml/xslt/relaxng2isoschematron.xsl \
 	modules/common/validation-utils/src/main/resources/xml/xslt/validation-report-to-html.xsl
-modules/common/validation-utils/.test modules/common/validation-utils/.install-doc : \
-	modules/common/validation-utils/src/test/sample-output-from-combine-validation-reports2.xml \
-	modules/common/validation-utils/src/test/sample-fileset.xml \
-	modules/common/validation-utils/src/test/badxml.xml \
-	modules/common/validation-utils/src/test/xprocspec/test_validate-with-relax-ng.xprocspec \
-	modules/common/validation-utils/src/test/sample-schematron-report.xml \
-	modules/common/validation-utils/src/test/sample-rng-report.xml \
-	modules/common/validation-utils/src/test/sample-images-report.xml \
-	modules/common/validation-utils/src/test/sample-output-from-validation-report-to-html.html \
-	modules/common/validation-utils/src/test/sample-output-from-combine-validation-reports.xml
 .make/target/mk/modules/common/validation-utils/sources.mk : \
 	modules/common/validation-utils/src \
 	modules/common/validation-utils/src/test \

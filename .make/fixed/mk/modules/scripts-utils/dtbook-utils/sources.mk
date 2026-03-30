@@ -1,4 +1,34 @@
-modules/scripts-utils/dtbook-utils/.test modules/scripts-utils/dtbook-utils/.install modules/scripts-utils/dtbook-utils/.install-doc $(TARGET_DIR)/state/modules/scripts-utils/dtbook-utils/modified-since-release_ : \
+modules/scripts-utils/dtbook-utils/.test : \
+	modules/scripts-utils/dtbook-utils/src/test/resources/logback.xml \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test6.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test7.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/invalid-doctype.xml \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test5.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook.2005.basic.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test4.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test1.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook110.xml \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test3.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test2.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/lexicon.pls \
+	modules/scripts-utils/dtbook-utils/src/test/resources/font.ttf \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test10.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test11.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/style.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook_valid_2005-3.xml \
+	modules/scripts-utils/dtbook-utils/src/test/resources/valentin.jpg \
+	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook_not_well_formed.xml \
+	modules/scripts-utils/dtbook-utils/src/test/resources/hauy_valid.xml \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test9.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook-with-stylesheets.xml \
+	modules/scripts-utils/dtbook-utils/src/test/resources/test8.css \
+	modules/scripts-utils/dtbook-utils/src/test/resources/image.png \
+	modules/scripts-utils/dtbook-utils/src/test/java/XProcSpecTest.java \
+	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_dtd_catalog.xprocspec \
+	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_validate.xprocspec \
+	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_dtbook-to-mods-meta.xprocspec \
+	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_load.xprocspec \
+	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_upgrade.xprocspec \
 	modules/scripts-utils/dtbook-utils/src/main/resources/css/default-speech.scss \
 	modules/scripts-utils/dtbook-utils/src/main/resources/META-INF/catalog.xml \
 	modules/scripts-utils/dtbook-utils/src/main/resources/xml/validate-dtbook/schema/sch/dtbook.mathml.nimas.sch \
@@ -35,40 +65,6 @@ modules/scripts-utils/dtbook-utils/.test modules/scripts-utils/dtbook-utils/.ins
 	modules/scripts-utils/dtbook-utils/src/main/resources/xml/merge-dtbook/merge-dtbook.xsl \
 	modules/scripts-utils/dtbook-utils/src/main/resources/xml/merge-dtbook/merge-dtbook.xpl \
 	modules/scripts-utils/dtbook-utils/src/main/resources/xml/dtbook-utils-library.xpl
-modules/scripts-utils/dtbook-utils/.test modules/scripts-utils/dtbook-utils/.install-doc : \
-	modules/scripts-utils/dtbook-utils/src/test/resources/logback.xml \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test6.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test7.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/invalid-doctype.xml \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test5.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook.2005.basic.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test4.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test1.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook110.xml \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test3.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test2.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/lexicon.pls \
-	modules/scripts-utils/dtbook-utils/src/test/resources/font.ttf \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test10.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test11.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/style.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook_valid_2005-3.xml \
-	modules/scripts-utils/dtbook-utils/src/test/resources/valentin.jpg \
-	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook_not_well_formed.xml \
-	modules/scripts-utils/dtbook-utils/src/test/resources/hauy_valid.xml \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test9.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/dtbook-with-stylesheets.xml \
-	modules/scripts-utils/dtbook-utils/src/test/resources/test8.css \
-	modules/scripts-utils/dtbook-utils/src/test/resources/image.png \
-	modules/scripts-utils/dtbook-utils/src/test/java/XProcSpecTest.java \
-	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_dtd_catalog.xprocspec \
-	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_validate.xprocspec \
-	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_dtbook-to-mods-meta.xprocspec \
-	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_load.xprocspec \
-	modules/scripts-utils/dtbook-utils/src/test/xprocspec/test_upgrade.xprocspec
-modules/scripts-utils/dtbook-utils/.install-doc : \
-	modules/scripts-utils/dtbook-utils/doc/routines.md \
-	modules/scripts-utils/dtbook-utils/doc/index.md
 .make/target/mk/modules/scripts-utils/dtbook-utils/sources.mk : \
 	modules/scripts-utils/dtbook-utils/src \
 	modules/scripts-utils/dtbook-utils/src/test \
@@ -90,5 +86,4 @@ modules/scripts-utils/dtbook-utils/.install-doc : \
 	modules/scripts-utils/dtbook-utils/src/main/resources/xml/break-detect \
 	modules/scripts-utils/dtbook-utils/src/main/resources/xml/upgrade-dtbook \
 	modules/scripts-utils/dtbook-utils/src/main/resources/xml/dtd \
-	modules/scripts-utils/dtbook-utils/src/main/resources/xml/merge-dtbook \
-	modules/scripts-utils/dtbook-utils/doc
+	modules/scripts-utils/dtbook-utils/src/main/resources/xml/merge-dtbook

@@ -1,4 +1,12 @@
-modules/scripts-utils/mathml-utils/.test modules/scripts-utils/mathml-utils/.install modules/scripts-utils/mathml-utils/.install-doc $(TARGET_DIR)/state/modules/scripts-utils/mathml-utils/modified-since-release_ : \
+modules/scripts-utils/mathml-utils/.test : \
+	modules/scripts-utils/mathml-utils/src/test/resources/logback.xml \
+	modules/scripts-utils/mathml-utils/src/test/resources/mathml3.xml \
+	modules/scripts-utils/mathml-utils/src/test/resources/mathml2.xml \
+	modules/scripts-utils/mathml-utils/src/test/java/XProcSpecTest.java \
+	modules/scripts-utils/mathml-utils/src/test/xprocspec/validate-mathml3-with-relax-ng.xprocspec \
+	modules/scripts-utils/mathml-utils/src/test/xprocspec/load-mathml2-dtd.xprocspec \
+	modules/scripts-utils/mathml-utils/src/test/xprocspec/pres-math-to-ssml.xprocspec \
+	modules/scripts-utils/mathml-utils/src/test/xprocspec/validate-mathml2-with-relax-ng.xprocspec \
 	modules/scripts-utils/mathml-utils/src/main/resources/META-INF/catalog.xml \
 	modules/scripts-utils/mathml-utils/src/main/resources/xml/mathml3/statistics.rng \
 	modules/scripts-utils/mathml-utils/src/main/resources/xml/mathml3/mathml3.rng \
@@ -57,15 +65,6 @@ modules/scripts-utils/mathml-utils/.test modules/scripts-utils/mathml-utils/.ins
 	modules/scripts-utils/mathml-utils/src/main/resources/xml/xproc/mathml-to-ssml.xpl \
 	modules/scripts-utils/mathml-utils/src/main/java/org/daisy/pipeline/mathml/tts/impl/FallbackMathMLProcessor.java \
 	modules/scripts-utils/mathml-utils/src/main/java/org/daisy/pipeline/mathml/tts/saxon/impl/MathMLToSSMLFunctionProvider.java
-modules/scripts-utils/mathml-utils/.test modules/scripts-utils/mathml-utils/.install-doc : \
-	modules/scripts-utils/mathml-utils/src/test/resources/logback.xml \
-	modules/scripts-utils/mathml-utils/src/test/resources/mathml3.xml \
-	modules/scripts-utils/mathml-utils/src/test/resources/mathml2.xml \
-	modules/scripts-utils/mathml-utils/src/test/java/XProcSpecTest.java \
-	modules/scripts-utils/mathml-utils/src/test/xprocspec/validate-mathml3-with-relax-ng.xprocspec \
-	modules/scripts-utils/mathml-utils/src/test/xprocspec/load-mathml2-dtd.xprocspec \
-	modules/scripts-utils/mathml-utils/src/test/xprocspec/pres-math-to-ssml.xprocspec \
-	modules/scripts-utils/mathml-utils/src/test/xprocspec/validate-mathml2-with-relax-ng.xprocspec
 .make/target/mk/modules/scripts-utils/mathml-utils/sources.mk : \
 	modules/scripts-utils/mathml-utils/src \
 	modules/scripts-utils/mathml-utils/src/test \

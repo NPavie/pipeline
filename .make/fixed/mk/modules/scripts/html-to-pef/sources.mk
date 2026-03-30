@@ -1,4 +1,29 @@
-modules/scripts/html-to-pef/.test modules/scripts/html-to-pef/.install modules/scripts/html-to-pef/.install-doc $(TARGET_DIR)/state/modules/scripts/html-to-pef/modified-since-release_ : \
+modules/scripts/html-to-pef/.test : \
+	modules/scripts/html-to-pef/src/test/xspec/leaf-sections.xspec \
+	modules/scripts/html-to-pef/src/test/xspec/leaf-sections_2.xspec \
+	modules/scripts/html-to-pef/src/test/resources/logback.xml \
+	modules/scripts/html-to-pef/src/test/resources/reset-test.html \
+	modules/scripts/html-to-pef/src/test/resources/images/alice09a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/images/alice05a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/images/alice04a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/images/alice08a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/images/alice03a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/images/alice02a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/images/alice01a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/images/alice07a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/images/alice10a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/images/alice06a.jpg \
+	modules/scripts/html-to-pef/src/test/resources/test_ascii-table_2.brf \
+	modules/scripts/html-to-pef/src/test/resources/test_ascii-table_1.brf \
+	modules/scripts/html-to-pef/src/test/resources/xinclude-math.xhtml \
+	modules/scripts/html-to-pef/src/test/resources/alice.xhtml \
+	modules/scripts/html-to-pef/src/test/resources/external-entity.xhtml \
+	modules/scripts/html-to-pef/src/test/resources/math.xml \
+	modules/scripts/html-to-pef/src/test/resources/test_ascii-table_1.xhtml \
+	modules/scripts/html-to-pef/src/test/resources/test_ascii-table_2.xhtml \
+	modules/scripts/html-to-pef/src/test/java/XProcSpecTest.java \
+	modules/scripts/html-to-pef/src/test/xprocspec/test_html-to-pef.script.xprocspec \
+	modules/scripts/html-to-pef/src/test/xprocspec/test_html-to-pef.xprocspec \
 	modules/scripts/html-to-pef/src/main/resources/css/lists.xsl \
 	modules/scripts/html-to-pef/src/main/resources/css/tables.md \
 	modules/scripts/html-to-pef/src/main/resources/css/tables.xsl \
@@ -26,34 +51,6 @@ modules/scripts/html-to-pef/.test modules/scripts/html-to-pef/.install modules/s
 	modules/scripts/html-to-pef/src/main/resources/xml/xproc/html-to-pef.xpl \
 	modules/scripts/html-to-pef/src/main/resources/xml/xproc/library.xpl \
 	modules/scripts/html-to-pef/src/main/README.md
-modules/scripts/html-to-pef/.test modules/scripts/html-to-pef/.install-doc : \
-	modules/scripts/html-to-pef/src/test/xspec/leaf-sections.xspec \
-	modules/scripts/html-to-pef/src/test/xspec/leaf-sections_2.xspec \
-	modules/scripts/html-to-pef/src/test/resources/logback.xml \
-	modules/scripts/html-to-pef/src/test/resources/reset-test.html \
-	modules/scripts/html-to-pef/src/test/resources/images/alice09a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/images/alice05a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/images/alice04a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/images/alice08a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/images/alice03a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/images/alice02a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/images/alice01a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/images/alice07a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/images/alice10a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/images/alice06a.jpg \
-	modules/scripts/html-to-pef/src/test/resources/test_ascii-table_2.brf \
-	modules/scripts/html-to-pef/src/test/resources/test_ascii-table_1.brf \
-	modules/scripts/html-to-pef/src/test/resources/xinclude-math.xhtml \
-	modules/scripts/html-to-pef/src/test/resources/alice.xhtml \
-	modules/scripts/html-to-pef/src/test/resources/external-entity.xhtml \
-	modules/scripts/html-to-pef/src/test/resources/math.xml \
-	modules/scripts/html-to-pef/src/test/resources/test_ascii-table_1.xhtml \
-	modules/scripts/html-to-pef/src/test/resources/test_ascii-table_2.xhtml \
-	modules/scripts/html-to-pef/src/test/java/XProcSpecTest.java \
-	modules/scripts/html-to-pef/src/test/xprocspec/test_html-to-pef.script.xprocspec \
-	modules/scripts/html-to-pef/src/test/xprocspec/test_html-to-pef.xprocspec
-modules/scripts/html-to-pef/.install-doc : \
-	modules/scripts/html-to-pef/doc/index.md
 .make/target/mk/modules/scripts/html-to-pef/sources.mk : \
 	modules/scripts/html-to-pef/src \
 	modules/scripts/html-to-pef/src/test \
@@ -67,5 +64,4 @@ modules/scripts/html-to-pef/.install-doc : \
 	modules/scripts/html-to-pef/src/main/resources/css \
 	modules/scripts/html-to-pef/src/main/resources/META-INF \
 	modules/scripts/html-to-pef/src/main/resources/xml \
-	modules/scripts/html-to-pef/src/main/resources/xml/xproc \
-	modules/scripts/html-to-pef/doc
+	modules/scripts/html-to-pef/src/main/resources/xml/xproc

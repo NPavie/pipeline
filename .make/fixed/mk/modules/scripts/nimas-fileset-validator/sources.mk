@@ -1,19 +1,4 @@
-modules/scripts/nimas-fileset-validator/.test modules/scripts/nimas-fileset-validator/.install modules/scripts/nimas-fileset-validator/.install-doc $(TARGET_DIR)/state/modules/scripts/nimas-fileset-validator/modified-since-release_ : \
-	modules/scripts/nimas-fileset-validator/src/main/resources/META-INF/catalog.xml \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.xpl \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/package-doc-with-mathml.sch \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/package-doc-without-mathml.sch \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/mod/package-doc-common.sch \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/mod/package-doc-without-mathml-mod.sch \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/mod/package-doc-with-mathml-mod.sch \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/rng/package-doc-1.2.rng \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/rng/mod/datatypes.rng \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/rng/mod/attributes.rng \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.validate.xpl \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.validate-package-doc.xpl \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.fileset-filter.xpl \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.store.xpl
-modules/scripts/nimas-fileset-validator/.test modules/scripts/nimas-fileset-validator/.install-doc : \
+modules/scripts/nimas-fileset-validator/.test : \
 	modules/scripts/nimas-fileset-validator/src/test/resources/logback.xml \
 	modules/scripts/nimas-fileset-validator/src/test/resources/9781122334455NIMAS/9781122334455NIMAS.pdf \
 	modules/scripts/nimas-fileset-validator/src/test/resources/9781122334455NIMAS/9781122334455NIMAS.xml \
@@ -200,10 +185,21 @@ modules/scripts/nimas-fileset-validator/.test modules/scripts/nimas-fileset-vali
 	modules/scripts/nimas-fileset-validator/src/test/resources/greatpainters-text-files-only/greatpainters-portrait_of_georg_gisze.jpg \
 	modules/scripts/nimas-fileset-validator/src/test/java/XProcSpecTest.java \
 	modules/scripts/nimas-fileset-validator/src/test/xprocspec/test_nimas-fileset-validator.xprocspec \
-	modules/scripts/nimas-fileset-validator/src/test/xprocspec/test_nimas-fileset-validator.script.xprocspec
-modules/scripts/nimas-fileset-validator/.install-doc : \
-	modules/scripts/nimas-fileset-validator/doc/dev-notes.md \
-	modules/scripts/nimas-fileset-validator/doc/index.md
+	modules/scripts/nimas-fileset-validator/src/test/xprocspec/test_nimas-fileset-validator.script.xprocspec \
+	modules/scripts/nimas-fileset-validator/src/main/resources/META-INF/catalog.xml \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.xpl \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/package-doc-with-mathml.sch \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/package-doc-without-mathml.sch \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/mod/package-doc-common.sch \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/mod/package-doc-without-mathml-mod.sch \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/mod/package-doc-with-mathml-mod.sch \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/rng/package-doc-1.2.rng \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/rng/mod/datatypes.rng \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/rng/mod/attributes.rng \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.validate.xpl \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.validate-package-doc.xpl \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.fileset-filter.xpl \
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/nimas-fileset-validator.store.xpl
 .make/target/mk/modules/scripts/nimas-fileset-validator/sources.mk : \
 	modules/scripts/nimas-fileset-validator/src \
 	modules/scripts/nimas-fileset-validator/src/test \
@@ -225,5 +221,4 @@ modules/scripts/nimas-fileset-validator/.install-doc : \
 	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch \
 	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/sch/mod \
 	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/rng \
-	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/rng/mod \
-	modules/scripts/nimas-fileset-validator/doc
+	modules/scripts/nimas-fileset-validator/src/main/resources/xml/schema/rng/mod

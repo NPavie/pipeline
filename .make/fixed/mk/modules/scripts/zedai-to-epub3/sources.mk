@@ -1,11 +1,4 @@
-modules/scripts/zedai-to-epub3/.test modules/scripts/zedai-to-epub3/.install modules/scripts/zedai-to-epub3/.install-doc $(TARGET_DIR)/state/modules/scripts/zedai-to-epub3/modified-since-release_ : \
-	modules/scripts/zedai-to-epub3/src/main/resources/META-INF/catalog.xml \
-	modules/scripts/zedai-to-epub3/src/main/resources/xml/xproc/zedai-to-epub3.convert.xpl \
-	modules/scripts/zedai-to-epub3/src/main/resources/xml/xproc/zedai-to-epub3.xpl \
-	modules/scripts/zedai-to-epub3/src/main/resources/xml/xproc/zedai-to-opf-metadata.xpl \
-	modules/scripts/zedai-to-epub3/src/main/resources/xml/xproc/library.xpl \
-	modules/scripts/zedai-to-epub3/src/main/resources/xml/xslt/zedai-to-opf-metadata.xsl
-modules/scripts/zedai-to-epub3/.test modules/scripts/zedai-to-epub3/.install-doc : \
+modules/scripts/zedai-to-epub3/.test : \
 	modules/scripts/zedai-to-epub3/src/test/resources/logback.xml \
 	modules/scripts/zedai-to-epub3/src/test/resources/resources/alice.xml \
 	modules/scripts/zedai-to-epub3/src/test/resources/resources/images/alice25a.png \
@@ -53,9 +46,13 @@ modules/scripts/zedai-to-epub3/.test modules/scripts/zedai-to-epub3/.install-doc
 	modules/scripts/zedai-to-epub3/src/test/java/XProcSpecTest.java \
 	modules/scripts/zedai-to-epub3/src/test/xprocspec/test_zedai-to-opf-metadata.xprocspec \
 	modules/scripts/zedai-to-epub3/src/test/xprocspec/test_zedai-to-epub3.script.xprocspec \
-	modules/scripts/zedai-to-epub3/src/test/xprocspec/test_zedai-to-epub3.xprocspec
-modules/scripts/zedai-to-epub3/.install-doc : \
-	modules/scripts/zedai-to-epub3/doc/index.md
+	modules/scripts/zedai-to-epub3/src/test/xprocspec/test_zedai-to-epub3.xprocspec \
+	modules/scripts/zedai-to-epub3/src/main/resources/META-INF/catalog.xml \
+	modules/scripts/zedai-to-epub3/src/main/resources/xml/xproc/zedai-to-epub3.convert.xpl \
+	modules/scripts/zedai-to-epub3/src/main/resources/xml/xproc/zedai-to-epub3.xpl \
+	modules/scripts/zedai-to-epub3/src/main/resources/xml/xproc/zedai-to-opf-metadata.xpl \
+	modules/scripts/zedai-to-epub3/src/main/resources/xml/xproc/library.xpl \
+	modules/scripts/zedai-to-epub3/src/main/resources/xml/xslt/zedai-to-opf-metadata.xsl
 .make/target/mk/modules/scripts/zedai-to-epub3/sources.mk : \
 	modules/scripts/zedai-to-epub3/src \
 	modules/scripts/zedai-to-epub3/src/test \
@@ -69,5 +66,4 @@ modules/scripts/zedai-to-epub3/.install-doc : \
 	modules/scripts/zedai-to-epub3/src/main/resources/META-INF \
 	modules/scripts/zedai-to-epub3/src/main/resources/xml \
 	modules/scripts/zedai-to-epub3/src/main/resources/xml/xproc \
-	modules/scripts/zedai-to-epub3/src/main/resources/xml/xslt \
-	modules/scripts/zedai-to-epub3/doc
+	modules/scripts/zedai-to-epub3/src/main/resources/xml/xslt

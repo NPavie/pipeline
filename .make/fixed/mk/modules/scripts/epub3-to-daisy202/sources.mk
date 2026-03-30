@@ -1,30 +1,4 @@
-modules/scripts/epub3-to-daisy202/.test modules/scripts/epub3-to-daisy202/.install modules/scripts/epub3-to-daisy202/.install-doc $(TARGET_DIR)/state/modules/scripts/epub3-to-daisy202/modified-since-release_ : \
-	modules/scripts/epub3-to-daisy202/src/main/resources/css/dtbook.2005.basic.css \
-	modules/scripts/epub3-to-daisy202/src/main/resources/css/accessibility.css \
-	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexicMono-Regular.otf \
-	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexic-Italic.otf \
-	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexic-BoldItalic.otf \
-	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexic-Bold.otf \
-	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/LICENSE.txt \
-	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexic-Regular.otf \
-	modules/scripts/epub3-to-daisy202/src/main/resources/META-INF/catalog.xml \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/step/create-ncc.xpl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/step/opf-to-ncc-metadata.xpl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/step/epub3-to-daisy202.convert.xpl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/epub3-to-daisy202.xpl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/library.xpl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/deep-level-grouping.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/noterefs-in-smil.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/smil-metadata.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/opf-to-ncc-metadata.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/make-skippables.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/rearrange-notes.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/augment-smil.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/outline-to-ncc-body.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/create-linkbacks.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/identify-pagebreaks-and-noterefs.xsl \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/pretty-print.xsl
-modules/scripts/epub3-to-daisy202/.test modules/scripts/epub3-to-daisy202/.install-doc : \
+modules/scripts/epub3-to-daisy202/.test : \
 	modules/scripts/epub3-to-daisy202/src/test/xspec/create-linkbacks.xspec \
 	modules/scripts/epub3-to-daisy202/src/test/xspec/catalog.xml \
 	modules/scripts/epub3-to-daisy202/src/test/xspec/mock/uri-functions.xsl \
@@ -390,9 +364,32 @@ modules/scripts/epub3-to-daisy202/.test modules/scripts/epub3-to-daisy202/.insta
 	modules/scripts/epub3-to-daisy202/src/test/xprocspec/hefty-water/EPUB/package.opf \
 	modules/scripts/epub3-to-daisy202/src/test/xprocspec/moby-dick-mo-20120214.epub \
 	modules/scripts/epub3-to-daisy202/src/test/xprocspec/augment-smil.xprocspec \
-	modules/scripts/epub3-to-daisy202/src/test/xprocspec/xprocspec-assert-xml-declaration.xpl
-modules/scripts/epub3-to-daisy202/.install-doc : \
-	modules/scripts/epub3-to-daisy202/doc/index.md
+	modules/scripts/epub3-to-daisy202/src/test/xprocspec/xprocspec-assert-xml-declaration.xpl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/css/dtbook.2005.basic.css \
+	modules/scripts/epub3-to-daisy202/src/main/resources/css/accessibility.css \
+	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexicMono-Regular.otf \
+	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexic-Italic.otf \
+	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexic-BoldItalic.otf \
+	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexic-Bold.otf \
+	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/LICENSE.txt \
+	modules/scripts/epub3-to-daisy202/src/main/resources/css/fonts/opendyslexic/OpenDyslexic-Regular.otf \
+	modules/scripts/epub3-to-daisy202/src/main/resources/META-INF/catalog.xml \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/step/create-ncc.xpl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/step/opf-to-ncc-metadata.xpl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/step/epub3-to-daisy202.convert.xpl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/epub3-to-daisy202.xpl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/library.xpl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/deep-level-grouping.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/noterefs-in-smil.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/smil-metadata.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/opf-to-ncc-metadata.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/make-skippables.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/rearrange-notes.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/augment-smil.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/outline-to-ncc-body.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/create-linkbacks.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/identify-pagebreaks-and-noterefs.xsl \
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt/pretty-print.xsl
 .make/target/mk/modules/scripts/epub3-to-daisy202/sources.mk : \
 	modules/scripts/epub3-to-daisy202/src \
 	modules/scripts/epub3-to-daisy202/src/test \
@@ -441,5 +438,4 @@ modules/scripts/epub3-to-daisy202/.install-doc : \
 	modules/scripts/epub3-to-daisy202/src/main/resources/xml \
 	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc \
 	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xproc/step \
-	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt \
-	modules/scripts/epub3-to-daisy202/doc
+	modules/scripts/epub3-to-daisy202/src/main/resources/xml/xslt

@@ -1,4 +1,24 @@
-modules/scripts-utils/html-utils/.test modules/scripts-utils/html-utils/.install modules/scripts-utils/html-utils/.install-doc $(TARGET_DIR)/state/modules/scripts-utils/html-utils/modified-since-release_ : \
+modules/scripts-utils/html-utils/.test : \
+	modules/scripts-utils/html-utils/src/test/xspec/namespace-fixup.xspec \
+	modules/scripts-utils/html-utils/src/test/xspec/html5-outline.xspec \
+	modules/scripts-utils/html-utils/src/test/xspec/html5-upgrade.xspec \
+	modules/scripts-utils/html-utils/src/test/xspec/html5-to-html4.xspec \
+	modules/scripts-utils/html-utils/src/test/resources/logback.xml \
+	modules/scripts-utils/html-utils/src/test/resources/config-calabash.xml \
+	modules/scripts-utils/html-utils/src/test/resources/non-xml.html \
+	modules/scripts-utils/html-utils/src/test/resources/html-with-xml-stylesheet-processing-instruction.xml \
+	modules/scripts-utils/html-utils/src/test/java/XProcSpecTest.java \
+	modules/scripts-utils/html-utils/src/test/xprocspec/test_load-html.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/html-update-links.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/test_html-outline.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/uri-functions.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/test_html-break-detect.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/test_fileset-load-html.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/test_html-load.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/html-merge.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/html-downgrade.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/html-id-fixer.xprocspec \
+	modules/scripts-utils/html-utils/src/test/xprocspec/html-chunker.xprocspec \
 	modules/scripts-utils/html-utils/src/main/resources/css/default-speech.scss \
 	modules/scripts-utils/html-utils/src/main/resources/META-INF/catalog.xml \
 	modules/scripts-utils/html-utils/src/main/resources/xml/xproc/html-downgrade.xpl \
@@ -91,27 +111,6 @@ modules/scripts-utils/html-utils/.test modules/scripts-utils/html-utils/.install
 	modules/scripts-utils/html-utils/src/main/resources/xml/xslt/untitled-section-titles.xml \
 	modules/scripts-utils/html-utils/src/main/resources/xml/xslt/library.xsl \
 	modules/scripts-utils/html-utils/src/main/java/org/daisy/pipeline/html/impl/HtmlDocumentBuilder.java
-modules/scripts-utils/html-utils/.test modules/scripts-utils/html-utils/.install-doc : \
-	modules/scripts-utils/html-utils/src/test/xspec/namespace-fixup.xspec \
-	modules/scripts-utils/html-utils/src/test/xspec/html5-outline.xspec \
-	modules/scripts-utils/html-utils/src/test/xspec/html5-upgrade.xspec \
-	modules/scripts-utils/html-utils/src/test/xspec/html5-to-html4.xspec \
-	modules/scripts-utils/html-utils/src/test/resources/logback.xml \
-	modules/scripts-utils/html-utils/src/test/resources/config-calabash.xml \
-	modules/scripts-utils/html-utils/src/test/resources/non-xml.html \
-	modules/scripts-utils/html-utils/src/test/resources/html-with-xml-stylesheet-processing-instruction.xml \
-	modules/scripts-utils/html-utils/src/test/java/XProcSpecTest.java \
-	modules/scripts-utils/html-utils/src/test/xprocspec/test_load-html.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/html-update-links.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/test_html-outline.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/uri-functions.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/test_html-break-detect.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/test_fileset-load-html.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/test_html-load.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/html-merge.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/html-downgrade.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/html-id-fixer.xprocspec \
-	modules/scripts-utils/html-utils/src/test/xprocspec/html-chunker.xprocspec
 .make/target/mk/modules/scripts-utils/html-utils/sources.mk : \
 	modules/scripts-utils/html-utils/src \
 	modules/scripts-utils/html-utils/src/test \

@@ -1,50 +1,4 @@
-modules/braille/braille-css-utils/.test modules/braille/braille-css-utils/.install modules/braille/braille-css-utils/.install-doc $(TARGET_DIR)/state/modules/braille/braille-css-utils/modified-since-release_ : \
-	modules/braille/braille-css-utils/src/main/resources/META-INF/catalog.xml \
-	modules/braille/braille-css-utils/src/main/resources/xml/parse-content.xpl \
-	modules/braille/braille-css-utils/src/main/resources/xml/parse-content.xsl \
-	modules/braille/braille-css-utils/src/main/resources/xml/parse-stylesheet.xsl \
-	modules/braille/braille-css-utils/src/main/resources/xml/parse-stylesheet.xpl \
-	modules/braille/braille-css-utils/src/main/resources/xml/extract.xsl \
-	modules/braille/braille-css-utils/src/main/resources/xml/extract.xpl \
-	modules/braille/braille-css-utils/src/main/resources/xml/parse-properties.xpl \
-	modules/braille/braille-css-utils/src/main/resources/xml/parse-properties.xsl \
-	modules/braille/braille-css-utils/src/main/resources/xml/library.xpl \
-	modules/braille/braille-css-utils/src/main/resources/xml/library.xsl \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/BrailleCssParser.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/UnmodifiableTermIdent.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/StyleTransformerImpl.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/ContentList.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/CounterSetList.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/StringSetList.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/BrailleCssSerializer.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/TextTransformList.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/UnmodifiableTermString.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/UnmodifiableTerm.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/BrailleCssStyle.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/BrailleCssCascader.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/UnmodifiableTermURI.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/StyleTransformer.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/Declaration.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/Stylesheet.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/Value.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/CounterStyle.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/Rule.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/StyledText.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/Style.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/SupportedPrintCSS.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/TextStyleParser.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/CounterSet.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/EmbossedMedium.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/InvalidTableException.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/StyledTextFunctionProvider.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/RenderTableByDefinition.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/StyleFunctionProvider.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/TableAsList.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/CSSStyledText.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/CounterFunction.java \
-	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/package-info.java \
-	modules/braille/braille-css-utils/src/main/README.md
-modules/braille/braille-css-utils/.test modules/braille/braille-css-utils/.install-doc : \
+modules/braille/braille-css-utils/.test : \
 	modules/braille/braille-css-utils/src/test/xspec/test_braille-css.xspec \
 	modules/braille/braille-css-utils/src/test/xspec/test_render-table-by.xspec \
 	modules/braille/braille-css-utils/src/test/xspec/test_parse-stylesheet.xspec \
@@ -113,7 +67,52 @@ modules/braille/braille-css-utils/.test modules/braille/braille-css-utils/.insta
 	modules/braille/braille-css-utils/src/test/xprocspec/test_inline/test_encoding.xprocspec \
 	modules/braille/braille-css-utils/src/test/xprocspec/test_inline/test_text-transform.xprocspec \
 	modules/braille/braille-css-utils/src/test/xprocspec/test_inline/test_context.xprocspec \
-	modules/braille/braille-css-utils/src/test/xprocspec/test_inline/test_user-stylesheet.xprocspec
+	modules/braille/braille-css-utils/src/test/xprocspec/test_inline/test_user-stylesheet.xprocspec \
+	modules/braille/braille-css-utils/src/main/resources/META-INF/catalog.xml \
+	modules/braille/braille-css-utils/src/main/resources/xml/parse-content.xpl \
+	modules/braille/braille-css-utils/src/main/resources/xml/parse-content.xsl \
+	modules/braille/braille-css-utils/src/main/resources/xml/parse-stylesheet.xsl \
+	modules/braille/braille-css-utils/src/main/resources/xml/parse-stylesheet.xpl \
+	modules/braille/braille-css-utils/src/main/resources/xml/extract.xsl \
+	modules/braille/braille-css-utils/src/main/resources/xml/extract.xpl \
+	modules/braille/braille-css-utils/src/main/resources/xml/parse-properties.xpl \
+	modules/braille/braille-css-utils/src/main/resources/xml/parse-properties.xsl \
+	modules/braille/braille-css-utils/src/main/resources/xml/library.xpl \
+	modules/braille/braille-css-utils/src/main/resources/xml/library.xsl \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/BrailleCssParser.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/UnmodifiableTermIdent.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/StyleTransformerImpl.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/ContentList.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/CounterSetList.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/StringSetList.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/BrailleCssSerializer.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/TextTransformList.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/UnmodifiableTermString.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/UnmodifiableTerm.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/BrailleCssStyle.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/BrailleCssCascader.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/impl/UnmodifiableTermURI.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/StyleTransformer.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/Declaration.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/Stylesheet.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/Value.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/CounterStyle.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/impl/Rule.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/StyledText.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/xpath/Style.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/SupportedPrintCSS.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/TextStyleParser.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/CounterSet.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/EmbossedMedium.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/InvalidTableException.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/StyledTextFunctionProvider.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/RenderTableByDefinition.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/StyleFunctionProvider.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/saxon/impl/TableAsList.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/CSSStyledText.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/CounterFunction.java \
+	modules/braille/braille-css-utils/src/main/java/org/daisy/pipeline/braille/css/package-info.java \
+	modules/braille/braille-css-utils/src/main/README.md
 .make/target/mk/modules/braille/braille-css-utils/sources.mk : \
 	modules/braille/braille-css-utils/src \
 	modules/braille/braille-css-utils/src/test \

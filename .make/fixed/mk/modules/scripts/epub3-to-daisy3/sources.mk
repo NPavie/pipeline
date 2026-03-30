@@ -1,12 +1,4 @@
-modules/scripts/epub3-to-daisy3/.test modules/scripts/epub3-to-daisy3/.install modules/scripts/epub3-to-daisy3/.install-doc $(TARGET_DIR)/state/modules/scripts/epub3-to-daisy3/modified-since-release_ : \
-	modules/scripts/epub3-to-daisy3/src/main/resources/META-INF/catalog.xml \
-	modules/scripts/epub3-to-daisy3/src/main/resources/xml/epub3-to-daisy3.xpl \
-	modules/scripts/epub3-to-daisy3/src/main/resources/xml/flatten-headings.xsl \
-	modules/scripts/epub3-to-daisy3/src/main/resources/xml/page-list-update-links.xpl \
-	modules/scripts/epub3-to-daisy3/src/main/resources/xml/page-list-update-links.xsl \
-	modules/scripts/epub3-to-daisy3/src/main/resources/xml/epub3-to-daisy3.script.xpl \
-	modules/scripts/epub3-to-daisy3/src/main/resources/xml/library.xpl
-modules/scripts/epub3-to-daisy3/.test modules/scripts/epub3-to-daisy3/.install-doc : \
+modules/scripts/epub3-to-daisy3/.test : \
 	modules/scripts/epub3-to-daisy3/src/test/resources/logback.xml \
 	modules/scripts/epub3-to-daisy3/src/test/resources/minimal.epub/META-INF/container.xml \
 	modules/scripts/epub3-to-daisy3/src/test/resources/minimal.epub/mimetype \
@@ -22,9 +14,14 @@ modules/scripts/epub3-to-daisy3/.test modules/scripts/epub3-to-daisy3/.install-d
 	modules/scripts/epub3-to-daisy3/src/test/resources/minimal.epub/EPUB/package.opf \
 	modules/scripts/epub3-to-daisy3/src/test/java/XProcSpecTest.java \
 	modules/scripts/epub3-to-daisy3/src/test/xprocspec/test_epub3-to-daisy3.xprocspec \
-	modules/scripts/epub3-to-daisy3/src/test/xprocspec/test_epub3-to-daisy3.script.xprocspec
-modules/scripts/epub3-to-daisy3/.install-doc : \
-	modules/scripts/epub3-to-daisy3/doc/index.md
+	modules/scripts/epub3-to-daisy3/src/test/xprocspec/test_epub3-to-daisy3.script.xprocspec \
+	modules/scripts/epub3-to-daisy3/src/main/resources/META-INF/catalog.xml \
+	modules/scripts/epub3-to-daisy3/src/main/resources/xml/epub3-to-daisy3.xpl \
+	modules/scripts/epub3-to-daisy3/src/main/resources/xml/flatten-headings.xsl \
+	modules/scripts/epub3-to-daisy3/src/main/resources/xml/page-list-update-links.xpl \
+	modules/scripts/epub3-to-daisy3/src/main/resources/xml/page-list-update-links.xsl \
+	modules/scripts/epub3-to-daisy3/src/main/resources/xml/epub3-to-daisy3.script.xpl \
+	modules/scripts/epub3-to-daisy3/src/main/resources/xml/library.xpl
 .make/target/mk/modules/scripts/epub3-to-daisy3/sources.mk : \
 	modules/scripts/epub3-to-daisy3/src \
 	modules/scripts/epub3-to-daisy3/src/test \
@@ -39,5 +36,4 @@ modules/scripts/epub3-to-daisy3/.install-doc : \
 	modules/scripts/epub3-to-daisy3/src/main \
 	modules/scripts/epub3-to-daisy3/src/main/resources \
 	modules/scripts/epub3-to-daisy3/src/main/resources/META-INF \
-	modules/scripts/epub3-to-daisy3/src/main/resources/xml \
-	modules/scripts/epub3-to-daisy3/doc
+	modules/scripts/epub3-to-daisy3/src/main/resources/xml

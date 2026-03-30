@@ -1,15 +1,4 @@
-modules/scripts/epub3-to-epub3/.test modules/scripts/epub3-to-epub3/.install modules/scripts/epub3-to-epub3/.install-doc $(TARGET_DIR)/state/modules/scripts/epub3-to-epub3/modified-since-release_ : \
-	modules/scripts/epub3-to-epub3/src/main/resources/css/default.css \
-	modules/scripts/epub3-to-epub3/src/main/resources/META-INF/catalog.xml \
-	modules/scripts/epub3-to-epub3/src/main/resources/xml/epub3-to-epub3.xpl \
-	modules/scripts/epub3-to-epub3/src/main/resources/xml/html-derive-meta-from-package-doc.xsl \
-	modules/scripts/epub3-to-epub3/src/main/resources/xml/braille-rendition.package-document.xsl \
-	modules/scripts/epub3-to-epub3/src/main/resources/xml/ensure-pagenum-text.xsl \
-	modules/scripts/epub3-to-epub3/src/main/resources/xml/braille-rendition.fileset.xsl \
-	modules/scripts/epub3-to-epub3/src/main/resources/xml/resource-map.xsl \
-	modules/scripts/epub3-to-epub3/src/main/resources/xml/epub3-to-epub3.convert.xpl \
-	modules/scripts/epub3-to-epub3/src/main/resources/xml/library.xpl
-modules/scripts/epub3-to-epub3/.test modules/scripts/epub3-to-epub3/.install-doc : \
+modules/scripts/epub3-to-epub3/.test : \
 	modules/scripts/epub3-to-epub3/src/test/resources/logback.xml \
 	modules/scripts/epub3-to-epub3/src/test/resources/webserver-tts-config.xml \
 	modules/scripts/epub3-to-epub3/src/test/resources/valentin.epub \
@@ -38,9 +27,17 @@ modules/scripts/epub3-to-epub3/.test modules/scripts/epub3-to-epub3/.install-doc
 	modules/scripts/epub3-to-epub3/src/test/java/XProcSpecTest.java \
 	modules/scripts/epub3-to-epub3/src/test/xprocspec/test_epub3-to-epub3.xprocspec \
 	modules/scripts/epub3-to-epub3/src/test/xprocspec/test_epub3-to-epub3.load.xprocspec \
-	modules/scripts/epub3-to-epub3/src/test/xprocspec/test_epub3-to-epub3.script.xprocspec
-modules/scripts/epub3-to-epub3/.install-doc : \
-	modules/scripts/epub3-to-epub3/doc/index.md
+	modules/scripts/epub3-to-epub3/src/test/xprocspec/test_epub3-to-epub3.script.xprocspec \
+	modules/scripts/epub3-to-epub3/src/main/resources/css/default.css \
+	modules/scripts/epub3-to-epub3/src/main/resources/META-INF/catalog.xml \
+	modules/scripts/epub3-to-epub3/src/main/resources/xml/epub3-to-epub3.xpl \
+	modules/scripts/epub3-to-epub3/src/main/resources/xml/html-derive-meta-from-package-doc.xsl \
+	modules/scripts/epub3-to-epub3/src/main/resources/xml/braille-rendition.package-document.xsl \
+	modules/scripts/epub3-to-epub3/src/main/resources/xml/ensure-pagenum-text.xsl \
+	modules/scripts/epub3-to-epub3/src/main/resources/xml/braille-rendition.fileset.xsl \
+	modules/scripts/epub3-to-epub3/src/main/resources/xml/resource-map.xsl \
+	modules/scripts/epub3-to-epub3/src/main/resources/xml/epub3-to-epub3.convert.xpl \
+	modules/scripts/epub3-to-epub3/src/main/resources/xml/library.xpl
 .make/target/mk/modules/scripts/epub3-to-epub3/sources.mk : \
 	modules/scripts/epub3-to-epub3/src \
 	modules/scripts/epub3-to-epub3/src/test \
@@ -58,5 +55,4 @@ modules/scripts/epub3-to-epub3/.install-doc : \
 	modules/scripts/epub3-to-epub3/src/main/resources \
 	modules/scripts/epub3-to-epub3/src/main/resources/css \
 	modules/scripts/epub3-to-epub3/src/main/resources/META-INF \
-	modules/scripts/epub3-to-epub3/src/main/resources/xml \
-	modules/scripts/epub3-to-epub3/doc
+	modules/scripts/epub3-to-epub3/src/main/resources/xml

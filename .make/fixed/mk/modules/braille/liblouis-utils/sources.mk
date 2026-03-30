@@ -1,73 +1,4 @@
-modules/braille/liblouis-utils/.test modules/braille/liblouis-utils/.install modules/braille/liblouis-utils/.install-doc $(TARGET_DIR)/state/modules/braille/liblouis-utils/modified-since-release_ : \
-	modules/braille/liblouis-utils/src/main/resources/tables/spaces.cti \
-	modules/braille/liblouis-utils/src/main/resources/tables/spaces.dis \
-	modules/braille/liblouis-utils/src/main/resources/tables/unicode.dis \
-	modules/braille/liblouis-utils/src/main/resources/META-INF/catalog.xml \
-	modules/braille/liblouis-utils/src/main/resources/xml/translate-mathml.xpl \
-	modules/braille/liblouis-utils/src/main/resources/xml/translate-file.xpl \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/litdigits6Dots.uti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/latinUppercaseComp6.uti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/loweredDigits6Dots.uti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/spaces.uti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths.cfg \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths.sem \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths_unicode_defs.cti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths_single_cell_defs.cti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths_edit.ctb \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg.cfg \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/latinLetterDef6Dots.uti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg_unicode_defs.cti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg.sem \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemeth.ctb \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/wiskunde.sem \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/wiskunde-chardefs.cti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/liblouisutdml.ini \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nl-chardefs.uti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemeth_edit.ctb \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemethdefs.cti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/namespace.sem \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/digits6Dots.uti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/exactdots \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths.ctb \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/en-chardefs.cti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/woluwe.cfg \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemeth.cfg \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/latinLetterDef8Dots.uti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/digits6DotsPlusDot6.uti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg_single_cell_defs.cti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/braille-patterns.cti \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/wiskunde_edit.ctb \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg_edit.ctb \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/unicode.dis \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg.ctb \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/wiskunde.ctb \
-	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemeth.sem \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisMathMLTransform.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisutdmlConfigRegistry.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisExternalNativePath.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisTableDatatypeService.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisMathMLConfigPath.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/mac/LiblouisNativePathForMacOS.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisTableRegistry.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/linux/LiblouisNativePathForLinux.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisTranslatorJnaImplProvider.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/windows/LiblouisNativePathForWindows.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisTableJnaImplProvider.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisutdmlProcessBuilderImpl.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/calabash/impl/LiblouisResultReader.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/calabash/impl/TranslateFileStep.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisTable.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisutdmlConfigPath.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisTableResolver.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/pef/impl/LiblouisDisplayTableProvider.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/pef/LiblouisDisplayTableBrailleConverter.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisTablePath.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/Liblouisutdml.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/package-info.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisTranslator.java \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisutdmlConfigResolver.java \
-	modules/braille/liblouis-utils/src/main/README.md
-modules/braille/liblouis-utils/.test modules/braille/liblouis-utils/.install-doc : \
+modules/braille/liblouis-utils/.test : \
 	modules/braille/liblouis-utils/src/test/resources/logback.xml \
 	modules/braille/liblouis-utils/src/test/resources/tables/foobar.utb \
 	modules/braille/liblouis-utils/src/test/resources/tables/ital.cti \
@@ -213,9 +144,75 @@ modules/braille/liblouis-utils/.test modules/braille/liblouis-utils/.install-doc
 	modules/braille/liblouis-utils/src/test/java/MockHyphenator.java \
 	modules/braille/liblouis-utils/src/test/xprocspec/test_transform_mathml.xprocspec \
 	modules/braille/liblouis-utils/src/test/xprocspec/test_transform.xprocspec \
-	modules/braille/liblouis-utils/src/test/xprocspec/test_translate-mathml_woluwe.xprocspec
-modules/braille/liblouis-utils/.install-doc : \
-	modules/braille/liblouis-utils/doc/index.md
+	modules/braille/liblouis-utils/src/test/xprocspec/test_translate-mathml_woluwe.xprocspec \
+	modules/braille/liblouis-utils/src/main/resources/tables/spaces.cti \
+	modules/braille/liblouis-utils/src/main/resources/tables/spaces.dis \
+	modules/braille/liblouis-utils/src/main/resources/tables/unicode.dis \
+	modules/braille/liblouis-utils/src/main/resources/META-INF/catalog.xml \
+	modules/braille/liblouis-utils/src/main/resources/xml/translate-mathml.xpl \
+	modules/braille/liblouis-utils/src/main/resources/xml/translate-file.xpl \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/litdigits6Dots.uti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/latinUppercaseComp6.uti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/loweredDigits6Dots.uti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/spaces.uti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths.cfg \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths.sem \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths_unicode_defs.cti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths_single_cell_defs.cti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths_edit.ctb \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg.cfg \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/latinLetterDef6Dots.uti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg_unicode_defs.cti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg.sem \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemeth.ctb \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/wiskunde.sem \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/wiskunde-chardefs.cti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/liblouisutdml.ini \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nl-chardefs.uti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemeth_edit.ctb \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemethdefs.cti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/namespace.sem \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/digits6Dots.uti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/exactdots \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/ukmaths.ctb \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/en-chardefs.cti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/woluwe.cfg \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemeth.cfg \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/latinLetterDef8Dots.uti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/digits6DotsPlusDot6.uti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg_single_cell_defs.cti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/braille-patterns.cti \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/wiskunde_edit.ctb \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg_edit.ctb \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/unicode.dis \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/marburg.ctb \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/wiskunde.ctb \
+	modules/braille/liblouis-utils/src/main/resources/lbu_files/mathml/nemeth.sem \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisMathMLTransform.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisutdmlConfigRegistry.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisExternalNativePath.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisTableDatatypeService.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisMathMLConfigPath.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/mac/LiblouisNativePathForMacOS.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisTableRegistry.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/linux/LiblouisNativePathForLinux.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisTranslatorJnaImplProvider.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/windows/LiblouisNativePathForWindows.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisTableJnaImplProvider.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/impl/LiblouisutdmlProcessBuilderImpl.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/calabash/impl/LiblouisResultReader.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/calabash/impl/TranslateFileStep.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisTable.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisutdmlConfigPath.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisTableResolver.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/pef/impl/LiblouisDisplayTableProvider.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/pef/LiblouisDisplayTableBrailleConverter.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisTablePath.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/Liblouisutdml.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/package-info.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisTranslator.java \
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/LiblouisutdmlConfigResolver.java \
+	modules/braille/liblouis-utils/src/main/README.md
 .make/target/mk/modules/braille/liblouis-utils/sources.mk : \
 	modules/braille/liblouis-utils/src \
 	modules/braille/liblouis-utils/src/test \
@@ -252,5 +249,4 @@ modules/braille/liblouis-utils/.install-doc : \
 	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/calabash \
 	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/calabash/impl \
 	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/pef \
-	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/pef/impl \
-	modules/braille/liblouis-utils/doc
+	modules/braille/liblouis-utils/src/main/java/org/daisy/pipeline/braille/liblouis/pef/impl

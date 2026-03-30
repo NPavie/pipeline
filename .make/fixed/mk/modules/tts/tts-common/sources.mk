@@ -1,4 +1,39 @@
-modules/tts/tts-common/.test modules/tts/tts-common/.install modules/tts/tts-common/.install-doc $(TARGET_DIR)/state/modules/tts/tts-common/modified-since-release_ : \
+modules/tts/tts-common/.test : \
+	modules/tts/tts-common/src/test/resources/logback.xml \
+	modules/tts/tts-common/src/test/resources/lexicon-test-en.pls \
+	modules/tts/tts-common/src/test/resources/lexicon-test-fr.pls \
+	modules/tts/tts-common/src/test/resources/tts-default-config.xml \
+	modules/tts/tts-common/src/test/resources/OSGI-INF/mock-tts.xml \
+	modules/tts/tts-common/src/test/resources/OSGI-INF/mock-encoder.xml \
+	modules/tts/tts-common/src/test/resources/mock-tts/mock_short.wav \
+	modules/tts/tts-common/src/test/resources/mock-tts/transform-ssml.xsl \
+	modules/tts/tts-common/src/test/resources/mock-tts/mock_long.wav \
+	modules/tts/tts-common/src/test/resources/mock-encoder/mock_short.mp3 \
+	modules/tts/tts-common/src/test/resources/valid-sheet.xsl \
+	modules/tts/tts-common/src/test/java/XProcSpecTest.java \
+	modules/tts/tts-common/src/test/java/ignore \
+	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/TimeoutTest.java \
+	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/config/URITest.java \
+	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/config/ConfigReaderTest.java \
+	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/GenericMarkSplitterTest.java \
+	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/calabash/impl/ConfigReaderTest.java \
+	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/calabash/impl/SSMLtoAudioTest.java \
+	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/TTSRegistryTest.java \
+	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/StructuredMarkSplitterTest.java \
+	modules/tts/tts-common/src/test/java/MockEncoder.java \
+	modules/tts/tts-common/src/test/java/MockTTS.java \
+	modules/tts/tts-common/src/test/xprocspec/text-to-ssml.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/pls-to-ssml.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/extract-skippable.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/normalize.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/clean-text.xpl \
+	modules/tts/tts-common/src/test/xprocspec/test_ssml-to-audio.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/annotations.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/punctuation.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/skippable-to-ssml.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/ordering.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/annotations-in-config.xprocspec \
+	modules/tts/tts-common/src/test/xprocspec/isolate-skippable.xprocspec \
 	modules/tts/tts-common/src/main/resources/META-INF/catalog.xml \
 	modules/tts/tts-common/src/main/resources/xml/xproc/flatten-structure.xsl \
 	modules/tts/tts-common/src/main/resources/xml/xproc/normalize.xsl \
@@ -64,44 +99,6 @@ modules/tts/tts-common/.test modules/tts/tts-common/.install modules/tts/tts-com
 	modules/tts/tts-common/src/main/java/org/daisy/pipeline/tts/TTSInputProcessor.java \
 	modules/tts/tts-common/src/main/java/org/daisy/pipeline/tts/VoiceInfo.java \
 	modules/tts/tts-common/src/main/java/org/daisy/pipeline/tts/TTSEngine.java
-modules/tts/tts-common/.test modules/tts/tts-common/.install-doc : \
-	modules/tts/tts-common/src/test/resources/logback.xml \
-	modules/tts/tts-common/src/test/resources/lexicon-test-en.pls \
-	modules/tts/tts-common/src/test/resources/lexicon-test-fr.pls \
-	modules/tts/tts-common/src/test/resources/tts-default-config.xml \
-	modules/tts/tts-common/src/test/resources/OSGI-INF/mock-tts.xml \
-	modules/tts/tts-common/src/test/resources/OSGI-INF/mock-encoder.xml \
-	modules/tts/tts-common/src/test/resources/mock-tts/mock_short.wav \
-	modules/tts/tts-common/src/test/resources/mock-tts/transform-ssml.xsl \
-	modules/tts/tts-common/src/test/resources/mock-tts/mock_long.wav \
-	modules/tts/tts-common/src/test/resources/mock-encoder/mock_short.mp3 \
-	modules/tts/tts-common/src/test/resources/valid-sheet.xsl \
-	modules/tts/tts-common/src/test/java/XProcSpecTest.java \
-	modules/tts/tts-common/src/test/java/ignore \
-	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/TimeoutTest.java \
-	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/config/URITest.java \
-	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/config/ConfigReaderTest.java \
-	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/GenericMarkSplitterTest.java \
-	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/calabash/impl/ConfigReaderTest.java \
-	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/calabash/impl/SSMLtoAudioTest.java \
-	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/TTSRegistryTest.java \
-	modules/tts/tts-common/src/test/java/org/daisy/pipeline/tts/StructuredMarkSplitterTest.java \
-	modules/tts/tts-common/src/test/java/MockEncoder.java \
-	modules/tts/tts-common/src/test/java/MockTTS.java \
-	modules/tts/tts-common/src/test/xprocspec/text-to-ssml.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/pls-to-ssml.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/extract-skippable.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/normalize.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/clean-text.xpl \
-	modules/tts/tts-common/src/test/xprocspec/test_ssml-to-audio.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/annotations.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/punctuation.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/skippable-to-ssml.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/ordering.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/annotations-in-config.xprocspec \
-	modules/tts/tts-common/src/test/xprocspec/isolate-skippable.xprocspec
-modules/tts/tts-common/.install-doc : \
-	modules/tts/tts-common/doc/index.md
 .make/target/mk/modules/tts/tts-common/sources.mk : \
 	modules/tts/tts-common/src \
 	modules/tts/tts-common/src/test \
@@ -131,5 +128,4 @@ modules/tts/tts-common/.install-doc : \
 	modules/tts/tts-common/src/main/java/org/daisy/pipeline/tts/impl \
 	modules/tts/tts-common/src/main/java/org/daisy/pipeline/tts/config \
 	modules/tts/tts-common/src/main/java/org/daisy/pipeline/tts/calabash \
-	modules/tts/tts-common/src/main/java/org/daisy/pipeline/tts/calabash/impl \
-	modules/tts/tts-common/doc
+	modules/tts/tts-common/src/main/java/org/daisy/pipeline/tts/calabash/impl

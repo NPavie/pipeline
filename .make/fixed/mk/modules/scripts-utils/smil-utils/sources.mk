@@ -1,4 +1,36 @@
-modules/scripts-utils/smil-utils/.test modules/scripts-utils/smil-utils/.install modules/scripts-utils/smil-utils/.install-doc $(TARGET_DIR)/state/modules/scripts-utils/smil-utils/modified-since-release_ : \
+modules/scripts-utils/smil-utils/.test : \
+	modules/scripts-utils/smil-utils/src/test/xspec/upgrade-smil-daisy202_test.xspec \
+	modules/scripts-utils/smil-utils/src/test/resources/logback.xml \
+	modules/scripts-utils/smil-utils/src/test/resources/docs/test20.smil \
+	modules/scripts-utils/smil-utils/src/test/resources/docs/test-doc-1.xml \
+	modules/scripts-utils/smil-utils/src/test/resources/docs/test-doc-3.xml \
+	modules/scripts-utils/smil-utils/src/test/resources/docs/test-doc-2.xml \
+	modules/scripts-utils/smil-utils/src/test/resources/docs/test-mo1.smil \
+	modules/scripts-utils/smil-utils/src/test/resources/docs/test-mo2.smil \
+	modules/scripts-utils/smil-utils/src/test/resources/docs/test-content.xml \
+	modules/scripts-utils/smil-utils/src/test/resources/docs/test.smil \
+	modules/scripts-utils/smil-utils/src/test/java/XProcSpecTest.java \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/downgrade.xprocspec \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/mediaoverlay-joined.medium_1.smil \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_5.xml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_4.xml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/mediaoverlay-joined.small_1.smil \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_1.xml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_3.xml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_2.xml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_3.xhtml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_1.xhtml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_5.xhtml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_2.xhtml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_6.xhtml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_47.xhtml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_4.xhtml \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/mediaoverlay-joined.smil \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/update-links.xprocspec \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/rearrange.xprocspec \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/audio-clips-update-files.xprocspec \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/audio-clips-to-fileset.xprocspec \
+	modules/scripts-utils/smil-utils/src/test/xprocspec/join.xprocspec \
 	modules/scripts-utils/smil-utils/src/main/resources/META-INF/catalog.xml \
 	modules/scripts-utils/smil-utils/src/main/resources/xml/resolve-relative-uris.xsl \
 	modules/scripts-utils/smil-utils/src/main/resources/xml/smil3-to-smil1.xsl \
@@ -34,39 +66,6 @@ modules/scripts-utils/smil-utils/.test modules/scripts-utils/smil-utils/.install
 	modules/scripts-utils/smil-utils/src/main/resources/xml/upgrade-smil-dtbook.xsl \
 	modules/scripts-utils/smil-utils/src/main/resources/xml/downgrade-smil.xpl \
 	modules/scripts-utils/smil-utils/src/main/resources/xml/library.xpl
-modules/scripts-utils/smil-utils/.test modules/scripts-utils/smil-utils/.install-doc : \
-	modules/scripts-utils/smil-utils/src/test/xspec/upgrade-smil-daisy202_test.xspec \
-	modules/scripts-utils/smil-utils/src/test/resources/logback.xml \
-	modules/scripts-utils/smil-utils/src/test/resources/docs/test20.smil \
-	modules/scripts-utils/smil-utils/src/test/resources/docs/test-doc-1.xml \
-	modules/scripts-utils/smil-utils/src/test/resources/docs/test-doc-3.xml \
-	modules/scripts-utils/smil-utils/src/test/resources/docs/test-doc-2.xml \
-	modules/scripts-utils/smil-utils/src/test/resources/docs/test-mo1.smil \
-	modules/scripts-utils/smil-utils/src/test/resources/docs/test-mo2.smil \
-	modules/scripts-utils/smil-utils/src/test/resources/docs/test-content.xml \
-	modules/scripts-utils/smil-utils/src/test/resources/docs/test.smil \
-	modules/scripts-utils/smil-utils/src/test/java/XProcSpecTest.java \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/downgrade.xprocspec \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/mediaoverlay-joined.medium_1.smil \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_5.xml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_4.xml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/mediaoverlay-joined.small_1.smil \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_1.xml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_3.xml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/expected_2.xml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_3.xhtml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_1.xhtml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_5.xhtml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_2.xhtml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_6.xhtml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_47.xhtml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/content_4.xhtml \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/resources/mediaoverlay-joined.smil \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/update-links.xprocspec \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/rearrange.xprocspec \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/audio-clips-update-files.xprocspec \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/audio-clips-to-fileset.xprocspec \
-	modules/scripts-utils/smil-utils/src/test/xprocspec/join.xprocspec
 .make/target/mk/modules/scripts-utils/smil-utils/sources.mk : \
 	modules/scripts-utils/smil-utils/src \
 	modules/scripts-utils/smil-utils/src/test \

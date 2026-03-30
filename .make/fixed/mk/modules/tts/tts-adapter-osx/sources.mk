@@ -1,4 +1,7 @@
-modules/tts/tts-adapter-osx/.test modules/tts/tts-adapter-osx/.install modules/tts/tts-adapter-osx/.install-doc $(TARGET_DIR)/state/modules/tts/tts-adapter-osx/modified-since-release_ : \
+modules/tts/tts-adapter-osx/.test : \
+	modules/tts/tts-adapter-osx/src/test/java/ignore \
+	modules/tts/tts-adapter-osx/src/test/java/org/daisy/pipeline/tts/osx/impl/OSXSSMLTest.java \
+	modules/tts/tts-adapter-osx/src/test/java/org/daisy/pipeline/tts/osx/impl/OSXSpeechTest.java \
 	modules/tts/tts-adapter-osx/src/main/resources/transform-ssml.xsl \
 	modules/tts/tts-adapter-osx/src/main/java/org/daisy/pipeline/tts/osx/impl/OSXSpeechService.java \
 	modules/tts/tts-adapter-osx/src/main/java/org/daisy/pipeline/tts/osx/impl/OSXSpeechEngine.java \
@@ -18,10 +21,6 @@ modules/tts/tts-adapter-osx/.test modules/tts/tts-adapter-osx/.install modules/t
 	modules/tts/tts-adapter-osx/src/main/java/org/rococoa/cocoa/NSApplication.java \
 	modules/tts/tts-adapter-osx/src/main/java/org/rococoa/cocoa/NSMenu.java \
 	modules/tts/tts-adapter-osx/src/main/java/org/rococoa/cocoa/NSWindow.java
-modules/tts/tts-adapter-osx/.test modules/tts/tts-adapter-osx/.install-doc : \
-	modules/tts/tts-adapter-osx/src/test/java/ignore \
-	modules/tts/tts-adapter-osx/src/test/java/org/daisy/pipeline/tts/osx/impl/OSXSSMLTest.java \
-	modules/tts/tts-adapter-osx/src/test/java/org/daisy/pipeline/tts/osx/impl/OSXSpeechTest.java
 .make/target/mk/modules/tts/tts-adapter-osx/sources.mk : \
 	modules/tts/tts-adapter-osx/src \
 	modules/tts/tts-adapter-osx/src/test \

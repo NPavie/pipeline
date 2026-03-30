@@ -1,41 +1,4 @@
-modules/common/file-utils/.test modules/common/file-utils/.install modules/common/file-utils/.install-doc $(TARGET_DIR)/state/modules/common/file-utils/modified-since-release_ : \
-	modules/common/file-utils/src/main/resources/config-calabash.xml \
-	modules/common/file-utils/src/main/resources/META-INF/catalog.xml \
-	modules/common/file-utils/src/main/resources/xml/xproc/data.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/normalize-document-base.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/recursive-directory-list.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/java-library.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/set-xml-declaration.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/peek.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/tempdir.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/load.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/normalize-uri.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/read-xml-declaration.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/set-base-uri.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/add-xml-base.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/set-doctype.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/copy-resource.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/xml-peek.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/library.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/read-doctype.xpl \
-	modules/common/file-utils/src/main/resources/xml/xproc/xprocspec-assert-xml-declaration.xpl \
-	modules/common/file-utils/src/main/resources/xml/xslt/base64-to-hex.xsl \
-	modules/common/file-utils/src/main/resources/xml/xslt/sort-directory-list.xsl \
-	modules/common/file-utils/src/main/resources/xml/xslt/uri-functions.xsl \
-	modules/common/file-utils/src/main/resources/xml/xslt/xml-peek.parse.xsl \
-	modules/common/file-utils/src/main/resources/xml/xslt/library.xsl \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/FileUtils.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/SetDoctypeProvider.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/XMLPeekProvider.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/NormalizeURIProvider.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/SetXmlDeclarationProvider.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/PeekProvider.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/LoadProvider.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/CopyResourceProvider.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/saxon/impl/FileExists.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/saxon/impl/Expand83.java \
-	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/saxon/impl/NormalizeURI.java
-modules/common/file-utils/.test modules/common/file-utils/.install-doc : \
+modules/common/file-utils/.test : \
 	modules/common/file-utils/src/test/xspec/xml-peek.parse.xspec \
 	modules/common/file-utils/src/test/xspec/sort-directory-list.xspec \
 	modules/common/file-utils/src/test/xspec/base64-to-hex.xspec \
@@ -75,7 +38,43 @@ modules/common/file-utils/.test modules/common/file-utils/.install-doc : \
 	modules/common/file-utils/src/test/xprocspec/file-peek.xprocspec \
 	modules/common/file-utils/src/test/xprocspec/file-xml-peek.xprocspec \
 	modules/common/file-utils/src/test/xprocspec/set-base-uri.2.xprocspec \
-	modules/common/file-utils/src/test/xprocspec/data.xprocspec
+	modules/common/file-utils/src/test/xprocspec/data.xprocspec \
+	modules/common/file-utils/src/main/resources/config-calabash.xml \
+	modules/common/file-utils/src/main/resources/META-INF/catalog.xml \
+	modules/common/file-utils/src/main/resources/xml/xproc/data.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/normalize-document-base.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/recursive-directory-list.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/java-library.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/set-xml-declaration.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/peek.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/tempdir.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/load.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/normalize-uri.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/read-xml-declaration.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/set-base-uri.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/add-xml-base.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/set-doctype.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/copy-resource.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/xml-peek.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/library.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/read-doctype.xpl \
+	modules/common/file-utils/src/main/resources/xml/xproc/xprocspec-assert-xml-declaration.xpl \
+	modules/common/file-utils/src/main/resources/xml/xslt/base64-to-hex.xsl \
+	modules/common/file-utils/src/main/resources/xml/xslt/sort-directory-list.xsl \
+	modules/common/file-utils/src/main/resources/xml/xslt/uri-functions.xsl \
+	modules/common/file-utils/src/main/resources/xml/xslt/xml-peek.parse.xsl \
+	modules/common/file-utils/src/main/resources/xml/xslt/library.xsl \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/FileUtils.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/SetDoctypeProvider.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/XMLPeekProvider.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/NormalizeURIProvider.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/SetXmlDeclarationProvider.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/PeekProvider.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/LoadProvider.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/calabash/impl/CopyResourceProvider.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/saxon/impl/FileExists.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/saxon/impl/Expand83.java \
+	modules/common/file-utils/src/main/java/org/daisy/pipeline/file/saxon/impl/NormalizeURI.java
 .make/target/mk/modules/common/file-utils/sources.mk : \
 	modules/common/file-utils/src \
 	modules/common/file-utils/src/test \

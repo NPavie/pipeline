@@ -1,4 +1,8 @@
-modules/tts/tts-adapter-sapinative/.test modules/tts/tts-adapter-sapinative/.install modules/tts/tts-adapter-sapinative/.install-doc $(TARGET_DIR)/state/modules/tts/tts-adapter-sapinative/modified-since-release_ : \
+modules/tts/tts-adapter-sapinative/.test : \
+	modules/tts/tts-adapter-sapinative/src/test/java/ignore \
+	modules/tts/tts-adapter-sapinative/src/test/java/org/daisy/pipeline/tts/sapi/impl/SAPIServiceTest.java \
+	modules/tts/tts-adapter-sapinative/src/test/java/org/daisy/pipeline/tts/sapi/impl/SAPITest.java \
+	modules/tts/tts-adapter-sapinative/src/test/java/org/daisy/pipeline/tts/sapi/impl/SapiSSMLTest.java \
 	modules/tts/tts-adapter-sapinative/src/main/resources/x64/sapinative.dll \
 	modules/tts/tts-adapter-sapinative/src/main/resources/transform-ssml.xsl \
 	modules/tts/tts-adapter-sapinative/src/main/resources/x86/sapinative.dll \
@@ -19,11 +23,6 @@ modules/tts/tts-adapter-sapinative/.test modules/tts/tts-adapter-sapinative/.ins
 	modules/tts/tts-adapter-sapinative/src/main/jni/sapinative/queue_stream.h \
 	modules/tts/tts-adapter-sapinative/src/main/jni/jni_helper.h \
 	modules/tts/tts-adapter-sapinative/src/main/jni/Voice.hpp
-modules/tts/tts-adapter-sapinative/.test modules/tts/tts-adapter-sapinative/.install-doc : \
-	modules/tts/tts-adapter-sapinative/src/test/java/ignore \
-	modules/tts/tts-adapter-sapinative/src/test/java/org/daisy/pipeline/tts/sapi/impl/SAPIServiceTest.java \
-	modules/tts/tts-adapter-sapinative/src/test/java/org/daisy/pipeline/tts/sapi/impl/SAPITest.java \
-	modules/tts/tts-adapter-sapinative/src/test/java/org/daisy/pipeline/tts/sapi/impl/SapiSSMLTest.java
 .make/target/mk/modules/tts/tts-adapter-sapinative/sources.mk : \
 	modules/tts/tts-adapter-sapinative/src \
 	modules/tts/tts-adapter-sapinative/src/test \

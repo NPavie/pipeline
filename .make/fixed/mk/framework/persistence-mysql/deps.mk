@@ -6,9 +6,7 @@ $(TARGET_DIR)/state/framework/persistence-mysql/last-tested : $(TARGET_DIR)/stat
 # this rule overrides the implicit rule in main.mk
 # note that because the modified-since-release_ files created by main.mk, are deleted,
 # this rule gets executed at least once
-$(TARGET_DIR)/state/framework/persistence-mysql/modified-since-release_ : framework/persistence-mysql/pom.xml \
-	$(TARGET_DIR)/state/framework/parent/modified-since-release \
-	$(TARGET_DIR)/state/framework/framework-persistence/modified-since-release
+$(TARGET_DIR)/state/framework/persistence-mysql/modified-since-release_ : framework/persistence-mysql/pom.xml $(TARGET_DIR)/state/framework/parent/modified-since-release
 	mkdirs("$(dir $@)"); \
 	try (OutputStream s = new FileOutputStream("$@")) { \
 		ModificationType modified = isModifiedSinceLastRelease(new File("$<").getParentFile()); \
@@ -53,11 +51,7 @@ framework/persistence-mysql/.install-doc : | .maven-init .group-eval
 framework/persistence-mysql/.install-doc : %/.install-doc : %/pom.xml | %/.compile-dependencies %/.test-dependencies
 
 .SECONDARY : framework/persistence-mysql/.compile-dependencies framework/persistence-mysql/.test-dependencies
-framework/persistence-mysql/.compile-dependencies : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.5-SNAPSHOT/framework-parent-1.15.5-SNAPSHOT.pom \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-persistence/2.1.13-SNAPSHOT/framework-persistence-2.1.13-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1-SNAPSHOT/common-utils-6.4.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-core/11.0.1-SNAPSHOT/framework-core-11.0.1-SNAPSHOT.jar
+framework/persistence-mysql/.compile-dependencies : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.7-SNAPSHOT/framework-parent-1.15.7-SNAPSHOT.pom
 framework/persistence-mysql/.test-dependencies :
 
 $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/persistence-mysql/2.0.2/persistence-mysql-2.0.2.% \
@@ -68,11 +62,7 @@ $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/persistence-mysql/2.0.2/persistence-m
 framework/persistence-mysql/.release : framework/.release
 	+$(EVAL) mvn.releaseModulesInDir("framework").apply("persistence-mysql");
 
-framework/persistence-mysql/.release : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.5/framework-parent-1.15.5.pom \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-persistence/2.1.13/framework-persistence-2.1.13.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1/common-utils-6.4.1.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-core/11.0.1/framework-core-11.0.1.jar
+framework/persistence-mysql/.release : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.7/framework-parent-1.15.7.pom
 
 clean : framework/persistence-mysql/.clean
 .PHONY : framework/persistence-mysql/.clean

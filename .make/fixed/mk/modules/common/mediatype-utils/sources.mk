@@ -1,11 +1,4 @@
-modules/common/mediatype-utils/.test modules/common/mediatype-utils/.install modules/common/mediatype-utils/.install-doc $(TARGET_DIR)/state/modules/common/mediatype-utils/modified-since-release_ : \
-	modules/common/mediatype-utils/src/main/resources/META-INF/catalog.xml \
-	modules/common/mediatype-utils/src/main/resources/xml/maps/ns-to-mediatype.xml \
-	modules/common/mediatype-utils/src/main/resources/xml/maps/ext-to-mediatype.xml \
-	modules/common/mediatype-utils/src/main/resources/xml/xproc/mediatype.xpl \
-	modules/common/mediatype-utils/src/main/resources/xml/xproc/library.xpl \
-	modules/common/mediatype-utils/src/main/resources/xml/xslt/mediatype-functions.xsl
-modules/common/mediatype-utils/.test modules/common/mediatype-utils/.install-doc : \
+modules/common/mediatype-utils/.test : \
 	modules/common/mediatype-utils/src/test/xspec/mediatype-functions.xspec \
 	modules/common/mediatype-utils/src/test/resources/test-mediatype-detect.xpl \
 	modules/common/mediatype-utils/src/test/resources/test.xpl \
@@ -76,7 +69,13 @@ modules/common/mediatype-utils/.test modules/common/mediatype-utils/.install-doc
 	modules/common/mediatype-utils/src/test/resources/samples/fileset/epub/META-INF/container.xml \
 	modules/common/mediatype-utils/src/test/resources/samples/fileset/epub/mimetype \
 	modules/common/mediatype-utils/src/test/resources/samples/fileset/log4j.properties \
-	modules/common/mediatype-utils/src/test/resources/samples/fileset/a.html
+	modules/common/mediatype-utils/src/test/resources/samples/fileset/a.html \
+	modules/common/mediatype-utils/src/main/resources/META-INF/catalog.xml \
+	modules/common/mediatype-utils/src/main/resources/xml/maps/ns-to-mediatype.xml \
+	modules/common/mediatype-utils/src/main/resources/xml/maps/ext-to-mediatype.xml \
+	modules/common/mediatype-utils/src/main/resources/xml/xproc/mediatype.xpl \
+	modules/common/mediatype-utils/src/main/resources/xml/xproc/library.xpl \
+	modules/common/mediatype-utils/src/main/resources/xml/xslt/mediatype-functions.xsl
 .make/target/mk/modules/common/mediatype-utils/sources.mk : \
 	modules/common/mediatype-utils/src \
 	modules/common/mediatype-utils/src/test \

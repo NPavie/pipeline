@@ -1,30 +1,4 @@
-modules/scripts/daisy202-to-epub3/.test modules/scripts/daisy202-to-epub3/.install modules/scripts/daisy202-to-epub3/.install-doc $(TARGET_DIR)/state/modules/scripts/daisy202-to-epub3/modified-since-release_ : \
-	modules/scripts/daisy202-to-epub3/src/main/resources/META-INF/catalog.xml \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/daisy202-to-epub3.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/resources.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/navigation.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-page-list.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-page-list.xsl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/convert.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-opf-metadata.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/package.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/resolve-links.create-mapping.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/media-overlay.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-navigation.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/resolve-links.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/daisy202-content-to-epub3-content.xsl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/content.annotate-pagebreaks.xsl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/package.manifest-to-fileset.xsl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/resolve-links.xsl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-toc.xsl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-toc.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-navigation.make-new-hrefs.xsl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/content.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-landmarks.xpl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-content.xsl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-landmarks.xsl \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-metadata-to-opf-metadata.xsl
-modules/scripts/daisy202-to-epub3/.test modules/scripts/daisy202-to-epub3/.install-doc : \
+modules/scripts/daisy202-to-epub3/.test : \
 	modules/scripts/daisy202-to-epub3/src/test/resources/logback.xml \
 	modules/scripts/daisy202-to-epub3/src/test/resources/expected/scenario2/output/F00000\ -\ Don't\ Worry,\ Be\ Happy\ Lyrics.epub \
 	modules/scripts/daisy202-to-epub3/src/test/resources/expected/scenario2/temp-dir/epub/META-INF/container.xml \
@@ -74,9 +48,32 @@ modules/scripts/daisy202-to-epub3/.test modules/scripts/daisy202-to-epub3/.insta
 	modules/scripts/daisy202-to-epub3/src/test/java/XProcSpecTest.java \
 	modules/scripts/daisy202-to-epub3/src/test/xprocspec/test_resolve-links.xprocspec \
 	modules/scripts/daisy202-to-epub3/src/test/xprocspec/test_daisy202-to-epub3.xprocspec \
-	modules/scripts/daisy202-to-epub3/src/test/xprocspec/test_daisy202-to-epub3.script.xprocspec
-modules/scripts/daisy202-to-epub3/.install-doc : \
-	modules/scripts/daisy202-to-epub3/doc/index.md
+	modules/scripts/daisy202-to-epub3/src/test/xprocspec/test_daisy202-to-epub3.script.xprocspec \
+	modules/scripts/daisy202-to-epub3/src/main/resources/META-INF/catalog.xml \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/daisy202-to-epub3.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/resources.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/navigation.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-page-list.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-page-list.xsl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/convert.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-opf-metadata.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/package.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/resolve-links.create-mapping.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/media-overlay.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-navigation.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/resolve-links.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/daisy202-content-to-epub3-content.xsl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/content.annotate-pagebreaks.xsl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/package.manifest-to-fileset.xsl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/resolve-links.xsl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-toc.xsl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-toc.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-navigation.make-new-hrefs.xsl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/content.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-landmarks.xpl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-content.xsl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-to-nav-landmarks.xsl \
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert/ncc-metadata-to-opf-metadata.xsl
 .make/target/mk/modules/scripts/daisy202-to-epub3/sources.mk : \
 	modules/scripts/daisy202-to-epub3/src \
 	modules/scripts/daisy202-to-epub3/src/test \
@@ -105,5 +102,4 @@ modules/scripts/daisy202-to-epub3/.install-doc : \
 	modules/scripts/daisy202-to-epub3/src/main/resources \
 	modules/scripts/daisy202-to-epub3/src/main/resources/META-INF \
 	modules/scripts/daisy202-to-epub3/src/main/resources/xml \
-	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert \
-	modules/scripts/daisy202-to-epub3/doc
+	modules/scripts/daisy202-to-epub3/src/main/resources/xml/convert

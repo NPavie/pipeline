@@ -6,11 +6,7 @@ $(TARGET_DIR)/state/modules/braille/obfl-utils/last-tested : $(TARGET_DIR)/state
 # this rule overrides the implicit rule in main.mk
 # note that because the modified-since-release_ files created by main.mk, are deleted,
 # this rule gets executed at least once
-$(TARGET_DIR)/state/modules/braille/obfl-utils/modified-since-release_ : modules/braille/obfl-utils/pom.xml \
-	$(TARGET_DIR)/state/modules/parent/modified-since-release \
-	$(TARGET_DIR)/state/framework/modules-registry/modified-since-release \
-	$(TARGET_DIR)/state/framework/webservice/modified-since-release \
-	$(TARGET_DIR)/state/framework/calabash-adapter/modified-since-release
+$(TARGET_DIR)/state/modules/braille/obfl-utils/modified-since-release_ : modules/braille/obfl-utils/pom.xml $(TARGET_DIR)/state/modules/parent/modified-since-release
 	mkdirs("$(dir $@)"); \
 	try (OutputStream s = new FileOutputStream("$@")) { \
 		ModificationType modified = isModifiedSinceLastRelease(new File("$<").getParentFile()); \
@@ -61,18 +57,8 @@ modules/braille/obfl-utils/.install-doc : | .maven-init .group-eval
 modules/braille/obfl-utils/.install-doc : %/.install-doc : %/pom.xml | %/.compile-dependencies %/.test-dependencies
 
 .SECONDARY : modules/braille/obfl-utils/.compile-dependencies modules/braille/obfl-utils/.test-dependencies
-modules/braille/obfl-utils/.compile-dependencies : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-parent/1.15.4-SNAPSHOT/modules-parent-1.15.4-SNAPSHOT.pom \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules-registry/5.0.1-SNAPSHOT/modules-registry-5.0.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1-SNAPSHOT/common-utils-6.4.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/calabash-adapter/7.0.1-SNAPSHOT/calabash-adapter-7.0.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/saxon-adapter/5.8.1-SNAPSHOT/saxon-adapter-5.8.1-SNAPSHOT.jar
-modules/braille/obfl-utils/.test-dependencies : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/webservice/3.8.1-SNAPSHOT/webservice-3.8.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1-SNAPSHOT/common-utils-6.4.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-core/11.0.1-SNAPSHOT/framework-core-11.0.1-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-persistence/2.1.13-SNAPSHOT/framework-persistence-2.1.13-SNAPSHOT.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules-registry/5.0.1-SNAPSHOT/modules-registry-5.0.1-SNAPSHOT.jar
+modules/braille/obfl-utils/.compile-dependencies : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-parent/1.15.4-SNAPSHOT/modules-parent-1.15.4-SNAPSHOT.pom
+modules/braille/obfl-utils/.test-dependencies :
 
 $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/braille/obfl-utils/2.0.3/obfl-utils-2.0.3.% \
 $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/braille/obfl-utils/2.0.3/obfl-utils-2.0.3-% : modules/braille/obfl-utils/.release
@@ -82,15 +68,7 @@ $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/braille/obfl-utils/2.0.3/obfl
 modules/braille/obfl-utils/.release : modules/.release
 	+$(EVAL) mvn.releaseModulesInDir("modules").apply("braille/obfl-utils");
 
-modules/braille/obfl-utils/.release : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-parent/1.15.4/modules-parent-1.15.4.pom \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules-registry/5.0.1/modules-registry-5.0.1.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1/common-utils-6.4.1.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/webservice/3.8.1/webservice-3.8.1.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-core/11.0.1/framework-core-11.0.1.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-persistence/2.1.13/framework-persistence-2.1.13.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/calabash-adapter/7.0.1/calabash-adapter-7.0.1.jar \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/saxon-adapter/5.8.1/saxon-adapter-5.8.1.jar
+modules/braille/obfl-utils/.release : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-parent/1.15.4/modules-parent-1.15.4.pom
 
 clean : modules/braille/obfl-utils/.clean
 .PHONY : modules/braille/obfl-utils/.clean

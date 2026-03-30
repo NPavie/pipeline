@@ -1,4 +1,15 @@
-modules/braille/libhyphen-utils/.test modules/braille/libhyphen-utils/.install modules/braille/libhyphen-utils/.install-doc $(TARGET_DIR)/state/modules/braille/libhyphen-utils/modified-since-release_ : \
+modules/braille/libhyphen-utils/.test : \
+	modules/braille/libhyphen-utils/src/test/xspec/.gitkeep \
+	modules/braille/libhyphen-utils/src/test/resources/logback.xml \
+	modules/braille/libhyphen-utils/src/test/resources/tables/standard.dic \
+	modules/braille/libhyphen-utils/src/test/resources/tables/non-standard.dic \
+	modules/braille/libhyphen-utils/src/test/resources/OSGI-INF/table-path.xml \
+	modules/braille/libhyphen-utils/src/test/resources/phony.xsl \
+	modules/braille/libhyphen-utils/src/test/resources/foobar.dic \
+	modules/braille/libhyphen-utils/src/test/java/TablePath.java \
+	modules/braille/libhyphen-utils/src/test/java/ignore \
+	modules/braille/libhyphen-utils/src/test/java/XSpecAndXProcSpecTest.java \
+	modules/braille/libhyphen-utils/src/test/java/LibhyphenCoreTest.java \
 	modules/braille/libhyphen-utils/src/main/resources/tables/hyph_ru_RU.dic \
 	modules/braille/libhyphen-utils/src/main/resources/tables/hyph_et_EE.dic \
 	modules/braille/libhyphen-utils/src/main/resources/tables/hyph_pt_PT.dic \
@@ -45,20 +56,6 @@ modules/braille/libhyphen-utils/.test modules/braille/libhyphen-utils/.install m
 	modules/braille/libhyphen-utils/src/main/java/org/daisy/pipeline/braille/libhyphen/LibhyphenTableProvider.java \
 	modules/braille/libhyphen-utils/src/main/java/org/daisy/pipeline/braille/libhyphen/package-info.java \
 	modules/braille/libhyphen-utils/src/main/README.md
-modules/braille/libhyphen-utils/.test modules/braille/libhyphen-utils/.install-doc : \
-	modules/braille/libhyphen-utils/src/test/xspec/.gitkeep \
-	modules/braille/libhyphen-utils/src/test/resources/logback.xml \
-	modules/braille/libhyphen-utils/src/test/resources/tables/standard.dic \
-	modules/braille/libhyphen-utils/src/test/resources/tables/non-standard.dic \
-	modules/braille/libhyphen-utils/src/test/resources/OSGI-INF/table-path.xml \
-	modules/braille/libhyphen-utils/src/test/resources/phony.xsl \
-	modules/braille/libhyphen-utils/src/test/resources/foobar.dic \
-	modules/braille/libhyphen-utils/src/test/java/TablePath.java \
-	modules/braille/libhyphen-utils/src/test/java/ignore \
-	modules/braille/libhyphen-utils/src/test/java/XSpecAndXProcSpecTest.java \
-	modules/braille/libhyphen-utils/src/test/java/LibhyphenCoreTest.java
-modules/braille/libhyphen-utils/.install-doc : \
-	modules/braille/libhyphen-utils/doc/index.md
 .make/target/mk/modules/braille/libhyphen-utils/sources.mk : \
 	modules/braille/libhyphen-utils/src \
 	modules/braille/libhyphen-utils/src/test \
@@ -80,5 +77,4 @@ modules/braille/libhyphen-utils/.install-doc : \
 	modules/braille/libhyphen-utils/src/main/java/org/daisy/pipeline/braille/libhyphen/impl \
 	modules/braille/libhyphen-utils/src/main/java/org/daisy/pipeline/braille/libhyphen/impl/mac \
 	modules/braille/libhyphen-utils/src/main/java/org/daisy/pipeline/braille/libhyphen/impl/linux \
-	modules/braille/libhyphen-utils/src/main/java/org/daisy/pipeline/braille/libhyphen/impl/windows \
-	modules/braille/libhyphen-utils/doc
+	modules/braille/libhyphen-utils/src/main/java/org/daisy/pipeline/braille/libhyphen/impl/windows

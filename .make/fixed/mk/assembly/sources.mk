@@ -1,4 +1,10 @@
-assembly/.test assembly/.install $(TARGET_DIR)/state/assembly/modified-since-release_ : \
+assembly/.test : \
+	assembly/src/test/xspec/pom-to-release.xspec \
+	assembly/src/test/resources/test-docker-image.sh \
+	assembly/src/test/resources/test-checkJavaVersion.sh \
+	assembly/src/test/resources/effective-pom.xml \
+	assembly/src/test/resources/test-checkJavaVersion.bat \
+	assembly/src/test/resources/descriptor.xml \
 	assembly/src/main/docker/logback.xml \
 	assembly/src/main/docker/Dockerfile \
 	assembly/src/main/assembly/dist-mac.properties \
@@ -55,13 +61,6 @@ assembly/.test assembly/.install $(TARGET_DIR)/state/assembly/modified-since-rel
 	assembly/src/main/deb/DEBIAN.cli/control \
 	assembly/src/main/deb/opt/daisy-pipeline2/bin/debian.cfg \
 	assembly/src/main/xslt/pom-to-release.xslt
-assembly/.test : \
-	assembly/src/test/xspec/pom-to-release.xspec \
-	assembly/src/test/resources/test-docker-image.sh \
-	assembly/src/test/resources/test-checkJavaVersion.sh \
-	assembly/src/test/resources/effective-pom.xml \
-	assembly/src/test/resources/test-checkJavaVersion.bat \
-	assembly/src/test/resources/descriptor.xml
 .make/target/mk/assembly/sources.mk : \
 	assembly/src \
 	assembly/src/test \

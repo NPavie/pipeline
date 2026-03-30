@@ -1,4 +1,25 @@
-modules/scripts-utils/daisy3-utils/.test modules/scripts-utils/daisy3-utils/.install modules/scripts-utils/daisy3-utils/.install-doc $(TARGET_DIR)/state/modules/scripts-utils/daisy3-utils/modified-since-release_ : \
+modules/scripts-utils/daisy3-utils/.test : \
+	modules/scripts-utils/daisy3-utils/src/test/resources/logback.xml \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/ncx110.dtd \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/mo.smil \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/content.xml \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/oebpkg101.dtd \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/navigation.ncx \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/dtbook110.dtd \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/book.opf \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/dtbsmil110.dtd \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/oeb1.ent \
+	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/audio.wav \
+	modules/scripts-utils/daisy3-utils/src/test/java/XProcSpecTest.java \
+	modules/scripts-utils/daisy3-utils/src/test/xprocspec/create-smils.xprocspec \
+	modules/scripts-utils/daisy3-utils/src/test/xprocspec/semantic-transformations.xprocspec \
+	modules/scripts-utils/daisy3-utils/src/test/xprocspec/upgrade.xprocspec \
+	modules/scripts-utils/daisy3-utils/src/test/xprocspec/add-smilrefs.xprocspec \
+	modules/scripts-utils/daisy3-utils/src/test/xprocspec/ncx.xprocspec \
+	modules/scripts-utils/daisy3-utils/src/test/xprocspec/create-opf.xprocspec \
+	modules/scripts-utils/daisy3-utils/src/test/xprocspec/load.xprocspec \
+	modules/scripts-utils/daisy3-utils/src/test/xprocspec/audio-transcode.xprocspec \
+	modules/scripts-utils/daisy3-utils/src/test/xprocspec/upgrade.script.xprocspec \
 	modules/scripts-utils/daisy3-utils/src/main/resources/META-INF/catalog.xml \
 	modules/scripts-utils/daisy3-utils/src/main/resources/xml/daisy3-library.xpl \
 	modules/scripts-utils/daisy3-utils/src/main/resources/xml/daisy3-upgrader.script.xpl \
@@ -51,30 +72,6 @@ modules/scripts-utils/daisy3-utils/.test modules/scripts-utils/daisy3-utils/.ins
 	modules/scripts-utils/daisy3-utils/src/main/resources/xml/dtd/resource-2005-1.dtd \
 	modules/scripts-utils/daisy3-utils/src/main/resources/xml/dtd/oeb1.ent \
 	modules/scripts-utils/daisy3-utils/src/main/resources/xml/daisy3-upgrader.xpl
-modules/scripts-utils/daisy3-utils/.test modules/scripts-utils/daisy3-utils/.install-doc : \
-	modules/scripts-utils/daisy3-utils/src/test/resources/logback.xml \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/ncx110.dtd \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/mo.smil \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/content.xml \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/oebpkg101.dtd \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/navigation.ncx \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/dtbook110.dtd \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/book.opf \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/dtbsmil110.dtd \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/oeb1.ent \
-	modules/scripts-utils/daisy3-utils/src/test/resources/1.1.0/audio.wav \
-	modules/scripts-utils/daisy3-utils/src/test/java/XProcSpecTest.java \
-	modules/scripts-utils/daisy3-utils/src/test/xprocspec/create-smils.xprocspec \
-	modules/scripts-utils/daisy3-utils/src/test/xprocspec/semantic-transformations.xprocspec \
-	modules/scripts-utils/daisy3-utils/src/test/xprocspec/upgrade.xprocspec \
-	modules/scripts-utils/daisy3-utils/src/test/xprocspec/add-smilrefs.xprocspec \
-	modules/scripts-utils/daisy3-utils/src/test/xprocspec/ncx.xprocspec \
-	modules/scripts-utils/daisy3-utils/src/test/xprocspec/create-opf.xprocspec \
-	modules/scripts-utils/daisy3-utils/src/test/xprocspec/load.xprocspec \
-	modules/scripts-utils/daisy3-utils/src/test/xprocspec/audio-transcode.xprocspec \
-	modules/scripts-utils/daisy3-utils/src/test/xprocspec/upgrade.script.xprocspec
-modules/scripts-utils/daisy3-utils/.install-doc : \
-	modules/scripts-utils/daisy3-utils/doc/index.md
 .make/target/mk/modules/scripts-utils/daisy3-utils/sources.mk : \
 	modules/scripts-utils/daisy3-utils/src \
 	modules/scripts-utils/daisy3-utils/src/test \
@@ -94,5 +91,4 @@ modules/scripts-utils/daisy3-utils/.install-doc : \
 	modules/scripts-utils/daisy3-utils/src/main/resources/xml/internal/load \
 	modules/scripts-utils/daisy3-utils/src/main/resources/xml/internal/tts \
 	modules/scripts-utils/daisy3-utils/src/main/resources/xml/internal/opf \
-	modules/scripts-utils/daisy3-utils/src/main/resources/xml/dtd \
-	modules/scripts-utils/daisy3-utils/doc
+	modules/scripts-utils/daisy3-utils/src/main/resources/xml/dtd

@@ -1,13 +1,4 @@
-modules/scripts/daisy202-to-daisy3/.test modules/scripts/daisy202-to-daisy3/.install modules/scripts/daisy202-to-daisy3/.install-doc $(TARGET_DIR)/state/modules/scripts/daisy202-to-daisy3/modified-since-release_ : \
-	modules/scripts/daisy202-to-daisy3/src/main/resources/META-INF/catalog.xml \
-	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/d202ncc_Z2005ncx.xsl \
-	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/daisy202-to-daisy3.script.xpl \
-	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/daisy202-to-daisy3.xpl \
-	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/text.res \
-	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/ncc-to-oebps-metadata.xpl \
-	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/ncc-to-oebps-metadata.xsl \
-	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/d202smil_Z2005smil.xsl
-modules/scripts/daisy202-to-daisy3/.test modules/scripts/daisy202-to-daisy3/.install-doc : \
+modules/scripts/daisy202-to-daisy3/.test : \
 	modules/scripts/daisy202-to-daisy3/src/test/resources/logback.xml \
 	modules/scripts/daisy202-to-daisy3/src/test/resources/daisy202/dontworrybehappy-nccOnly/speechgen0001.smil \
 	modules/scripts/daisy202-to-daisy3/src/test/resources/daisy202/dontworrybehappy-nccOnly/speechgen0006.smil \
@@ -81,9 +72,15 @@ modules/scripts/daisy202-to-daisy3/.test modules/scripts/daisy202-to-daisy3/.ins
 	modules/scripts/daisy202-to-daisy3/src/test/resources/daisy3/dontworrybehappy/package.opf \
 	modules/scripts/daisy202-to-daisy3/src/test/java/XProcSpecTest.java \
 	modules/scripts/daisy202-to-daisy3/src/test/xprocspec/test_daisy202-to-daisy3.xprocspec \
-	modules/scripts/daisy202-to-daisy3/src/test/xprocspec/test_daisy202-to-daisy3.script.xprocspec
-modules/scripts/daisy202-to-daisy3/.install-doc : \
-	modules/scripts/daisy202-to-daisy3/doc/index.md
+	modules/scripts/daisy202-to-daisy3/src/test/xprocspec/test_daisy202-to-daisy3.script.xprocspec \
+	modules/scripts/daisy202-to-daisy3/src/main/resources/META-INF/catalog.xml \
+	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/d202ncc_Z2005ncx.xsl \
+	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/daisy202-to-daisy3.script.xpl \
+	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/daisy202-to-daisy3.xpl \
+	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/text.res \
+	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/ncc-to-oebps-metadata.xpl \
+	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/ncc-to-oebps-metadata.xsl \
+	modules/scripts/daisy202-to-daisy3/src/main/resources/xml/d202smil_Z2005smil.xsl
 .make/target/mk/modules/scripts/daisy202-to-daisy3/sources.mk : \
 	modules/scripts/daisy202-to-daisy3/src \
 	modules/scripts/daisy202-to-daisy3/src/test \
@@ -99,5 +96,4 @@ modules/scripts/daisy202-to-daisy3/.install-doc : \
 	modules/scripts/daisy202-to-daisy3/src/main \
 	modules/scripts/daisy202-to-daisy3/src/main/resources \
 	modules/scripts/daisy202-to-daisy3/src/main/resources/META-INF \
-	modules/scripts/daisy202-to-daisy3/src/main/resources/xml \
-	modules/scripts/daisy202-to-daisy3/doc
+	modules/scripts/daisy202-to-daisy3/src/main/resources/xml

@@ -1,4 +1,85 @@
-modules/scripts/word-to-dtbook/.test modules/scripts/word-to-dtbook/.install modules/scripts/word-to-dtbook/.install-doc $(TARGET_DIR)/state/modules/scripts/word-to-dtbook/modified-since-release_ : \
+modules/scripts/word-to-dtbook/.test : \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Params\ 10.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Input/F10.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Output/F10-Picture\ 3.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Output/F10-Picture\ 1.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Output/F10.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/logback.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Input/default_sample_for_dtbook_conversion.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion-Image\ 1.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion-Image\ 2.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion-Image\ 3.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion-Image\ 4.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Image\ 1.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Image\ 2.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Image\ 3.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Image\ 4.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Shape478211313.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Shape8.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 6/Input/F6.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 6/Output/F6.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 6/Params\ 6.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 1/Input/F1.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 1/Output/F1.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 1/Output/F1-42-21112966.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 1/Params\ 1.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 8/Input/F8.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 8/Output/F8-Picture\ 1.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 8/Output/F8.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 8/Params\ 8.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 9/Input/F9.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 9/Params\ 9.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 9/Output/F9.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 7/Input/F7.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 7/Output/F7.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 7/Params\ 7.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 13/Input/mathml-core-tests.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 13/Output/mathml-core-tests.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 12/Input/Untitled.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 12/Output/Untitled.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 2/Params\ 2.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 2/Input/F\ 2.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 2/Output/F\ 2.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 5/Input/F5.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 5/Params\ 5.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 5/Output/F5.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Input/F4.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 26.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 27.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4.xml \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 8.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 19.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 25.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 24.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 18.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 9.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 20.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 21.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 23.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 22.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 2.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 12.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 3.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 1.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 10.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 11.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 4.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 15.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 14.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 5.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 7.jpg \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 16.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 17.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 6.png \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Params\ 4.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 3/Params\ 3.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 3/Input/F\ 3.docx \
+	modules/scripts/word-to-dtbook/src/test/resources/Test\ 3/Output/F\ 3.xml \
+	modules/scripts/word-to-dtbook/src/test/java/XProcSpecTest.java \
+	modules/scripts/word-to-dtbook/src/test/xprocspec/test_word-to-dtbook.script.xprocspec \
+	modules/scripts/word-to-dtbook/src/test/xprocspec/test_fix.xprocspec \
 	modules/scripts/word-to-dtbook/src/main/resources/css/dtbookbasic.css \
 	modules/scripts/word-to-dtbook/src/main/resources/META-INF/catalog.xml \
 	modules/scripts/word-to-dtbook/src/main/resources/xml/TOC.xsl \
@@ -104,90 +185,6 @@ modules/scripts/word-to-dtbook/.test modules/scripts/word-to-dtbook/.install mod
 	modules/scripts/word-to-dtbook/src/main/csharp/CheckWordArchitecture/App.config \
 	modules/scripts/word-to-dtbook/src/main/csharp/CheckWordArchitecture/Properties/AssemblyInfo.cs \
 	modules/scripts/word-to-dtbook/src/main/csharp/CheckWordArchitecture/Program.cs
-modules/scripts/word-to-dtbook/.test modules/scripts/word-to-dtbook/.install-doc : \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Params\ 10.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Input/F10.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Output/F10-Picture\ 3.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Output/F10-Picture\ 1.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 10/Output/F10.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/logback.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Input/default_sample_for_dtbook_conversion.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion-Image\ 1.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion-Image\ 2.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion-Image\ 3.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion-Image\ 4.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/Output/default_sample_for_dtbook_conversion.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Image\ 1.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Image\ 2.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Image\ 3.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Image\ 4.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Shape478211313.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 11/OutputWithShapes/default_sample_for_dtbook_conversion-Shape8.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 6/Input/F6.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 6/Output/F6.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 6/Params\ 6.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 1/Input/F1.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 1/Output/F1.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 1/Output/F1-42-21112966.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 1/Params\ 1.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 8/Input/F8.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 8/Output/F8-Picture\ 1.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 8/Output/F8.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 8/Params\ 8.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 9/Input/F9.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 9/Params\ 9.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 9/Output/F9.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 7/Input/F7.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 7/Output/F7.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 7/Params\ 7.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 13/Input/mathml-core-tests.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 13/Output/mathml-core-tests.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 12/Input/Untitled.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 12/Output/Untitled.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 2/Params\ 2.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 2/Input/F\ 2.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 2/Output/F\ 2.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 5/Input/F5.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 5/Params\ 5.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 5/Output/F5.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Input/F4.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 26.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 27.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4.xml \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 8.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 19.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 25.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 24.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 18.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 9.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 20.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 21.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 23.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 22.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 2.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 12.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 3.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 1.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 10.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 11.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 4.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 15.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 14.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 5.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 7.jpg \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 16.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 17.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Output/F4-Picture\ 6.png \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 4/Params\ 4.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 3/Params\ 3.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 3/Input/F\ 3.docx \
-	modules/scripts/word-to-dtbook/src/test/resources/Test\ 3/Output/F\ 3.xml \
-	modules/scripts/word-to-dtbook/src/test/java/XProcSpecTest.java \
-	modules/scripts/word-to-dtbook/src/test/xprocspec/test_word-to-dtbook.script.xprocspec \
-	modules/scripts/word-to-dtbook/src/test/xprocspec/test_fix.xprocspec
-modules/scripts/word-to-dtbook/.install-doc : \
-	modules/scripts/word-to-dtbook/doc/index.md
 .make/target/mk/modules/scripts/word-to-dtbook/sources.mk : \
 	modules/scripts/word-to-dtbook/src \
 	modules/scripts/word-to-dtbook/src/test \
@@ -259,5 +256,4 @@ modules/scripts/word-to-dtbook/.install-doc : \
 	modules/scripts/word-to-dtbook/src/main/csharp/ExportShapesWithWord \
 	modules/scripts/word-to-dtbook/src/main/csharp/ExportShapesWithWord/Properties \
 	modules/scripts/word-to-dtbook/src/main/csharp/CheckWordArchitecture \
-	modules/scripts/word-to-dtbook/src/main/csharp/CheckWordArchitecture/Properties \
-	modules/scripts/word-to-dtbook/doc
+	modules/scripts/word-to-dtbook/src/main/csharp/CheckWordArchitecture/Properties

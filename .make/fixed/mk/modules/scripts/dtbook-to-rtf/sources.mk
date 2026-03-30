@@ -1,4 +1,9 @@
-modules/scripts/dtbook-to-rtf/.test modules/scripts/dtbook-to-rtf/.install modules/scripts/dtbook-to-rtf/.install-doc $(TARGET_DIR)/state/modules/scripts/dtbook-to-rtf/modified-since-release_ : \
+modules/scripts/dtbook-to-rtf/.test : \
+	modules/scripts/dtbook-to-rtf/src/test/xspec/unittest.xspec \
+	modules/scripts/dtbook-to-rtf/src/test/resources/logback.xml \
+	modules/scripts/dtbook-to-rtf/src/test/java/XProcSpecTest.java \
+	modules/scripts/dtbook-to-rtf/src/test/xprocspec/test_dtbook-to-rtf.xprocspec \
+	modules/scripts/dtbook-to-rtf/src/test/xprocspec/test_dtbook-to-rtf.script.xprocspec \
 	modules/scripts/dtbook-to-rtf/src/main/resources/META-INF/catalog.xml \
 	modules/scripts/dtbook-to-rtf/src/main/resources/xml/dtbook_to_rtf.xsl \
 	modules/scripts/dtbook-to-rtf/src/main/resources/xml/dtbook_to_rtf_encode.xsl \
@@ -16,15 +21,6 @@ modules/scripts/dtbook-to-rtf/.test modules/scripts/dtbook-to-rtf/.install modul
 	modules/scripts/dtbook-to-rtf/src/main/resources/xml/dtbook_to_rtf_list.xsl \
 	modules/scripts/dtbook-to-rtf/src/main/resources/xml/library.xpl \
 	modules/scripts/dtbook-to-rtf/src/main/resources/xml/dtbook_to_rtf_images.xsl
-modules/scripts/dtbook-to-rtf/.test modules/scripts/dtbook-to-rtf/.install-doc : \
-	modules/scripts/dtbook-to-rtf/src/test/xspec/unittest.xspec \
-	modules/scripts/dtbook-to-rtf/src/test/resources/logback.xml \
-	modules/scripts/dtbook-to-rtf/src/test/java/XProcSpecTest.java \
-	modules/scripts/dtbook-to-rtf/src/test/xprocspec/test_dtbook-to-rtf.xprocspec \
-	modules/scripts/dtbook-to-rtf/src/test/xprocspec/test_dtbook-to-rtf.script.xprocspec
-modules/scripts/dtbook-to-rtf/.install-doc : \
-	modules/scripts/dtbook-to-rtf/doc/index.md \
-	modules/scripts/dtbook-to-rtf/doc/example-rtf.html
 .make/target/mk/modules/scripts/dtbook-to-rtf/sources.mk : \
 	modules/scripts/dtbook-to-rtf/src \
 	modules/scripts/dtbook-to-rtf/src/test \
@@ -35,5 +31,4 @@ modules/scripts/dtbook-to-rtf/.install-doc : \
 	modules/scripts/dtbook-to-rtf/src/main \
 	modules/scripts/dtbook-to-rtf/src/main/resources \
 	modules/scripts/dtbook-to-rtf/src/main/resources/META-INF \
-	modules/scripts/dtbook-to-rtf/src/main/resources/xml \
-	modules/scripts/dtbook-to-rtf/doc
+	modules/scripts/dtbook-to-rtf/src/main/resources/xml

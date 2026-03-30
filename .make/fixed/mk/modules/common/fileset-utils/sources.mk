@@ -1,46 +1,4 @@
-modules/common/fileset-utils/.test modules/common/fileset-utils/.install modules/common/fileset-utils/.install-doc $(TARGET_DIR)/state/modules/common/fileset-utils/modified-since-release_ : \
-	modules/common/fileset-utils/src/main/resources/META-INF/catalog.xml \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-rebase.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-intersect.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-purge.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-create.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-filter-in-memory.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-add-entries.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-compose.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-update.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-library.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-from-dir-list.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-copy.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-from-dir.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-unzip.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/xprocspec-fileset-compare.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-join.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-load.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-add-entry.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-apply.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-invert.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-fix-original-hrefs.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-diff.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-store.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-add-ref.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-move.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-delete.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-compare.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-filter.xpl \
-	modules/common/fileset-utils/src/main/resources/xml/schemas/fileset.rnc \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-rebase.xsl \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-intersect.xsl \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-compose.xsl \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-update.xsl \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-from-dir-list.xsl \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-join.xsl \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-to-zip-manifests.xsl \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-invert.xsl \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-fix-original-hrefs.xsl \
-	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-flatten.xsl \
-	modules/common/fileset-utils/src/main/java/org/daisy/pipeline/fileset/Fileset.java \
-	modules/common/fileset-utils/src/main/java/org/daisy/pipeline/fileset/calabash/impl/AddEntriesStep.java
-modules/common/fileset-utils/.test modules/common/fileset-utils/.install-doc : \
+modules/common/fileset-utils/.test : \
 	modules/common/fileset-utils/src/test/xspec/catalog.xml \
 	modules/common/fileset-utils/src/test/xspec/fileset-from-dir-list.xspec \
 	modules/common/fileset-utils/src/test/xspec/fileset-join.xspec \
@@ -207,9 +165,48 @@ modules/common/fileset-utils/.test modules/common/fileset-utils/.install-doc : \
 	modules/common/fileset-utils/src/test/xprocspec/fileset-join.xprocspec \
 	modules/common/fileset-utils/src/test/xprocspec/fileset-store.xprocspec \
 	modules/common/fileset-utils/src/test/xprocspec/fileset-intersect.xprocspec \
-	modules/common/fileset-utils/src/test/xprocspec/fileset-from-dir-list.xprocspec
-modules/common/fileset-utils/.install-doc : \
-	modules/common/fileset-utils/doc/fileset.rnc.html
+	modules/common/fileset-utils/src/test/xprocspec/fileset-from-dir-list.xprocspec \
+	modules/common/fileset-utils/src/main/resources/META-INF/catalog.xml \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-rebase.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-intersect.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-purge.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-create.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-filter-in-memory.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-add-entries.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-compose.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-update.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-library.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-from-dir-list.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-copy.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-from-dir.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-unzip.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/xprocspec-fileset-compare.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-join.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-load.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-add-entry.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-apply.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-invert.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-fix-original-hrefs.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-diff.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-store.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-add-ref.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-move.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-delete.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-compare.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/xproc/fileset-filter.xpl \
+	modules/common/fileset-utils/src/main/resources/xml/schemas/fileset.rnc \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-rebase.xsl \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-intersect.xsl \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-compose.xsl \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-update.xsl \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-from-dir-list.xsl \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-join.xsl \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-to-zip-manifests.xsl \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-invert.xsl \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-fix-original-hrefs.xsl \
+	modules/common/fileset-utils/src/main/resources/xml/xslt/fileset-flatten.xsl \
+	modules/common/fileset-utils/src/main/java/org/daisy/pipeline/fileset/Fileset.java \
+	modules/common/fileset-utils/src/main/java/org/daisy/pipeline/fileset/calabash/impl/AddEntriesStep.java
 .make/target/mk/modules/common/fileset-utils/sources.mk : \
 	modules/common/fileset-utils/src \
 	modules/common/fileset-utils/src/test \
@@ -261,5 +258,4 @@ modules/common/fileset-utils/.install-doc : \
 	modules/common/fileset-utils/src/main/java/org/daisy/pipeline \
 	modules/common/fileset-utils/src/main/java/org/daisy/pipeline/fileset \
 	modules/common/fileset-utils/src/main/java/org/daisy/pipeline/fileset/calabash \
-	modules/common/fileset-utils/src/main/java/org/daisy/pipeline/fileset/calabash/impl \
-	modules/common/fileset-utils/doc
+	modules/common/fileset-utils/src/main/java/org/daisy/pipeline/fileset/calabash/impl

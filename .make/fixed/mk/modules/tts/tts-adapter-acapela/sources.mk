@@ -1,4 +1,9 @@
-modules/tts/tts-adapter-acapela/.test modules/tts/tts-adapter-acapela/.install modules/tts/tts-adapter-acapela/.install-doc $(TARGET_DIR)/state/modules/tts/tts-adapter-acapela/modified-since-release_ : \
+modules/tts/tts-adapter-acapela/.test : \
+	modules/tts/tts-adapter-acapela/src/test/resources/decimal_chars.txt \
+	modules/tts/tts-adapter-acapela/src/test/resources/logback.xml \
+	modules/tts/tts-adapter-acapela/src/test/java/ignore \
+	modules/tts/tts-adapter-acapela/src/test/java/org/daisy/pipeline/tts/acapela/impl/AcapelaTest.java \
+	modules/tts/tts-adapter-acapela/src/test/java/org/daisy/pipeline/tts/acapela/impl/AcapelaSSMLTest.java \
 	modules/tts/tts-adapter-acapela/src/main/resources/transform-ssml.xsl \
 	modules/tts/tts-adapter-acapela/src/main/java/org/daisy/pipeline/tts/acapela/impl/NSC_EVENT_DATA_TextStarted.java \
 	modules/tts/tts-adapter-acapela/src/main/java/org/daisy/pipeline/tts/acapela/impl/NSC_EVENT_DATA_TextDone.java \
@@ -21,12 +26,6 @@ modules/tts/tts-adapter-acapela/.test modules/tts/tts-adapter-acapela/.install m
 	modules/tts/tts-adapter-acapela/src/main/java/org/daisy/pipeline/tts/acapela/impl/NSC_SRVSTATUS_DATAEX.java \
 	modules/tts/tts-adapter-acapela/src/main/java/org/daisy/pipeline/tts/acapela/impl/NSC_EVENT_DATA_PhoSynchExt.java \
 	modules/tts/tts-adapter-acapela/src/main/java/org/daisy/pipeline/tts/acapela/impl/NSC_SRVINFO_DATA.java
-modules/tts/tts-adapter-acapela/.test modules/tts/tts-adapter-acapela/.install-doc : \
-	modules/tts/tts-adapter-acapela/src/test/resources/decimal_chars.txt \
-	modules/tts/tts-adapter-acapela/src/test/resources/logback.xml \
-	modules/tts/tts-adapter-acapela/src/test/java/ignore \
-	modules/tts/tts-adapter-acapela/src/test/java/org/daisy/pipeline/tts/acapela/impl/AcapelaTest.java \
-	modules/tts/tts-adapter-acapela/src/test/java/org/daisy/pipeline/tts/acapela/impl/AcapelaSSMLTest.java
 .make/target/mk/modules/tts/tts-adapter-acapela/sources.mk : \
 	modules/tts/tts-adapter-acapela/src \
 	modules/tts/tts-adapter-acapela/src/test \

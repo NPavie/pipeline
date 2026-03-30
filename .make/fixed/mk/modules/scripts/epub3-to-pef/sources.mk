@@ -1,15 +1,4 @@
-modules/scripts/epub3-to-pef/.test modules/scripts/epub3-to-pef/.install modules/scripts/epub3-to-pef/.install-doc $(TARGET_DIR)/state/modules/scripts/epub3-to-pef/modified-since-release_ : \
-	modules/scripts/epub3-to-pef/src/main/resources/css/reset.css \
-	modules/scripts/epub3-to-pef/src/main/resources/META-INF/catalog.xml \
-	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/xml-to-pef.store.xpl \
-	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/epub3-to-pef.xpl \
-	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/epub3-to-pef.convert.xpl \
-	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/epub3-to-pef.store.xpl \
-	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/epub3-to-pef.load.xpl \
-	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/library.xpl \
-	modules/scripts/epub3-to-pef/src/main/resources/xml/xslt/opf-to-html-head.xsl \
-	modules/scripts/epub3-to-pef/src/main/README.md
-modules/scripts/epub3-to-pef/.test modules/scripts/epub3-to-pef/.install-doc : \
+modules/scripts/epub3-to-pef/.test : \
 	modules/scripts/epub3-to-pef/src/test/xspec/catalog.xml \
 	modules/scripts/epub3-to-pef/src/test/xspec/mock-functions.xsl \
 	modules/scripts/epub3-to-pef/src/test/resources/logback.xml \
@@ -42,9 +31,17 @@ modules/scripts/epub3-to-pef/.test modules/scripts/epub3-to-pef/.install-doc : \
 	modules/scripts/epub3-to-pef/src/test/java/XProcSpecTest.java \
 	modules/scripts/epub3-to-pef/src/test/xprocspec/test_epub3-to-pef.script.xprocspec \
 	modules/scripts/epub3-to-pef/src/test/xprocspec/test_epub3-to-pef.xprocspec \
-	modules/scripts/epub3-to-pef/src/test/xprocspec/test_epub3-to-pef.load.xprocspec
-modules/scripts/epub3-to-pef/.install-doc : \
-	modules/scripts/epub3-to-pef/doc/index.md
+	modules/scripts/epub3-to-pef/src/test/xprocspec/test_epub3-to-pef.load.xprocspec \
+	modules/scripts/epub3-to-pef/src/main/resources/css/reset.css \
+	modules/scripts/epub3-to-pef/src/main/resources/META-INF/catalog.xml \
+	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/xml-to-pef.store.xpl \
+	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/epub3-to-pef.xpl \
+	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/epub3-to-pef.convert.xpl \
+	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/epub3-to-pef.store.xpl \
+	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/epub3-to-pef.load.xpl \
+	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc/library.xpl \
+	modules/scripts/epub3-to-pef/src/main/resources/xml/xslt/opf-to-html-head.xsl \
+	modules/scripts/epub3-to-pef/src/main/README.md
 .make/target/mk/modules/scripts/epub3-to-pef/sources.mk : \
 	modules/scripts/epub3-to-pef/src \
 	modules/scripts/epub3-to-pef/src/test \
@@ -62,5 +59,4 @@ modules/scripts/epub3-to-pef/.install-doc : \
 	modules/scripts/epub3-to-pef/src/main/resources/META-INF \
 	modules/scripts/epub3-to-pef/src/main/resources/xml \
 	modules/scripts/epub3-to-pef/src/main/resources/xml/xproc \
-	modules/scripts/epub3-to-pef/src/main/resources/xml/xslt \
-	modules/scripts/epub3-to-pef/doc
+	modules/scripts/epub3-to-pef/src/main/resources/xml/xslt

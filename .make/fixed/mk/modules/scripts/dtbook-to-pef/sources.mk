@@ -1,4 +1,17 @@
-modules/scripts/dtbook-to-pef/.test modules/scripts/dtbook-to-pef/.install modules/scripts/dtbook-to-pef/.install-doc $(TARGET_DIR)/state/modules/scripts/dtbook-to-pef/modified-since-release_ : \
+modules/scripts/dtbook-to-pef/.test : \
+	modules/scripts/dtbook-to-pef/src/test/xspec/leaf-sections.xspec \
+	modules/scripts/dtbook-to-pef/src/test/resources/logback.xml \
+	modules/scripts/dtbook-to-pef/src/test/resources/dtbook.2005.basic.css \
+	modules/scripts/dtbook-to-pef/src/test/resources/reset.css \
+	modules/scripts/dtbook-to-pef/src/test/resources/test_ascii-table_2.brf \
+	modules/scripts/dtbook-to-pef/src/test/resources/test_ascii-table_1.brf \
+	modules/scripts/dtbook-to-pef/src/test/resources/style.css \
+	modules/scripts/dtbook-to-pef/src/test/resources/valentin.jpg \
+	modules/scripts/dtbook-to-pef/src/test/resources/hauy_valid.xml \
+	modules/scripts/dtbook-to-pef/src/test/java/XProcSpecTest.java \
+	modules/scripts/dtbook-to-pef/src/test/xprocspec/test_dtbook-to-pef.script.xprocspec \
+	modules/scripts/dtbook-to-pef/src/test/xprocspec/test_dtbook-to-pef.xprocspec \
+	modules/scripts/dtbook-to-pef/src/test/xprocspec/test_generate-toc.xprocspec \
 	modules/scripts/dtbook-to-pef/src/main/resources/css/lists.xsl \
 	modules/scripts/dtbook-to-pef/src/main/resources/css/tables.md \
 	modules/scripts/dtbook-to-pef/src/main/resources/css/tables.xsl \
@@ -25,22 +38,6 @@ modules/scripts/dtbook-to-pef/.test modules/scripts/dtbook-to-pef/.install modul
 	modules/scripts/dtbook-to-pef/src/main/resources/xml/xproc/dtbook-to-pef.convert.xpl \
 	modules/scripts/dtbook-to-pef/src/main/resources/xml/xproc/dtbook-to-pef.xpl \
 	modules/scripts/dtbook-to-pef/src/main/README.md
-modules/scripts/dtbook-to-pef/.test modules/scripts/dtbook-to-pef/.install-doc : \
-	modules/scripts/dtbook-to-pef/src/test/xspec/leaf-sections.xspec \
-	modules/scripts/dtbook-to-pef/src/test/resources/logback.xml \
-	modules/scripts/dtbook-to-pef/src/test/resources/dtbook.2005.basic.css \
-	modules/scripts/dtbook-to-pef/src/test/resources/reset.css \
-	modules/scripts/dtbook-to-pef/src/test/resources/test_ascii-table_2.brf \
-	modules/scripts/dtbook-to-pef/src/test/resources/test_ascii-table_1.brf \
-	modules/scripts/dtbook-to-pef/src/test/resources/style.css \
-	modules/scripts/dtbook-to-pef/src/test/resources/valentin.jpg \
-	modules/scripts/dtbook-to-pef/src/test/resources/hauy_valid.xml \
-	modules/scripts/dtbook-to-pef/src/test/java/XProcSpecTest.java \
-	modules/scripts/dtbook-to-pef/src/test/xprocspec/test_dtbook-to-pef.script.xprocspec \
-	modules/scripts/dtbook-to-pef/src/test/xprocspec/test_dtbook-to-pef.xprocspec \
-	modules/scripts/dtbook-to-pef/src/test/xprocspec/test_generate-toc.xprocspec
-modules/scripts/dtbook-to-pef/.install-doc : \
-	modules/scripts/dtbook-to-pef/doc/index.md
 .make/target/mk/modules/scripts/dtbook-to-pef/sources.mk : \
 	modules/scripts/dtbook-to-pef/src \
 	modules/scripts/dtbook-to-pef/src/test \
@@ -53,5 +50,4 @@ modules/scripts/dtbook-to-pef/.install-doc : \
 	modules/scripts/dtbook-to-pef/src/main/resources/css \
 	modules/scripts/dtbook-to-pef/src/main/resources/META-INF \
 	modules/scripts/dtbook-to-pef/src/main/resources/xml \
-	modules/scripts/dtbook-to-pef/src/main/resources/xml/xproc \
-	modules/scripts/dtbook-to-pef/doc
+	modules/scripts/dtbook-to-pef/src/main/resources/xml/xproc

@@ -1,12 +1,11 @@
-modules/tts/tts-adapter-google/.test modules/tts/tts-adapter-google/.install modules/tts/tts-adapter-google/.install-doc $(TARGET_DIR)/state/modules/tts/tts-adapter-google/modified-since-release_ : \
+modules/tts/tts-adapter-google/.test : \
+	modules/tts/tts-adapter-google/src/test/resources/logback.xml \
+	modules/tts/tts-adapter-google/src/test/java/org/daisy/pipeline/tts/google/impl/GoogleTTSTest.java \
 	modules/tts/tts-adapter-google/src/main/resources/transform-ssml.xsl \
 	modules/tts/tts-adapter-google/src/main/java/org/daisy/pipeline/tts/google/impl/GoogleRestAction.java \
 	modules/tts/tts-adapter-google/src/main/java/org/daisy/pipeline/tts/google/impl/GoogleRequestBuilder.java \
 	modules/tts/tts-adapter-google/src/main/java/org/daisy/pipeline/tts/google/impl/GoogleTTSService.java \
 	modules/tts/tts-adapter-google/src/main/java/org/daisy/pipeline/tts/google/impl/GoogleRestTTSEngine.java
-modules/tts/tts-adapter-google/.test modules/tts/tts-adapter-google/.install-doc : \
-	modules/tts/tts-adapter-google/src/test/resources/logback.xml \
-	modules/tts/tts-adapter-google/src/test/java/org/daisy/pipeline/tts/google/impl/GoogleTTSTest.java
 .make/target/mk/modules/tts/tts-adapter-google/sources.mk : \
 	modules/tts/tts-adapter-google/src \
 	modules/tts/tts-adapter-google/src/test \

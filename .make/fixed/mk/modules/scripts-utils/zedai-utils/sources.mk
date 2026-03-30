@@ -1,4 +1,4 @@
-modules/scripts-utils/zedai-utils/.test modules/scripts-utils/zedai-utils/.install modules/scripts-utils/zedai-utils/.install-doc $(TARGET_DIR)/state/modules/scripts-utils/zedai-utils/modified-since-release_ : \
+modules/scripts-utils/zedai-utils/.test : \
 	modules/scripts-utils/zedai-utils/src/main/resources/META-INF/catalog.xml \
 	modules/scripts-utils/zedai-utils/src/main/resources/xml/xproc/break-detect/library.xpl \
 	modules/scripts-utils/zedai-utils/src/main/resources/xml/xproc/zedai-load.xpl \

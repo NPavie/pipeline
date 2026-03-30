@@ -1,4 +1,13 @@
-modules/audio/audio-common/.test modules/audio/audio-common/.install modules/audio/audio-common/.install-doc $(TARGET_DIR)/state/modules/audio/audio-common/modified-since-release_ : \
+modules/audio/audio-common/.test : \
+	modules/audio/audio-common/src/test/resources/logback.xml \
+	modules/audio/audio-common/src/test/resources/blah.mp3 \
+	modules/audio/audio-common/src/test/resources/blah.wav \
+	modules/audio/audio-common/src/test/java/XProcSpecTest.java \
+	modules/audio/audio-common/src/test/java/ignore \
+	modules/audio/audio-common/src/test/java/org/daisy/pipeline/audio/impl/WaveAudioEncoderTest.java \
+	modules/audio/audio-common/src/test/java/org/daisy/pipeline/audio/AudioUtilsTest.java \
+	modules/audio/audio-common/src/test/xprocspec/test_audio-rearrange.xprocspec \
+	modules/audio/audio-common/src/test/xprocspec/test_audio-transcode.xprocspec \
 	modules/audio/audio-common/src/main/resources/META-INF/catalog.xml \
 	modules/audio/audio-common/src/main/resources/xml/audio-rearrange.xpl \
 	modules/audio/audio-common/src/main/resources/xml/audio-transcode.xpl \
@@ -20,16 +29,6 @@ modules/audio/audio-common/.test modules/audio/audio-common/.install modules/aud
 	modules/audio/audio-common/src/main/java/org/daisy/pipeline/audio/AudioUtils.java \
 	modules/audio/audio-common/src/main/java/org/daisy/pipeline/audio/AudioClip.java \
 	modules/audio/audio-common/src/main/java/org/daisy/pipeline/audio/AudioDecoderService.java
-modules/audio/audio-common/.test modules/audio/audio-common/.install-doc : \
-	modules/audio/audio-common/src/test/resources/logback.xml \
-	modules/audio/audio-common/src/test/resources/blah.mp3 \
-	modules/audio/audio-common/src/test/resources/blah.wav \
-	modules/audio/audio-common/src/test/java/XProcSpecTest.java \
-	modules/audio/audio-common/src/test/java/ignore \
-	modules/audio/audio-common/src/test/java/org/daisy/pipeline/audio/impl/WaveAudioEncoderTest.java \
-	modules/audio/audio-common/src/test/java/org/daisy/pipeline/audio/AudioUtilsTest.java \
-	modules/audio/audio-common/src/test/xprocspec/test_audio-rearrange.xprocspec \
-	modules/audio/audio-common/src/test/xprocspec/test_audio-transcode.xprocspec
 .make/target/mk/modules/audio/audio-common/sources.mk : \
 	modules/audio/audio-common/src \
 	modules/audio/audio-common/src/test \

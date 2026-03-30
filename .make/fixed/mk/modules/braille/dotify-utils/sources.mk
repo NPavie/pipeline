@@ -1,4 +1,46 @@
-modules/braille/dotify-utils/.test modules/braille/dotify-utils/.install modules/braille/dotify-utils/.install-doc $(TARGET_DIR)/state/modules/braille/dotify-utils/modified-since-release_ : \
+modules/braille/dotify-utils/.test : \
+	modules/braille/dotify-utils/src/test/xspec/test_volume-stylesheets-use-when.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_adjust-boxes.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_padding-to-margin.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_propagate-page-break.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_resolve-css-string.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_preserve-white-space.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_generate-obfl-layout-master.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_make-table-grid.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_make-boxes.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_make-anonymous-inline-boxes.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_make-pseudo-elements.xspec \
+	modules/braille/dotify-utils/src/test/xspec/test_round-line-height.xspec \
+	modules/braille/dotify-utils/src/test/resources/logback.xml \
+	modules/braille/dotify-utils/src/test/resources/capsphrase.utb \
+	modules/braille/dotify-utils/src/test/resources/file-to-obfl.xpl \
+	modules/braille/dotify-utils/src/test/resources/OSGI-INF/number-braille-translator-provider.xml \
+	modules/braille/dotify-utils/src/test/resources/non-standard-hyph.dic \
+	modules/braille/dotify-utils/src/test/resources/foo.dic \
+	modules/braille/dotify-utils/src/test/resources/test_file-to-obfl/test_01.xml \
+	modules/braille/dotify-utils/src/test/resources/test_file-to-obfl/test_02.xml \
+	modules/braille/dotify-utils/src/test/resources/write-out-numbers.utb \
+	modules/braille/dotify-utils/src/test/resources/braille-charset.dis \
+	modules/braille/dotify-utils/src/test/java/ignore \
+	modules/braille/dotify-utils/src/test/java/XSpecAndXProcSpecTest.java \
+	modules/braille/dotify-utils/src/test/java/NumberBrailleTranslator.java \
+	modules/braille/dotify-utils/src/test/java/DotifyCoreTest.java \
+	modules/braille/dotify-utils/src/test/xprocspec/test_eval-target-content.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_flow-from.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_label-targets.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_split.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_new-definition.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_flow-into.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_shift-id.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_make-anonymous-block-boxes.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_shift-string-set.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_shift-obfl-marker.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_obfl-normalize-space.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_propagate-page-break.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_format.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_obfl-to-pef_sv-SE.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_obfl-to-pef.xprocspec \
+	modules/braille/dotify-utils/src/test/xprocspec/test_eval-counter.xprocspec \
 	modules/braille/dotify-utils/src/main/resources/META-INF/catalog.xml \
 	modules/braille/dotify-utils/src/main/resources/META-INF/services/org.daisy.dotify.api.text.Integer2TextFactoryMakerService \
 	modules/braille/dotify-utils/src/main/resources/xml/preserve-white-space.xpl \
@@ -78,52 +120,6 @@ modules/braille/dotify-utils/.test modules/braille/dotify-utils/.install modules
 	modules/braille/dotify-utils/src/main/java/org/daisy/pipeline/braille/dotify/saxon/impl/EmbossedMediumFunctions.java \
 	modules/braille/dotify-utils/src/main/java/org/daisy/pipeline/braille/dotify/DotifyTranslator.java \
 	modules/braille/dotify-utils/src/main/README.md
-modules/braille/dotify-utils/.test modules/braille/dotify-utils/.install-doc : \
-	modules/braille/dotify-utils/src/test/xspec/test_volume-stylesheets-use-when.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_adjust-boxes.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_padding-to-margin.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_propagate-page-break.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_resolve-css-string.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_preserve-white-space.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_generate-obfl-layout-master.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_make-table-grid.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_make-boxes.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_make-anonymous-inline-boxes.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_make-pseudo-elements.xspec \
-	modules/braille/dotify-utils/src/test/xspec/test_round-line-height.xspec \
-	modules/braille/dotify-utils/src/test/resources/logback.xml \
-	modules/braille/dotify-utils/src/test/resources/capsphrase.utb \
-	modules/braille/dotify-utils/src/test/resources/file-to-obfl.xpl \
-	modules/braille/dotify-utils/src/test/resources/OSGI-INF/number-braille-translator-provider.xml \
-	modules/braille/dotify-utils/src/test/resources/non-standard-hyph.dic \
-	modules/braille/dotify-utils/src/test/resources/foo.dic \
-	modules/braille/dotify-utils/src/test/resources/test_file-to-obfl/test_01.xml \
-	modules/braille/dotify-utils/src/test/resources/test_file-to-obfl/test_02.xml \
-	modules/braille/dotify-utils/src/test/resources/write-out-numbers.utb \
-	modules/braille/dotify-utils/src/test/resources/braille-charset.dis \
-	modules/braille/dotify-utils/src/test/java/ignore \
-	modules/braille/dotify-utils/src/test/java/XSpecAndXProcSpecTest.java \
-	modules/braille/dotify-utils/src/test/java/NumberBrailleTranslator.java \
-	modules/braille/dotify-utils/src/test/java/DotifyCoreTest.java \
-	modules/braille/dotify-utils/src/test/xprocspec/test_eval-target-content.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_flow-from.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_label-targets.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_split.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_new-definition.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_flow-into.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_shift-id.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_make-anonymous-block-boxes.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_shift-string-set.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_shift-obfl-marker.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_obfl-normalize-space.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_propagate-page-break.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_format.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_obfl-to-pef_sv-SE.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_obfl-to-pef.xprocspec \
-	modules/braille/dotify-utils/src/test/xprocspec/test_eval-counter.xprocspec
-modules/braille/dotify-utils/.install-doc : \
-	modules/braille/dotify-utils/doc/index.md \
-	modules/braille/dotify-utils/doc/obfl-to-pef.md
 .make/target/mk/modules/braille/dotify-utils/sources.mk : \
 	modules/braille/dotify-utils/src \
 	modules/braille/dotify-utils/src/test \
@@ -149,5 +145,4 @@ modules/braille/dotify-utils/.install-doc : \
 	modules/braille/dotify-utils/src/main/java/org/daisy/pipeline/braille/dotify/calabash \
 	modules/braille/dotify-utils/src/main/java/org/daisy/pipeline/braille/dotify/calabash/impl \
 	modules/braille/dotify-utils/src/main/java/org/daisy/pipeline/braille/dotify/saxon \
-	modules/braille/dotify-utils/src/main/java/org/daisy/pipeline/braille/dotify/saxon/impl \
-	modules/braille/dotify-utils/doc
+	modules/braille/dotify-utils/src/main/java/org/daisy/pipeline/braille/dotify/saxon/impl

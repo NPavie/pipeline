@@ -1,4 +1,38 @@
-modules/scripts-utils/css-utils/.test modules/scripts-utils/css-utils/.install modules/scripts-utils/css-utils/.install-doc $(TARGET_DIR)/state/modules/scripts-utils/css-utils/modified-since-release_ : \
+modules/scripts-utils/css-utils/.test : \
+	modules/scripts-utils/css-utils/src/test/xspec/test_css-parse-param-set.xspec \
+	modules/scripts-utils/css-utils/src/test/resources/logback.xml \
+	modules/scripts-utils/css-utils/src/test/resources/nested_properties.css \
+	modules/scripts-utils/css-utils/src/test/resources/default-dtbook-speech.scss \
+	modules/scripts-utils/css-utils/src/test/resources/speech-and-print.css \
+	modules/scripts-utils/css-utils/src/test/resources/font.ttf \
+	modules/scripts-utils/css-utils/src/test/resources/import.css \
+	modules/scripts-utils/css-utils/src/test/resources/META-INF/catalog.xml \
+	modules/scripts-utils/css-utils/src/test/resources/imports/4.scss \
+	modules/scripts-utils/css-utils/src/test/resources/imports/6/_index.scss \
+	modules/scripts-utils/css-utils/src/test/resources/imports/3.scss \
+	modules/scripts-utils/css-utils/src/test/resources/imports/2.css \
+	modules/scripts-utils/css-utils/src/test/resources/imports/1.css \
+	modules/scripts-utils/css-utils/src/test/resources/imports/_5.scss \
+	modules/scripts-utils/css-utils/src/test/resources/charset.scss \
+	modules/scripts-utils/css-utils/src/test/resources/charset.css \
+	modules/scripts-utils/css-utils/src/test/resources/misc.scss \
+	modules/scripts-utils/css-utils/src/test/resources/import.scss \
+	modules/scripts-utils/css-utils/src/test/resources/misc.css \
+	modules/scripts-utils/css-utils/src/test/resources/speech.css \
+	modules/scripts-utils/css-utils/src/test/resources/references.css \
+	modules/scripts-utils/css-utils/src/test/resources/nested_properties.scss \
+	modules/scripts-utils/css-utils/src/test/resources/bg.png \
+	modules/scripts-utils/css-utils/src/test/java/XProcSpecTest.java \
+	modules/scripts-utils/css-utils/src/test/java/ignore \
+	modules/scripts-utils/css-utils/src/test/java/org/daisy/pipeline/css/speech/impl/SpeechCssCascaderTest.java \
+	modules/scripts-utils/css-utils/src/test/java/org/daisy/pipeline/css/speech/VoiceFamilyListTest.java \
+	modules/scripts-utils/css-utils/src/test/java/org/daisy/pipeline/css/CssAnalyzerTest.java \
+	modules/scripts-utils/css-utils/src/test/java/org/daisy/pipeline/css/CounterStyleTest.java \
+	modules/scripts-utils/css-utils/src/test/java/SassTest.java \
+	modules/scripts-utils/css-utils/src/test/xprocspec/test_css-analyze.xprocspec \
+	modules/scripts-utils/css-utils/src/test/xprocspec/test_format-lists.xprocspec \
+	modules/scripts-utils/css-utils/src/test/xprocspec/test_css-speech-cascade.xprocspec \
+	modules/scripts-utils/css-utils/src/test/xprocspec/test_css-to-fileset.xprocspec \
 	modules/scripts-utils/css-utils/src/main/resources/META-INF/catalog.xml \
 	modules/scripts-utils/css-utils/src/main/resources/rnc/stylesheetParametersRequest.rnc \
 	modules/scripts-utils/css-utils/src/main/resources/xml/css-detach.xpl \
@@ -55,41 +89,6 @@ modules/scripts-utils/css-utils/.test modules/scripts-utils/css-utils/.install m
 	modules/scripts-utils/css-utils/src/main/antlr3/org/daisy/pipeline/css/sass/impl/SassPostProcess.g \
 	modules/scripts-utils/css-utils/src/main/antlr3/org/daisy/pipeline/css/sass/impl/Doxygen.g \
 	modules/scripts-utils/css-utils/src/main/README.md
-modules/scripts-utils/css-utils/.test modules/scripts-utils/css-utils/.install-doc : \
-	modules/scripts-utils/css-utils/src/test/xspec/test_css-parse-param-set.xspec \
-	modules/scripts-utils/css-utils/src/test/resources/logback.xml \
-	modules/scripts-utils/css-utils/src/test/resources/nested_properties.css \
-	modules/scripts-utils/css-utils/src/test/resources/default-dtbook-speech.scss \
-	modules/scripts-utils/css-utils/src/test/resources/speech-and-print.css \
-	modules/scripts-utils/css-utils/src/test/resources/font.ttf \
-	modules/scripts-utils/css-utils/src/test/resources/import.css \
-	modules/scripts-utils/css-utils/src/test/resources/META-INF/catalog.xml \
-	modules/scripts-utils/css-utils/src/test/resources/imports/4.scss \
-	modules/scripts-utils/css-utils/src/test/resources/imports/6/_index.scss \
-	modules/scripts-utils/css-utils/src/test/resources/imports/3.scss \
-	modules/scripts-utils/css-utils/src/test/resources/imports/2.css \
-	modules/scripts-utils/css-utils/src/test/resources/imports/1.css \
-	modules/scripts-utils/css-utils/src/test/resources/imports/_5.scss \
-	modules/scripts-utils/css-utils/src/test/resources/charset.scss \
-	modules/scripts-utils/css-utils/src/test/resources/charset.css \
-	modules/scripts-utils/css-utils/src/test/resources/misc.scss \
-	modules/scripts-utils/css-utils/src/test/resources/import.scss \
-	modules/scripts-utils/css-utils/src/test/resources/misc.css \
-	modules/scripts-utils/css-utils/src/test/resources/speech.css \
-	modules/scripts-utils/css-utils/src/test/resources/references.css \
-	modules/scripts-utils/css-utils/src/test/resources/nested_properties.scss \
-	modules/scripts-utils/css-utils/src/test/resources/bg.png \
-	modules/scripts-utils/css-utils/src/test/java/XProcSpecTest.java \
-	modules/scripts-utils/css-utils/src/test/java/ignore \
-	modules/scripts-utils/css-utils/src/test/java/org/daisy/pipeline/css/speech/impl/SpeechCssCascaderTest.java \
-	modules/scripts-utils/css-utils/src/test/java/org/daisy/pipeline/css/speech/VoiceFamilyListTest.java \
-	modules/scripts-utils/css-utils/src/test/java/org/daisy/pipeline/css/CssAnalyzerTest.java \
-	modules/scripts-utils/css-utils/src/test/java/org/daisy/pipeline/css/CounterStyleTest.java \
-	modules/scripts-utils/css-utils/src/test/java/SassTest.java \
-	modules/scripts-utils/css-utils/src/test/xprocspec/test_css-analyze.xprocspec \
-	modules/scripts-utils/css-utils/src/test/xprocspec/test_format-lists.xprocspec \
-	modules/scripts-utils/css-utils/src/test/xprocspec/test_css-speech-cascade.xprocspec \
-	modules/scripts-utils/css-utils/src/test/xprocspec/test_css-to-fileset.xprocspec
 .make/target/mk/modules/scripts-utils/css-utils/sources.mk : \
 	modules/scripts-utils/css-utils/src \
 	modules/scripts-utils/css-utils/src/test \

@@ -1,4 +1,8 @@
-modules/scripts-utils/mathcat-adapter/.test modules/scripts-utils/mathcat-adapter/.install modules/scripts-utils/mathcat-adapter/.install-doc $(TARGET_DIR)/state/modules/scripts-utils/mathcat-adapter/modified-since-release_ : \
+modules/scripts-utils/mathcat-adapter/.test : \
+	modules/scripts-utils/mathcat-adapter/src/test/xspec/test_asciimath-to-ssml.xspec \
+	modules/scripts-utils/mathcat-adapter/src/test/resources/logback.xml \
+	modules/scripts-utils/mathcat-adapter/src/test/java/XProcSpecTest.java \
+	modules/scripts-utils/mathcat-adapter/src/test/xprocspec/test_mathml-to-ssml.xprocspec \
 	modules/scripts-utils/mathcat-adapter/src/main/resources/rules/prefs.yaml \
 	modules/scripts-utils/mathcat-adapter/src/main/resources/rules/intent.yaml \
 	modules/scripts-utils/mathcat-adapter/src/main/resources/rules/Braille/LaTeX/unicode-full.yaml \
@@ -137,11 +141,6 @@ modules/scripts-utils/mathcat-adapter/.test modules/scripts-utils/mathcat-adapte
 	modules/scripts-utils/mathcat-adapter/src/main/resources/rules/Intent/probability.yaml \
 	modules/scripts-utils/mathcat-adapter/src/main/resources/rules/Intent/calculus.yaml \
 	modules/scripts-utils/mathcat-adapter/src/main/java/org/daisy/pipeline/mathcat/impl/MathCAT.java
-modules/scripts-utils/mathcat-adapter/.test modules/scripts-utils/mathcat-adapter/.install-doc : \
-	modules/scripts-utils/mathcat-adapter/src/test/xspec/test_asciimath-to-ssml.xspec \
-	modules/scripts-utils/mathcat-adapter/src/test/resources/logback.xml \
-	modules/scripts-utils/mathcat-adapter/src/test/java/XProcSpecTest.java \
-	modules/scripts-utils/mathcat-adapter/src/test/xprocspec/test_mathml-to-ssml.xprocspec
 .make/target/mk/modules/scripts-utils/mathcat-adapter/sources.mk : \
 	modules/scripts-utils/mathcat-adapter/src \
 	modules/scripts-utils/mathcat-adapter/src/test \

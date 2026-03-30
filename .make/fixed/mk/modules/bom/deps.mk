@@ -1,4 +1,4 @@
-modules/bom/VERSION := 1.15.4-SNAPSHOT
+modules/bom/VERSION := 1.15.4
 
 $(TARGET_DIR)/state/modules/bom/last-tested : $(TARGET_DIR)/state/%/last-tested : %/.test | .group-eval
 	+$(EVAL) mkdirs("$(dir $@)"); touch("$@");
@@ -9,37 +9,29 @@ modules/bom/.test : | .maven-init .group-eval
 
 modules/bom/.test : %/.test : %/pom.xml %/.compile-dependencies %/.test-dependencies
 
-$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-bom/1.15.4-SNAPSHOT/modules-bom-1.15.4-SNAPSHOT.pom : modules/bom/.install.pom | .group-eval
+$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-bom/1.15.4/modules-bom-1.15.4.pom : modules/bom/.install.pom | .group-eval
 	+$(EVAL) if (new File("$@").exists()) touch("$@"); else exit(1);
 
-$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-bom/1.15.4-SNAPSHOT/modules-bom-1.15.4-SNAPSHOT% : modules/bom/.install% | .group-eval
+$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-bom/1.15.4/modules-bom-1.15.4% : modules/bom/.install% | .group-eval
 	+$(EVAL) if (new File("$@").exists()) touch("$@"); else exit(1);
 
 .SECONDARY : modules/bom/.install.pom
 modules/bom/.install.pom : | .maven-init .group-eval
 	+$(EVAL) mvn.installPom("$(TARGET_DIR)/optimized/modules/bom");
 
-modules/bom/.install.pom : %/.install.pom : $(TARGET_DIR)/optimized/%/pom.xml %/.compile-dependencies | %/.test-dependencies
+modules/bom/.install.pom : %/.install.pom : | %/.compile-dependencies %/.test-dependencies
 
 .SECONDARY : modules/bom/.install-doc
 modules/bom/.install-doc : | .maven-init .group-eval
 	+$(EVAL) mvn.installDoc("$(patsubst %/,%,$(dir $@))");
 
-modules/bom/.install-doc : %/.install-doc : %/pom.xml | %/.compile-dependencies %/.test-dependencies
+modules/bom/.install-doc : %/.install-doc : | %/.compile-dependencies %/.test-dependencies
 
 .SECONDARY : modules/bom/.compile-dependencies modules/bom/.test-dependencies
 modules/bom/.compile-dependencies :
 modules/bom/.test-dependencies :
 
-$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-bom/1.15.4/modules-bom-1.15.4.% \
-$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/modules/modules-bom/1.15.4/modules-bom-1.15.4-% : modules/bom/.release
-	+//
-
 .SECONDARY : modules/bom/.release
-modules/bom/.release : modules/.release
-	+$(EVAL) mvn.releaseModulesInDir("modules").apply("bom");
-
-modules/bom/.release :
 
 clean : modules/bom/.clean
 .PHONY : modules/bom/.clean

@@ -1,4 +1,16 @@
-modules/nlp/nlp-common/.test modules/nlp/nlp-common/.install modules/nlp/nlp-common/.install-doc $(TARGET_DIR)/state/modules/nlp/nlp-common/modified-since-release_ : \
+modules/nlp/nlp-common/.test : \
+	modules/nlp/nlp-common/src/test/resources/epub3_test.html \
+	modules/nlp/nlp-common/src/test/resources/zedai_test.xml \
+	modules/nlp/nlp-common/src/test/resources/dtbook_test.xml \
+	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/FrenchCategorizerTest.java \
+	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/RuledCategorizerTest.java \
+	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/ActualFilesTest.java \
+	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/SegmentsPrettyPrinter.java \
+	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/DummyLexer.java \
+	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/BreakDetectTest.java \
+	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/StringComposerTest.java \
+	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/PrefixMatchTest.java \
+	modules/nlp/nlp-common/src/test/xprocspec/reshape.xprocspec \
 	modules/nlp/nlp-common/src/main/resources/META-INF/catalog.xml \
 	modules/nlp/nlp-common/src/main/resources/xml/break-detect.xpl \
 	modules/nlp/nlp-common/src/main/resources/xml/distribute-sentences.xsl \
@@ -39,19 +51,6 @@ modules/nlp/nlp-common/.test modules/nlp/nlp-common/.install modules/nlp/nlp-com
 	modules/nlp/nlp-common/src/main/java/org/daisy/pipeline/nlp/lexing/LexResultPrettyPrinter.java \
 	modules/nlp/nlp-common/src/main/java/org/daisy/pipeline/nlp/lexing/LexServiceRegistry.java \
 	modules/nlp/nlp-common/src/main/java/org/daisy/pipeline/nlp/lexing/LexService.java
-modules/nlp/nlp-common/.test modules/nlp/nlp-common/.install-doc : \
-	modules/nlp/nlp-common/src/test/resources/epub3_test.html \
-	modules/nlp/nlp-common/src/test/resources/zedai_test.xml \
-	modules/nlp/nlp-common/src/test/resources/dtbook_test.xml \
-	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/FrenchCategorizerTest.java \
-	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/RuledCategorizerTest.java \
-	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/ActualFilesTest.java \
-	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/SegmentsPrettyPrinter.java \
-	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/DummyLexer.java \
-	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/BreakDetectTest.java \
-	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/calabash/impl/StringComposerTest.java \
-	modules/nlp/nlp-common/src/test/java/org/daisy/pipeline/nlp/PrefixMatchTest.java \
-	modules/nlp/nlp-common/src/test/xprocspec/reshape.xprocspec
 .make/target/mk/modules/nlp/nlp-common/sources.mk : \
 	modules/nlp/nlp-common/src \
 	modules/nlp/nlp-common/src/test \

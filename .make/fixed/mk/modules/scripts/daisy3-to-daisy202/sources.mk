@@ -1,13 +1,4 @@
-modules/scripts/daisy3-to-daisy202/.test modules/scripts/daisy3-to-daisy202/.install modules/scripts/daisy3-to-daisy202/.install-doc $(TARGET_DIR)/state/modules/scripts/daisy3-to-daisy202/modified-since-release_ : \
-	modules/scripts/daisy3-to-daisy202/src/main/resources/META-INF/catalog.xml \
-	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/convert.xpl \
-	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/oebps-to-ncc-metadata.xpl \
-	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/convert-smils.xpl \
-	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/opf-to-metadata.xsl \
-	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/ncx-to-ncc.xsl \
-	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/daisy3-to-daisy202.xpl \
-	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/library.xpl
-modules/scripts/daisy3-to-daisy202/.test modules/scripts/daisy3-to-daisy202/.install-doc : \
+modules/scripts/daisy3-to-daisy202/.test : \
 	modules/scripts/daisy3-to-daisy202/src/test/resources/logback.xml \
 	modules/scripts/daisy3-to-daisy202/src/test/resources/Chimpanzee/0001.smil \
 	modules/scripts/daisy3-to-daisy202/src/test/resources/Chimpanzee/0017.smil \
@@ -69,9 +60,15 @@ modules/scripts/daisy3-to-daisy202/.test modules/scripts/daisy3-to-daisy202/.ins
 	modules/scripts/daisy3-to-daisy202/src/test/resources/Chimpanzee/img_page09b.jpg \
 	modules/scripts/daisy3-to-daisy202/src/test/java/XProcSpecTest.java \
 	modules/scripts/daisy3-to-daisy202/src/test/xprocspec/test_daisy3-to-daisy202.xprocspec \
-	modules/scripts/daisy3-to-daisy202/src/test/xprocspec/test_daisy3-to-daisy202.script.xprocspec
-modules/scripts/daisy3-to-daisy202/.install-doc : \
-	modules/scripts/daisy3-to-daisy202/doc/index.md
+	modules/scripts/daisy3-to-daisy202/src/test/xprocspec/test_daisy3-to-daisy202.script.xprocspec \
+	modules/scripts/daisy3-to-daisy202/src/main/resources/META-INF/catalog.xml \
+	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/convert.xpl \
+	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/oebps-to-ncc-metadata.xpl \
+	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/convert-smils.xpl \
+	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/opf-to-metadata.xsl \
+	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal/ncx-to-ncc.xsl \
+	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/daisy3-to-daisy202.xpl \
+	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/library.xpl
 .make/target/mk/modules/scripts/daisy3-to-daisy202/sources.mk : \
 	modules/scripts/daisy3-to-daisy202/src \
 	modules/scripts/daisy3-to-daisy202/src/test \
@@ -83,5 +80,4 @@ modules/scripts/daisy3-to-daisy202/.install-doc : \
 	modules/scripts/daisy3-to-daisy202/src/main/resources \
 	modules/scripts/daisy3-to-daisy202/src/main/resources/META-INF \
 	modules/scripts/daisy3-to-daisy202/src/main/resources/xml \
-	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal \
-	modules/scripts/daisy3-to-daisy202/doc
+	modules/scripts/daisy3-to-daisy202/src/main/resources/xml/internal

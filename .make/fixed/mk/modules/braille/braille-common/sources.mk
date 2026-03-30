@@ -1,4 +1,22 @@
-modules/braille/braille-common/.test modules/braille/braille-common/.install modules/braille/braille-common/.install-doc $(TARGET_DIR)/state/modules/braille/braille-common/modified-since-release_ : \
+modules/braille/braille-common/.test : \
+	modules/braille/braille-common/src/test/xspec/test_text-transform.xspec \
+	modules/braille/braille-common/src/test/resources/logback.xml \
+	modules/braille/braille-common/src/test/resources/uppercase-block-translator.xsl \
+	modules/braille/braille-common/src/test/resources/uppercase.xpl \
+	modules/braille/braille-common/src/test/resources/META-INF/catalog.xml \
+	modules/braille/braille-common/src/test/resources/OSGI-INF/uppercase-transform-provider.xml \
+	modules/braille/braille-common/src/test/resources/foobar.cti \
+	modules/braille/braille-common/src/test/java/ignore \
+	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/LocalesTest.java \
+	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/HyphenatorWithExceptionsTest.java \
+	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/UtilsTest.java \
+	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/QueryTest.java \
+	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/DefaultLineBreakerTest.java \
+	modules/braille/braille-common/src/test/java/XSpecAndXProcSpecTest.java \
+	modules/braille/braille-common/src/test/java/UppercaseTransform.java \
+	modules/braille/braille-common/src/test/xprocspec/test_abstract-block-translator.xprocspec \
+	modules/braille/braille-common/src/test/xprocspec/test_transform.xprocspec \
+	modules/braille/braille-common/src/test/xprocspec/test_parse_query.xprocspec \
 	modules/braille/braille-common/src/main/resources/META-INF/catalog.xml \
 	modules/braille/braille-common/src/main/resources/xml/block-translator.xpl \
 	modules/braille/braille-common/src/main/resources/xml/block-translator-from-text-transform.xsl \
@@ -8,7 +26,6 @@ modules/braille/braille-common/.test modules/braille/braille-common/.install mod
 	modules/braille/braille-common/src/main/resources/xml/data-types/transform-query.xml \
 	modules/braille/braille-common/src/main/resources/xml/abstract-block-translator.xsl \
 	modules/braille/braille-common/src/main/resources/xml/expand-pseudo-elements.xsl \
-	modules/braille/braille-common/src/main/resources/xml/delete-parameters.xpl \
 	modules/braille/braille-common/src/main/resources/xml/mark-transitions.xpl \
 	modules/braille/braille-common/src/main/resources/xml/xslt-for-each.xpl \
 	modules/braille/braille-common/src/main/resources/xml/mark-transitions.xsl \
@@ -58,27 +75,6 @@ modules/braille/braille-common/.test modules/braille/braille-common/.install mod
 	modules/braille/braille-common/src/main/java/org/daisy/pipeline/braille/common/HyphenationResourceParser.java \
 	modules/braille/braille-common/src/main/java/org/daisy/pipeline/braille/common/AbstractBrailleTranslator.java \
 	modules/braille/braille-common/src/main/README.md
-modules/braille/braille-common/.test modules/braille/braille-common/.install-doc : \
-	modules/braille/braille-common/src/test/xspec/test_text-transform.xspec \
-	modules/braille/braille-common/src/test/resources/logback.xml \
-	modules/braille/braille-common/src/test/resources/uppercase-block-translator.xsl \
-	modules/braille/braille-common/src/test/resources/uppercase.xpl \
-	modules/braille/braille-common/src/test/resources/META-INF/catalog.xml \
-	modules/braille/braille-common/src/test/resources/OSGI-INF/uppercase-transform-provider.xml \
-	modules/braille/braille-common/src/test/resources/foobar.cti \
-	modules/braille/braille-common/src/test/java/ignore \
-	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/LocalesTest.java \
-	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/HyphenatorWithExceptionsTest.java \
-	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/UtilsTest.java \
-	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/QueryTest.java \
-	modules/braille/braille-common/src/test/java/org/daisy/pipeline/braille/common/DefaultLineBreakerTest.java \
-	modules/braille/braille-common/src/test/java/XSpecAndXProcSpecTest.java \
-	modules/braille/braille-common/src/test/java/UppercaseTransform.java \
-	modules/braille/braille-common/src/test/xprocspec/test_abstract-block-translator.xprocspec \
-	modules/braille/braille-common/src/test/xprocspec/test_transform.xprocspec \
-	modules/braille/braille-common/src/test/xprocspec/test_parse_query.xprocspec
-modules/braille/braille-common/.install-doc : \
-	modules/braille/braille-common/doc/index.md
 .make/target/mk/modules/braille/braille-common/sources.mk : \
 	modules/braille/braille-common/src \
 	modules/braille/braille-common/src/test \
@@ -108,5 +104,4 @@ modules/braille/braille-common/.install-doc : \
 	modules/braille/braille-common/src/main/java/org/daisy/pipeline/braille/common/calabash \
 	modules/braille/braille-common/src/main/java/org/daisy/pipeline/braille/common/calabash/impl \
 	modules/braille/braille-common/src/main/java/org/daisy/pipeline/braille/common/saxon \
-	modules/braille/braille-common/src/main/java/org/daisy/pipeline/braille/common/saxon/impl \
-	modules/braille/braille-common/doc
+	modules/braille/braille-common/src/main/java/org/daisy/pipeline/braille/common/saxon/impl

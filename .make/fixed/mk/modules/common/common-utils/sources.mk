@@ -1,4 +1,15 @@
-modules/common/common-utils/.test modules/common/common-utils/.install modules/common/common-utils/.install-doc $(TARGET_DIR)/state/modules/common/common-utils/modified-since-release_ : \
+modules/common/common-utils/.test : \
+	modules/common/common-utils/src/test/xspec/i18n.xspec \
+	modules/common/common-utils/src/test/xspec/parse-xml-stylesheet-instructions.xspec \
+	modules/common/common-utils/src/test/xspec/numeral-conversion.xspec \
+	modules/common/common-utils/src/test/resources/logback.xml \
+	modules/common/common-utils/src/test/resources/test_parse-xml-stylesheet-instructions.xml \
+	modules/common/common-utils/src/test/java/XProcSpecTest.java \
+	modules/common/common-utils/src/test/java/org/daisy/pipeline/common/calabash/impl/ChunkerTest.java \
+	modules/common/common-utils/src/test/xprocspec/test_parse-xml-stylesheet-instructions.xprocspec \
+	modules/common/common-utils/src/test/xprocspec/assert.xprocspec \
+	modules/common/common-utils/src/test/xprocspec/error.xprocspec \
+	modules/common/common-utils/src/test/xprocspec/i18n-translate.xprocspec \
 	modules/common/common-utils/src/main/resources/META-INF/catalog.xml \
 	modules/common/common-utils/src/main/resources/xml/xproc/i18n-translate.xpl \
 	modules/common/common-utils/src/main/resources/xml/xproc/error.xpl \
@@ -36,18 +47,6 @@ modules/common/common-utils/.test modules/common/common-utils/.install modules/c
 	modules/common/common-utils/src/main/java/org/daisy/pipeline/common/rest/package-info.java \
 	modules/common/common-utils/src/main/java/org/daisy/pipeline/common/rest/Request.java \
 	modules/common/common-utils/src/main/java/org/daisy/pipeline/common/NormalizeLang.java
-modules/common/common-utils/.test modules/common/common-utils/.install-doc : \
-	modules/common/common-utils/src/test/xspec/i18n.xspec \
-	modules/common/common-utils/src/test/xspec/parse-xml-stylesheet-instructions.xspec \
-	modules/common/common-utils/src/test/xspec/numeral-conversion.xspec \
-	modules/common/common-utils/src/test/resources/logback.xml \
-	modules/common/common-utils/src/test/resources/test_parse-xml-stylesheet-instructions.xml \
-	modules/common/common-utils/src/test/java/XProcSpecTest.java \
-	modules/common/common-utils/src/test/java/org/daisy/pipeline/common/calabash/impl/ChunkerTest.java \
-	modules/common/common-utils/src/test/xprocspec/test_parse-xml-stylesheet-instructions.xprocspec \
-	modules/common/common-utils/src/test/xprocspec/assert.xprocspec \
-	modules/common/common-utils/src/test/xprocspec/error.xprocspec \
-	modules/common/common-utils/src/test/xprocspec/i18n-translate.xprocspec
 .make/target/mk/modules/common/common-utils/sources.mk : \
 	modules/common/common-utils/src \
 	modules/common/common-utils/src/test \

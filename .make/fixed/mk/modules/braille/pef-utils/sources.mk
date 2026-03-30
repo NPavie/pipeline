@@ -1,4 +1,23 @@
-modules/braille/pef-utils/.test modules/braille/pef-utils/.install modules/braille/pef-utils/.install-doc $(TARGET_DIR)/state/modules/braille/pef-utils/modified-since-release_ : \
+modules/braille/pef-utils/.test : \
+	modules/braille/pef-utils/src/test/resources/logback.xml \
+	modules/braille/pef-utils/src/test/resources/pef_4.pef \
+	modules/braille/pef-utils/src/test/resources/merged_sections.pef \
+	modules/braille/pef-utils/src/test/resources/pef_3.pef \
+	modules/braille/pef-utils/src/test/resources/pef_2.pef \
+	modules/braille/pef-utils/src/test/resources/pef_1.pef \
+	modules/braille/pef-utils/src/test/resources/merged_volumes.pef \
+	modules/braille/pef-utils/src/test/resources/pef_3_1.brf \
+	modules/braille/pef-utils/src/test/resources/pef_3_2.brf \
+	modules/braille/pef-utils/src/test/resources/.gitattributes \
+	modules/braille/pef-utils/src/test/resources/test_store_06.brf \
+	modules/braille/pef-utils/src/test/resources/test_store_07.brf \
+	modules/braille/pef-utils/src/test/resources/test_store_05.brf \
+	modules/braille/pef-utils/src/test/java/XProcSpecTest.java \
+	modules/braille/pef-utils/src/test/java/org/daisy/pipeline/braille/pef/impl/TableCatalogTest.java \
+	modules/braille/pef-utils/src/test/java/PefCoreTest.java \
+	modules/braille/pef-utils/src/test/xprocspec/test_padding.xprocspec \
+	modules/braille/pef-utils/src/test/xprocspec/test_merge.xprocspec \
+	modules/braille/pef-utils/src/test/xprocspec/test_store.xprocspec \
 	modules/braille/pef-utils/src/main/resources/NotCourierSans-Bold.ttf \
 	modules/braille/pef-utils/src/main/resources/odt2braille8.ttf \
 	modules/braille/pef-utils/src/main/resources/META-INF/catalog.xml \
@@ -45,26 +64,6 @@ modules/braille/pef-utils/.test modules/braille/pef-utils/.install modules/brail
 	modules/braille/pef-utils/src/main/java/org/daisy/pipeline/braille/pef/saxon/impl/EncodeDefinition.java \
 	modules/braille/pef-utils/src/main/java/org/daisy/pipeline/braille/pef/TableProvider.java \
 	modules/braille/pef-utils/src/main/README.md
-modules/braille/pef-utils/.test modules/braille/pef-utils/.install-doc : \
-	modules/braille/pef-utils/src/test/resources/logback.xml \
-	modules/braille/pef-utils/src/test/resources/pef_4.pef \
-	modules/braille/pef-utils/src/test/resources/merged_sections.pef \
-	modules/braille/pef-utils/src/test/resources/pef_3.pef \
-	modules/braille/pef-utils/src/test/resources/pef_2.pef \
-	modules/braille/pef-utils/src/test/resources/pef_1.pef \
-	modules/braille/pef-utils/src/test/resources/merged_volumes.pef \
-	modules/braille/pef-utils/src/test/resources/pef_3_1.brf \
-	modules/braille/pef-utils/src/test/resources/pef_3_2.brf \
-	modules/braille/pef-utils/src/test/resources/.gitattributes \
-	modules/braille/pef-utils/src/test/resources/test_store_06.brf \
-	modules/braille/pef-utils/src/test/resources/test_store_07.brf \
-	modules/braille/pef-utils/src/test/resources/test_store_05.brf \
-	modules/braille/pef-utils/src/test/java/XProcSpecTest.java \
-	modules/braille/pef-utils/src/test/java/org/daisy/pipeline/braille/pef/impl/TableCatalogTest.java \
-	modules/braille/pef-utils/src/test/java/PefCoreTest.java \
-	modules/braille/pef-utils/src/test/xprocspec/test_padding.xprocspec \
-	modules/braille/pef-utils/src/test/xprocspec/test_merge.xprocspec \
-	modules/braille/pef-utils/src/test/xprocspec/test_store.xprocspec
 .make/target/mk/modules/braille/pef-utils/sources.mk : \
 	modules/braille/pef-utils/src \
 	modules/braille/pef-utils/src/test \

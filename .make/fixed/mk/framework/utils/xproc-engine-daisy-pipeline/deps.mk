@@ -6,9 +6,7 @@ $(TARGET_DIR)/state/framework/utils/xproc-engine-daisy-pipeline/last-tested : $(
 # this rule overrides the implicit rule in main.mk
 # note that because the modified-since-release_ files created by main.mk, are deleted,
 # this rule gets executed at least once
-$(TARGET_DIR)/state/framework/utils/xproc-engine-daisy-pipeline/modified-since-release_ : framework/utils/xproc-engine-daisy-pipeline/pom.xml \
-	$(TARGET_DIR)/state/framework/parent/modified-since-release \
-	$(TARGET_DIR)/state/framework/common-utils/modified-since-release
+$(TARGET_DIR)/state/framework/utils/xproc-engine-daisy-pipeline/modified-since-release_ : framework/utils/xproc-engine-daisy-pipeline/pom.xml $(TARGET_DIR)/state/framework/parent/modified-since-release
 	mkdirs("$(dir $@)"); \
 	try (OutputStream s = new FileOutputStream("$@")) { \
 		ModificationType modified = isModifiedSinceLastRelease(new File("$<").getParentFile()); \
@@ -53,9 +51,7 @@ framework/utils/xproc-engine-daisy-pipeline/.install-doc : | .maven-init .group-
 framework/utils/xproc-engine-daisy-pipeline/.install-doc : %/.install-doc : %/pom.xml | %/.compile-dependencies %/.test-dependencies
 
 .SECONDARY : framework/utils/xproc-engine-daisy-pipeline/.compile-dependencies framework/utils/xproc-engine-daisy-pipeline/.test-dependencies
-framework/utils/xproc-engine-daisy-pipeline/.compile-dependencies : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.5-SNAPSHOT/framework-parent-1.15.5-SNAPSHOT.pom \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1-SNAPSHOT/common-utils-6.4.1-SNAPSHOT.jar
+framework/utils/xproc-engine-daisy-pipeline/.compile-dependencies : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.7-SNAPSHOT/framework-parent-1.15.7-SNAPSHOT.pom
 framework/utils/xproc-engine-daisy-pipeline/.test-dependencies :
 
 $(MVN_LOCAL_REPOSITORY)/org/daisy/maven/xproc-engine-daisy-pipeline/1.14.8/xproc-engine-daisy-pipeline-1.14.8.% \
@@ -66,9 +62,7 @@ $(MVN_LOCAL_REPOSITORY)/org/daisy/maven/xproc-engine-daisy-pipeline/1.14.8/xproc
 framework/utils/xproc-engine-daisy-pipeline/.release : framework/.release
 	+$(EVAL) mvn.releaseModulesInDir("framework").apply("utils/xproc-engine-daisy-pipeline");
 
-framework/utils/xproc-engine-daisy-pipeline/.release : \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.5/framework-parent-1.15.5.pom \
-	$(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/common-utils/6.4.1/common-utils-6.4.1.jar
+framework/utils/xproc-engine-daisy-pipeline/.release : $(MVN_LOCAL_REPOSITORY)/org/daisy/pipeline/framework-parent/1.15.7/framework-parent-1.15.7.pom
 
 clean : framework/utils/xproc-engine-daisy-pipeline/.clean
 .PHONY : framework/utils/xproc-engine-daisy-pipeline/.clean

@@ -1,13 +1,4 @@
-modules/braille/texhyph-utils/.test modules/braille/texhyph-utils/.install modules/braille/texhyph-utils/.install-doc $(TARGET_DIR)/state/modules/braille/texhyph-utils/modified-since-release_ : \
-	modules/braille/texhyph-utils/src/main/resources/xml/library.xsl \
-	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/impl/TexHyphenatorDotifyImpl.java \
-	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/impl/TexHyphenatorSimpleImpl.java \
-	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/impl/TexHyphenatorTableRegistry.java \
-	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/TexHyphenator.java \
-	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/TexHyphenatorTablePath.java \
-	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/package-info.java \
-	modules/braille/texhyph-utils/src/main/README.md
-modules/braille/texhyph-utils/.test modules/braille/texhyph-utils/.install-doc : \
+modules/braille/texhyph-utils/.test : \
 	modules/braille/texhyph-utils/src/test/xspec/.gitkeep \
 	modules/braille/texhyph-utils/src/test/resources/logback.xml \
 	modules/braille/texhyph-utils/src/test/resources/tables/foobar.properties \
@@ -17,9 +8,15 @@ modules/braille/texhyph-utils/.test modules/braille/texhyph-utils/.install-doc :
 	modules/braille/texhyph-utils/src/test/resources/foobar.tex \
 	modules/braille/texhyph-utils/src/test/java/TexHyphenatorCoreTest.java \
 	modules/braille/texhyph-utils/src/test/java/TablePath.java \
-	modules/braille/texhyph-utils/src/test/java/XSpecTest.java
-modules/braille/texhyph-utils/.install-doc : \
-	modules/braille/texhyph-utils/doc/index.md
+	modules/braille/texhyph-utils/src/test/java/XSpecTest.java \
+	modules/braille/texhyph-utils/src/main/resources/xml/library.xsl \
+	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/impl/TexHyphenatorDotifyImpl.java \
+	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/impl/TexHyphenatorSimpleImpl.java \
+	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/impl/TexHyphenatorTableRegistry.java \
+	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/TexHyphenator.java \
+	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/TexHyphenatorTablePath.java \
+	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/package-info.java \
+	modules/braille/texhyph-utils/src/main/README.md
 .make/target/mk/modules/braille/texhyph-utils/sources.mk : \
 	modules/braille/texhyph-utils/src \
 	modules/braille/texhyph-utils/src/test \
@@ -37,5 +34,4 @@ modules/braille/texhyph-utils/.install-doc : \
 	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline \
 	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille \
 	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex \
-	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/impl \
-	modules/braille/texhyph-utils/doc
+	modules/braille/texhyph-utils/src/main/java/org/daisy/pipeline/braille/tex/impl
