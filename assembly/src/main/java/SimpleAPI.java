@@ -11,6 +11,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,6 +33,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.daisy.common.messaging.Message;
+import org.daisy.common.messaging.ProgressMessage;
 import org.daisy.common.messaging.Message.Level;
 import org.daisy.common.messaging.MessageAccessor;
 import org.daisy.common.spi.CreateOnStart;
@@ -61,6 +65,8 @@ import xml.ScriptXmlWriter;
 import xml.ScriptsXmlWriter;
 import org.w3c.dom.Document;
 import com.google.common.base.Optional;
+
+import java.math.BigDecimal;
 
 /**
  * A simplified Java API consisting of a {@link #startJob()} method that starts a job based on a
@@ -337,18 +343,17 @@ public class SimpleAPI {
 			System.exit(1);
 		}
 		while (true) {
-			for (Message m : job.getNewMessages()) {
-				System.err.println(m.getText());
-			}
+			for (String m : job.getNewMessages()) System.out.println(m);
 			switch (job.getStatus()) {
 			case SUCCESS:
 			case FAIL:
 			case ERROR:
+				System.out.println("Job finished with status: " + job.getStatus());
 				System.exit(0);
 			case IDLE:
 			case RUNNING:
 			default:
-				Thread.sleep(1000);
+				Thread.sleep(330);
 			}
 		}
 	}
@@ -611,8 +616,52 @@ public class SimpleAPI {
 			}
 		}
 
-		private final List<Message> messagesQueue = new ArrayList<>();
-		private int lastMessage = -1;
+
+
+		public class MessageQueueItem {
+			public final Message message;
+			public boolean isPrinted = false;
+			private int level = 0;
+
+			public MessageQueueItem(Message message, int level) {
+				this.message = message;
+				this.level = level;
+			}
+			public synchronized String print() {
+				String indent = " > ";
+				for (int i = 0; i < level; i++) {
+					indent += "|   ";
+				}
+				//System.out.println(dateFormat.format(message.getTimeStamp()) +  indent + message.getText());
+				this.isPrinted = true;
+				return dateFormat.format(message.getTimeStamp()) +  indent + message.getText();
+			}
+		}
+
+
+		private final HashMap<Integer, MessageQueueItem> messagesMap = new HashMap<>();
+		
+		private double jobProgress = 0.0;
+		private boolean progressIsUpdated = false;
+
+		public synchronized void updateProgress(double progress) {
+			this.jobProgress = progress;
+			this.progressIsUpdated = true;
+		}
+
+		public synchronized boolean isProgressUpdated() {
+			return progressIsUpdated;
+		}
+
+		public synchronized double getUpdatedProgress() {
+			progressIsUpdated = false;
+			return jobProgress;
+		}
+
+		private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+		// Note : fallback solution while i cannot get the deep progress.
+		// - Added a progress message starting with "progress:" in the xsl i want to monitor
+		// - When consuming messages, if a message starts with "progress:", parse the progress value materialized by regex \d+\\\d+.
 
 		/**
 		 * Fill the message buffer queue for logging. The queue is returned and emptied on each
@@ -622,26 +671,80 @@ public class SimpleAPI {
 		 * @param seqNum see {@link MessageAccessor#listen()}
 		 */
 		private synchronized void consumeMessage(MessageAccessor accessor, int seqNum) {
-			for (Message m :
-					accessor.createFilter()
-					        .greaterThan(lastMessage)
-					        .filterLevels(Collections.singleton(Level.INFO))
-					        .getMessages()) {
-				if (m.getSequence() > lastMessage) {
-					messagesQueue.add(m);
+			// Note : accessor getters seems to only retrieve top level messages
+			// - Flattening the messages to get all progress messages and their portion/progress values,
+			// - store them in a map with their sequence number as key to avoid duplicates and to keep track of already retrieved messages.
+			List<MessageQueueItem> temp = new ArrayList<>();
+			for (Message m : accessor.getAll()
+			) {
+				temp.addAll(parseMessages(m));
+			}
+			for (MessageQueueItem mqi : temp) {
+				if(!messagesMap.containsKey(mqi.message.getSequence())) {
+					if(mqi.message.getText().startsWith("progress: ")) {
+						// Special "progress: message not to be printed but to update the job progress."
+						String[] parts = mqi.message.getText().split("progress: ")[1].trim().split("/");
+						if (parts.length == 2) {
+							try {
+								//System.out.println(mqi.message.getSequence() + " DEBUG > Found progress message with progress: " + parts[0] + " and portion: " + parts[1]);
+								BigDecimal progress = new BigDecimal(parts[0]);
+								BigDecimal portion = new BigDecimal(parts[1]);
+								//System.out.println(mqi.message.getSequence() + " DEBUG > Test : " + Float.toString(progress.floatValue()) + " and portion: " + Float.toString(portion.floatValue()));
+								updateProgress(progress.doubleValue() / portion.doubleValue());
+							} catch (NumberFormatException e) {
+								System.err.println("Invalid progress message format: " + mqi.message.getText() + " " + e.getMessage());
+							}
+						} else {
+							System.err.println("Invalid progress message format not enough parts in : " + mqi.message.getText());
+						}
+					} else {
+						messagesMap.put(mqi.message.getSequence(), mqi);
+						// String indent = " > ";
+						// for (int i = 0; i < mqi.level; i++) {
+						// 	indent += "|   ";
+						// }
+						// System.out.println(dateFormat.format(mqi.message.getTimeStamp()) +  indent + mqi.message.getText());
+					}
+					
 				}
 			}
-			lastMessage = seqNum;
+		}
+
+		public synchronized HashMap<Integer, MessageQueueItem> getMessagesMap() {
+			return messagesMap;
+		}
+
+		private synchronized List<MessageQueueItem> parseMessages(Message m){
+			return parseMessages(m, 0);
+		}
+
+		private synchronized List<MessageQueueItem> parseMessages(Message m, int level) {
+			List<MessageQueueItem> result = new ArrayList<>();
+			if (m instanceof ProgressMessage) {
+				ProgressMessage jm = (ProgressMessage)m;
+				result.add(new MessageQueueItem(jm, level));
+				for (Message m2 : jm) {
+					result.addAll(parseMessages(m2, level + 1));
+				}
+			} else {
+				result.add(new MessageQueueItem(m, level));
+			}
+			
+			return result;
 		}
 
 		/**
 		 * Get the list of new top-level messages (messages that have not been returned yet by a
 		 * previous call to {@link #getNewMessages()}).
 		 */
-		public synchronized List<Message> getNewMessages() {
-			List<Message> result = new ArrayList<>(messagesQueue);
-			//List.copyOf(messagesQueue);
-			messagesQueue.clear();
+		public synchronized List<String> getNewMessages() {
+
+			List<String> result = new ArrayList<>();
+			for (MessageQueueItem mqi : messagesMap.values()) {
+				if (!mqi.isPrinted) {
+					result.add(mqi.print());
+				}
+			}
 			return result;
 		}
 
