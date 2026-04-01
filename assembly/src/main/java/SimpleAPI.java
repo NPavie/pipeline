@@ -262,6 +262,8 @@ public class SimpleAPI {
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
 			List<SettableProperty> properties = new ArrayList<>(Properties.getSettableProperties());
+			Collections.sort(properties, (o1, o2) -> (o1.getName().compareTo(o2.getName())));
+
 			Document propertiesXml = new PropertiesXmlWriter(properties,"file:///.",true).getXmlDocument();
 			DOMSource source = new DOMSource(propertiesXml);
 			StringWriter writer = new StringWriter();
@@ -641,11 +643,11 @@ public class SimpleAPI {
 
 		private final HashMap<Integer, MessageQueueItem> messagesMap = new HashMap<>();
 		
-		private double jobProgress = 0.0;
+		private int jobStepProgress = 0;
+		private int jobStepTotal = 0;
 		private boolean progressIsUpdated = false;
-
-		public synchronized void updateProgress(double progress) {
-			this.jobProgress = progress;
+		public synchronized void updateProgress(int progress) {
+			this.jobStepProgress = progress;
 			this.progressIsUpdated = true;
 		}
 
@@ -653,9 +655,18 @@ public class SimpleAPI {
 			return progressIsUpdated;
 		}
 
-		public synchronized double getUpdatedProgress() {
+		public synchronized int getUpdatedProgress() {
 			progressIsUpdated = false;
-			return jobProgress;
+			return jobStepProgress;
+		}
+
+		public synchronized void updateTotal(int total) {
+			this.jobStepTotal = total;
+			this.progressIsUpdated = true;
+		}
+
+		public synchronized int getUpdatedTotal() {
+			return jobStepTotal;
 		}
 
 		private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
@@ -686,11 +697,15 @@ public class SimpleAPI {
 						String[] parts = mqi.message.getText().split("progress: ")[1].trim().split("/");
 						if (parts.length == 2) {
 							try {
+								
 								//System.out.println(mqi.message.getSequence() + " DEBUG > Found progress message with progress: " + parts[0] + " and portion: " + parts[1]);
 								BigDecimal progress = new BigDecimal(parts[0]);
 								BigDecimal portion = new BigDecimal(parts[1]);
-								//System.out.println(mqi.message.getSequence() + " DEBUG > Test : " + Float.toString(progress.floatValue()) + " and portion: " + Float.toString(portion.floatValue()));
-								updateProgress(progress.doubleValue() / portion.doubleValue());
+								if(jobStepTotal != portion.intValue()) {
+									updateTotal(portion.intValue());
+								}
+								updateProgress(progress.intValue());
+								System.out.println(mqi.message.getSequence() + " DEBUG > Test : " + Float.toString(progress.floatValue()) + " and portion: " + Float.toString(portion.floatValue()));
 							} catch (NumberFormatException e) {
 								System.err.println("Invalid progress message format: " + mqi.message.getText() + " " + e.getMessage());
 							}
