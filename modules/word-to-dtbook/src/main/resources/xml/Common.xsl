@@ -131,10 +131,10 @@
 			<!-- If the node parsing context match the wanted matter context (i.e. node context is Bodymatter and requested matter type is Bodymatter ) -->
 			<xsl:if test="d:GetCurrentMatterType($myObj)=$matterType">
 				<xsl:message terminate="no">
-							<xsl:value-of select="concat('progress: ',string(position()),'/',string($ElementCountToConvert))"/>
+					<xsl:value-of select="concat('Converting paragraph ',string(position()),'/',string($ElementCountToConvert))"/>
 				</xsl:message>
 				<xsl:call-template name="pf:progress">
-					<xsl:with-param name="progress" select="concat(string(position()),'/',string($ElementCountToConvert))"/>
+					<xsl:with-param name="progress" select="concat('1/',string($ElementCountToConvert))"/>
 				</xsl:call-template>
 				<xsl:choose>
 					<!--Checking for Paragraph element-->
@@ -1921,9 +1921,29 @@
 				) or preceding-sibling::node()[1]/w:pPr/w:pStyle[substring(@w:val,1,7)='Heading']
 				or preceding-sibling::node()[1]/w:pPr/w:rPr/w:vanish
 			)">
-			<xsl:variable name="val" as="xs:string" select="$numberingXml//w:numbering/w:num[@w:numId=$checknumId]/w:abstractNumId/@w:val"/>
+			<!-- NP 2026 05 04 : case where numbering is set to type 0 but no such reference exists in numbering.xml
+			  (meaning val could be empty here, and then type would be empty too) -->
+			<xsl:variable name="val" as="xs:string">
+				<xsl:choose>
+					<xsl:when test="$numberingXml//w:numbering/w:num[@w:numId=$checknumId]/w:abstractNumId/@w:val">
+						<xsl:value-of select="$numberingXml//w:numbering/w:num[@w:numId=$checknumId]/w:abstractNumId/@w:val"/>
+					</xsl:when>
+					<xsl:otherwise>
+							<xsl:value-of select="''"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
 			<!--Checking numbering.xml for the type of List-->
-			<xsl:variable    name="type" as="xs:string" select="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$val]/w:lvl[@w:ilvl=$checkilvl]/w:numFmt/@w:val"/>
+			<xsl:variable name="type" as="xs:string">
+				<xsl:choose>
+					<xsl:when test="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$val]/w:lvl[@w:ilvl=$checkilvl]/w:numFmt/@w:val">
+						<xsl:value-of select="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$val]/w:lvl[@w:ilvl=$checkilvl]/w:numFmt/@w:val"/>
+					</xsl:when>
+					<xsl:otherwise>
+							<xsl:value-of select="''"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
 			<!--Checking for Ordered List type-->
 			<xsl:choose>
 				<xsl:when test="$type='decimal'">
@@ -1973,12 +1993,40 @@
 		<xsl:call-template name="closelist">
 			<xsl:with-param name="close" select="$checkilvl"/>
 		</xsl:call-template>
-
-		<xsl:variable name="val" as="xs:string" select="$numberingXml//w:numbering/w:num[@w:numId=$checknumId]/w:abstractNumId/@w:val"/>
+		<!-- NP 2026 05 04 : case where numbering is set to type 0 but no such reference exists in numbering.xml
+			  (meaning val could be empty here, and then numFormat and lvlText too, and recstart could crash then) -->
+		<xsl:variable name="val" as="xs:string">
+			<xsl:choose>
+				<xsl:when test="$numberingXml//w:numbering/w:num[@w:numId=$checknumId]/w:abstractNumId/@w:val">
+					<xsl:value-of select="$numberingXml//w:numbering/w:num[@w:numId=$checknumId]/w:abstractNumId/@w:val"/>
+				</xsl:when>
+				<xsl:otherwise>
+						<xsl:value-of select="''"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<!--Checking numbering.xml for the type of List-->
-		<xsl:variable    name="numFormat" as="xs:string" select="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$val]/w:lvl[@w:ilvl=$checkilvl]/w:numFmt/@w:val"/>
-		<xsl:variable    name="lvlText" as="xs:string" select="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$val]/w:lvl[@w:ilvl=$checkilvl]/w:lvlText/@w:val"/>
-
+		<xsl:variable    name="numFormat" as="xs:string">
+			<xsl:choose>
+				<xsl:when test="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$val]/w:lvl[@w:ilvl=$checkilvl]/w:numFmt/@w:val">
+					<xsl:value-of select="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$val]/w:lvl[@w:ilvl=$checkilvl]/w:numFmt/@w:val"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="''"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable    name="lvlText" as="xs:string">
+			<xsl:choose>
+				<xsl:when test="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$val]/w:lvl[@w:ilvl=$checkilvl]/w:lvlText/@w:val">
+					<xsl:value-of select="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$val]/w:lvl[@w:ilvl=$checkilvl]/w:lvlText/@w:val"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="''"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:call-template name="recStart">
 			<xsl:with-param name="abstLevel" select="$val"/>
 			<xsl:with-param name="level" select="$checkilvl"/>

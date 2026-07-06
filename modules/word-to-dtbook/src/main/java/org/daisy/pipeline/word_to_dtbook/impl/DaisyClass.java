@@ -14,6 +14,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.List;
@@ -466,7 +467,13 @@ public class DaisyClass {
 			}
 		}
 		if(!shapeIsExported){
-			LOGGER.warn(fileName + " shape was not exported - manual conversion to an image is required");
+			// Check if the shape was exported by SaveAsDAISY
+			if(System.getProperty("os.name").startsWith("Windows")
+				&& !new File(System.getenv("APPDATA"), "SaveAsDAISY/"+ fileName).exists())
+			{
+				LOGGER.warn(fileName + " shape was not exported - manual conversion to an image is required");
+			}
+			
 		}
 		id = id.replace(" ", "_");
 		return id;

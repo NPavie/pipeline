@@ -32,6 +32,7 @@
               <addModule>jdk.management.agent</addModule>
               <addModule>jdk.zipfs</addModule>
               <addModule>jdk.crypto.ec</addModule>
+              <addModule>jdk.accessibility</addModule>
               <!-- <addModule>jdk.jdwp.agent</addModule> -->
             </addModules>
           </configuration>
@@ -58,7 +59,7 @@
                 <configuration>
                   <classifier>linux</classifier>
                   <modulePaths>
-                    <modulePath>src/main/jre/OpenJDK17U-jdk_x64_linux_hotspot_17.0.7_7/jdk-17.0.7+7/jmods</modulePath>
+                    <modulePath>src/main/jre/OpenJDK17U-jdk_x64_linux_hotspot_17.0.19_10/jdk-17.0.19+10/jmods</modulePath>
                   </modulePaths>
                 </configuration>
               </execution>
@@ -85,7 +86,7 @@
                 <configuration>
                   <classifier>linux-arm64</classifier>
                   <modulePaths>
-                    <modulePath>src/main/jre/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.7_7/jdk-17.0.7+7/jmods</modulePath>
+                    <modulePath>src/main/jre/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.19_10/jdk-17.0.19+10/jmods</modulePath>
                   </modulePaths>
                 </configuration>
               </execution>
@@ -109,7 +110,7 @@
                 <configuration>
                   <classifier>mac</classifier>
                   <modulePaths>
-                    <modulePath>src/main/jre/OpenJDK17U-jdk_x64_mac_hotspot_17.0.7_7/jdk-17.0.7+7/Contents/Home/jmods</modulePath>
+                    <modulePath>src/main/jre/OpenJDK17U-jdk_x64_mac_hotspot_17.0.19_10/jdk-17.0.19+10/Contents/Home/jmods</modulePath>
                   </modulePaths>
                 </configuration>
               </execution>
@@ -133,7 +134,7 @@
                 <configuration>
                   <classifier>win32</classifier>
                   <modulePaths>
-                    <modulePath>src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.7_7/jdk-17.0.7+7/jmods</modulePath>
+                    <modulePath>src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.19_10/jdk-17.0.19+10/jmods</modulePath>
                   </modulePaths>
                 </configuration>
               </execution>
@@ -157,7 +158,7 @@
                 <configuration>
                   <classifier>win64</classifier>
                   <modulePaths>
-                    <modulePath>src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.7_7/jdk-17.0.7+7/jmods</modulePath>
+                    <modulePath>src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.19_10/jdk-17.0.19+10/jmods</modulePath>
                   </modulePaths>
                 </configuration>
               </execution>
