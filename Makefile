@@ -270,7 +270,7 @@ assembly/.install-win.zip : | .maven-init .group-eval
 
 .SECONDARY : assembly/.install-sad.zip
 assembly/.install-sad.zip : | .maven-init .group-eval
-	+$(EVAL) $(call make-assembly, "zip-sad"$(comma) "--"$(comma) "--without-persistence")
+	+$(EVAL) $(call make-assembly, "zip-sad"$(comma) "--"$(comma) "--without-persistence --without-webservice")
 
 .SECONDARY : assembly/.install-cli.deb
 assembly/.install-cli.deb : | .maven-init .group-eval

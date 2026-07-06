@@ -13,9 +13,11 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,6 +95,7 @@ public class SimpleAPI {
 		policy = ReferencePolicy.STATIC
 	)
 	public void setScriptRegistry(ScriptRegistry scriptRegistry) {
+		System.out.println(dateFormat.format(new java.util.Date()) + " : setting script registry ");
 		this.scriptRegistry = scriptRegistry;
 	}
 
@@ -104,6 +107,7 @@ public class SimpleAPI {
 		policy = ReferencePolicy.STATIC
 	)
 	public void setDatatypeRegistry(DatatypeRegistry datatypeRegistry) {
+		System.out.println(dateFormat.format(new java.util.Date()) + " : setting datatype registry ");
 		this.datatypeRegistry = datatypeRegistry;
 	}
 
@@ -115,22 +119,29 @@ public class SimpleAPI {
 		policy = ReferencePolicy.STATIC
 	)
 	public void setJobFactory(JobFactory jobFactory) {
+		System.out.println(dateFormat.format(new java.util.Date()) + " : setting job factory ");
 		this.jobFactory = jobFactory;
 	}
 
 	public CommandLineJob startJob(String scriptName, Map<String,? extends Iterable<String>> options)
 			throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
+		System.out.println(dateFormat.format(new java.util.Date()) + " : Start searching for script in the registry");
 		ScriptService<?> scriptService = scriptRegistry.getScript(scriptName);
 		if (scriptService == null)
 			throw new IllegalArgumentException(scriptName + " script not found");
+		System.out.println(dateFormat.format(new java.util.Date()) + " : found script in the registry, loading ... ");
 		Script script = scriptService.load();
+		System.out.println(dateFormat.format(new java.util.Date()) + " : Loaded the script, creating job ... ");
+
 		File fileBase = new File(System.getProperty("org.daisy.pipeline.cli.cwd", "."));
 		CommandLineJobParser parser = new CommandLineJobParser(script, fileBase);
 		for (Map.Entry<String,? extends Iterable<String>> e : options.entrySet())
 			for (String value : e.getValue())
 				parser.withArgument(e.getKey(), value);
 		CommandLineJob job = parser.createJob(jobFactory);
+		System.out.println(dateFormat.format(new java.util.Date()) + " : Job created, starting ... ");
 		new Thread(job).start();
+		System.out.println(dateFormat.format(new java.util.Date()) + " : Job started");
 		return job;
 	}
 
@@ -292,6 +303,13 @@ public class SimpleAPI {
 	 */
 	private static SimpleAPI INSTANCE;
 
+	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+	protected SimpleAPI() {
+		// private constructor to prevent instantiation
+		System.out.println(dateFormat.format(new java.util.Date()) + " : SimpleAPI constructor called ");
+	}
+
 	/**
 	 * Get the singleton {@link SimpleAPI} instance.
 	 */
@@ -302,6 +320,7 @@ public class SimpleAPI {
 					INSTANCE = (SimpleAPI)o;
 			if (INSTANCE == null)
 				throw new IllegalStateException();
+			System.out.println(dateFormat.format(new java.util.Date()) + " : SimpleAPI instance created");
 		}
 		return INSTANCE;
 	}
@@ -311,6 +330,9 @@ public class SimpleAPI {
 	 * Simple command line interface
 	 */
 	public static void main(String[] args) throws InterruptedException, IOException {
+		// Print start date and time with milliseconds precision
+		System.out.println(dateFormat.format(new java.util.Date()) + " : Starting SimpleAPI command line interface");
+
 		if (args.length < 1) {
 			System.err.println("Expected script argument");
 			System.exit(1);
@@ -346,6 +368,10 @@ public class SimpleAPI {
 		}
 		while (true) {
 			for (String m : job.getNewMessages()) System.out.println(m);
+			//System.out.println("accessor progress : " + accessor.getProgress().doubleValue() * 100 + "%");
+			if(job.isProgressUpdated()) {
+				System.out.println("Progression: " + job.getUpdatedProgress() * 100 + "%");
+			}
 			switch (job.getStatus()) {
 			case SUCCESS:
 			case FAIL:
@@ -355,7 +381,7 @@ public class SimpleAPI {
 			case IDLE:
 			case RUNNING:
 			default:
-				Thread.sleep(330);
+				Thread.sleep(1000);
 			}
 		}
 	}
@@ -618,6 +644,10 @@ public class SimpleAPI {
 			}
 		}
 
+		public String getLogFile() {
+			return job.getLogFile().toString();
+		}
+
 
 
 		public class MessageQueueItem {
@@ -636,38 +666,52 @@ public class SimpleAPI {
 				}
 				//System.out.println(dateFormat.format(message.getTimeStamp()) +  indent + message.getText());
 				this.isPrinted = true;
-				return dateFormat.format(message.getTimeStamp()) +  indent + message.getText();
+				if(message instanceof ProgressMessage) {
+					ProgressMessage jm = (ProgressMessage)message;
+					
+					//return dateFormat.format(message.getTimeStamp()) +  indent + jm.getText();
+					return indent + jm.getText();
+				} else {
+					//return dateFormat.format(message.getTimeStamp()) +  indent + message.getText();
+					return indent + message.getText();
+				}
 			}
 		}
 
 
 		private final HashMap<Integer, MessageQueueItem> messagesMap = new HashMap<>();
 		
-		private int jobStepProgress = 0;
-		private int jobStepTotal = 0;
+		private double jobStepProgress = 0;
+		//private int jobStepTotal = 0;
 		private boolean progressIsUpdated = false;
-		public synchronized void updateProgress(int progress) {
-			this.jobStepProgress = progress;
-			this.progressIsUpdated = true;
-		}
+		// public synchronized void updateProgress(double progress) {
+		// 	this.jobStepProgress = progress;
+		// 	this.progressIsUpdated = true;
+		// }
 
 		public synchronized boolean isProgressUpdated() {
+			double newProgress = job.getMonitor().getMessageAccessor().getProgress().doubleValue();
+			if(newProgress != jobStepProgress) {
+				this.jobStepProgress = newProgress;
+				this.progressIsUpdated = true;
+			}
 			return progressIsUpdated;
 		}
 
-		public synchronized int getUpdatedProgress() {
+
+		public synchronized double getUpdatedProgress() {
 			progressIsUpdated = false;
 			return jobStepProgress;
 		}
 
-		public synchronized void updateTotal(int total) {
-			this.jobStepTotal = total;
-			this.progressIsUpdated = true;
-		}
+		// public synchronized void updateTotal(int total) {
+		// 	this.jobStepTotal = total;
+		// 	this.progressIsUpdated = true;
+		// }
 
-		public synchronized int getUpdatedTotal() {
-			return jobStepTotal;
-		}
+		// public synchronized int getUpdatedTotal() {
+		// 	return jobStepTotal;
+		// }
 
 		private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 		// Note : fallback solution while i cannot get the deep progress.
@@ -691,28 +735,31 @@ public class SimpleAPI {
 				temp.addAll(parseMessages(m));
 			}
 			for (MessageQueueItem mqi : temp) {
-				if(!messagesMap.containsKey(mqi.message.getSequence())) {
-					if(mqi.message.getText().startsWith("progress: ")) {
-						// Special "progress: message not to be printed but to update the job progress."
-						String[] parts = mqi.message.getText().split("progress: ")[1].trim().split("/");
-						if (parts.length == 2) {
-							try {
-								
-								//System.out.println(mqi.message.getSequence() + " DEBUG > Found progress message with progress: " + parts[0] + " and portion: " + parts[1]);
-								BigDecimal progress = new BigDecimal(parts[0]);
-								BigDecimal portion = new BigDecimal(parts[1]);
-								if(jobStepTotal != portion.intValue()) {
-									updateTotal(portion.intValue());
-								}
-								updateProgress(progress.intValue());
-								System.out.println(mqi.message.getSequence() + " DEBUG > Test : " + Float.toString(progress.floatValue()) + " and portion: " + Float.toString(portion.floatValue()));
-							} catch (NumberFormatException e) {
-								System.err.println("Invalid progress message format: " + mqi.message.getText() + " " + e.getMessage());
-							}
-						} else {
-							System.err.println("Invalid progress message format not enough parts in : " + mqi.message.getText());
-						}
-					} else {
+				if(!messagesMap.containsKey(mqi.message.getSequence()))
+				{
+					// if(mqi.message.getText().startsWith("progress: "))
+					// {
+					// 	// Special "progress: message not to be printed but to update the job progress."
+					// 	String[] parts = mqi.message.getText().split("progress: ")[1].trim().split("/");
+					// 	if (parts.length == 2) {
+					// 		try {
+					// 			//System.out.println(mqi.message.getSequence() + " DEBUG > Found progress message with progress: " + parts[0] + " and portion: " + parts[1]);
+					// 			BigDecimal progress = new BigDecimal(parts[0]);
+					// 			BigDecimal portion = new BigDecimal(parts[1]);
+					// 			if(jobStepTotal != portion.intValue()) {
+					// 				updateTotal(portion.intValue());
+					// 			}
+					// 			updateProgress(progress.intValue());
+					// 			//System.out.println(mqi.message.getSequence() + " DEBUG > Test : " + Float.toString(progress.floatValue()) + " and portion: " + Float.toString(portion.floatValue()));
+					// 		} catch (NumberFormatException e) {
+					// 			System.err.println("Invalid progress message format: " + mqi.message.getText() + " " + e.getMessage());
+					// 		}
+					// 	} else {
+					// 		System.err.println("Invalid progress message format not enough parts in : " + mqi.message.getText());
+					// 	}
+					// }
+					// else 
+					{
 						messagesMap.put(mqi.message.getSequence(), mqi);
 						// String indent = " > ";
 						// for (int i = 0; i < mqi.level; i++) {
@@ -720,9 +767,21 @@ public class SimpleAPI {
 						// }
 						// System.out.println(dateFormat.format(mqi.message.getTimeStamp()) +  indent + mqi.message.getText());
 					}
-					
 				}
+				// else if(mqi.message instanceof ProgressMessage) {
+				// 		ProgressMessage jm = (ProgressMessage)mqi.message;
+				// 		BigDecimal portion = jm.getPortion();
+				// 		BigDecimal progress = jm.getProgress();
+				// 		ProgressMessage existing = (ProgressMessage) messagesMap.get(mqi.message.getSequence()).message;
+				// 		// if(existing.getPortion() != portion) {
+				// 		// 	System.out.println("DEBUG > Portion updated for message " + jm.getSequence() + jm.getText() + " from " + existing.getPortion() + " to " + portion);
+				// 		// }
+				// 		// if(existing.getProgress() != progress) {
+				// 		// 	System.out.println("DEBUG > Progress updated for message " + jm.getSequence() + jm.getText() + " from " + existing.getProgress() + " to " + progress);
+				// 		// }
+				// }
 			}
+
 		}
 
 		public synchronized HashMap<Integer, MessageQueueItem> getMessagesMap() {

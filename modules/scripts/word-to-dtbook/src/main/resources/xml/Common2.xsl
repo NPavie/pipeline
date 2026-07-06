@@ -688,8 +688,10 @@
 		</xsl:if>
 	</xsl:template>
 	
+	<!--Template to start the recursive numbering
+		Note that abstLevel could be empty here in case of "removed" list format -->
 	<xsl:template name="recStart">
-		<xsl:param name="abstLevel" as="xs:string"/>
+		<xsl:param name="abstLevel" as="xs:string?"/>
 		<xsl:param name="level" as="xs:integer"/>
 		<xsl:variable name="levelNumberingScheme" select="$numberingXml//w:numbering/w:abstractNum[@w:abstractNumId=$abstLevel]/w:lvl[@w:ilvl=$level]" />
 		<xsl:choose>
