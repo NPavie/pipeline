@@ -1,0 +1,286 @@
+package api;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
+import java.net.URI;
+import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.daisy.common.messaging.Message;
+import org.daisy.common.messaging.ProgressMessage;
+import org.daisy.common.messaging.MessageAccessor;
+import org.daisy.pipeline.job.Job;
+import org.daisy.pipeline.job.JobMonitor;
+import org.daisy.pipeline.job.JobResult;
+
+
+/**
+ * Job with a simplified API that stores results after completion.
+ */
+public class CommandLineJob implements Runnable, AutoCloseable {
+
+    private final Job job;
+    private final Map<String,URI> resultLocations;
+    private final AtomicBoolean completed = new AtomicBoolean(false);
+
+    public CommandLineJob(Job job, Map<String,URI> resultLocations) {
+        this.job = job;
+        this.resultLocations = resultLocations;
+        // Simplify monitoring of messages
+        MessageAccessor accessor = job.getMonitor().getMessageAccessor();
+        accessor.listen(
+            num -> {
+                consumeMessage(accessor, num);
+            }
+        );
+    }
+
+    /**
+     * Run the job and store the results
+     */
+    public void run() {
+        job.run();
+        try {
+            switch (job.getStatus()) {
+            case SUCCESS:
+            case FAIL:
+                List<File> existingFiles = new ArrayList<>();
+                for (String port : job.getResults().getPorts()) {
+                    if (resultLocations.containsKey(port)) {
+                        URI u = resultLocations.get(port);
+                        File f = new File(u);
+                        if (u.toString().endsWith("/"))
+                            for (JobResult r : job.getResults().getResults(port)) {
+                                File dest = new File(f, URLDecoder.decode(r.strip().getPath().toString(), "utf-8"));
+                                if (dest.exists())
+                                    existingFiles.add(dest);
+                                else
+                                    writeResult(r, dest);
+                            }
+                        else
+                            for (JobResult r : job.getResults().getResults(port))
+                                if (f.exists())
+                                    existingFiles.add(f);
+                                else
+                                    writeResult(r, f);
+                    }
+                }
+                if (!existingFiles.isEmpty())
+                    throw new IOException("Some results could not be written: " + existingFiles);
+            default:
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        completed.set(true);
+    }
+
+    /**
+     * Get the current status
+     */
+    public Job.Status getStatus() {
+        Job.Status s = job.getStatus();
+        switch (s) {
+        case SUCCESS:
+        case FAIL:
+        case ERROR:
+            return completed.get() ? s : Job.Status.RUNNING;
+        case IDLE:
+        case RUNNING:
+        default:
+            return s;
+        }
+    }
+
+    public String getLogFile() {
+        return job.getLogFile().toString();
+    }
+
+
+
+    private final HashMap<Integer, MessageQueueItem> messagesMap = new HashMap<>();
+    
+    private double jobStepProgress = 0;
+    //private int jobStepTotal = 0;
+    private boolean progressIsUpdated = false;
+    // public synchronized void updateProgress(double progress) {
+    // 	this.jobStepProgress = progress;
+    // 	this.progressIsUpdated = true;
+    // }
+
+    public synchronized boolean isProgressUpdated() {
+        double newProgress = job.getMonitor().getMessageAccessor().getProgress().doubleValue();
+        if(newProgress != jobStepProgress) {
+            this.jobStepProgress = newProgress;
+            this.progressIsUpdated = true;
+        }
+        return progressIsUpdated;
+    }
+
+
+    public synchronized double getUpdatedProgress() {
+        progressIsUpdated = false;
+        return jobStepProgress;
+    }
+
+    // public synchronized void updateTotal(int total) {
+    // 	this.jobStepTotal = total;
+    // 	this.progressIsUpdated = true;
+    // }
+
+    // public synchronized int getUpdatedTotal() {
+    // 	return jobStepTotal;
+    // }
+
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    // Note : fallback solution while i cannot get the deep progress.
+    // - Added a progress message starting with "progress:" in the xsl i want to monitor
+    // - When consuming messages, if a message starts with "progress:", parse the progress value materialized by regex \d+\\\d+.
+
+    /**
+     * Fill the message buffer queue for logging. The queue is returned and emptied on each
+     * {@link #getNewMessages()} call.
+     *
+     * @param accessor the job's {@link MessageAccessor}
+     * @param seqNum see {@link MessageAccessor#listen()}
+     */
+    private synchronized void consumeMessage(MessageAccessor accessor, int seqNum) {
+        // Note : accessor getters seems to only retrieve top level messages
+        // - Flattening the messages to get all progress messages and their portion/progress values,
+        // - store them in a map with their sequence number as key to avoid duplicates and to keep track of already retrieved messages.
+        List<MessageQueueItem> temp = new ArrayList<>();
+        for (Message m : accessor.getAll()
+        ) {
+            temp.addAll(parseMessages(m));
+        }
+        for (MessageQueueItem mqi : temp) {
+            if(!messagesMap.containsKey(mqi.message.getSequence()))
+            {
+                // if(mqi.message.getText().startsWith("progress: "))
+                // {
+                // 	// Special "progress: message not to be printed but to update the job progress."
+                // 	String[] parts = mqi.message.getText().split("progress: ")[1].trim().split("/");
+                // 	if (parts.length == 2) {
+                // 		try {
+                // 			//System.out.println(mqi.message.getSequence() + " DEBUG > Found progress message with progress: " + parts[0] + " and portion: " + parts[1]);
+                // 			BigDecimal progress = new BigDecimal(parts[0]);
+                // 			BigDecimal portion = new BigDecimal(parts[1]);
+                // 			if(jobStepTotal != portion.intValue()) {
+                // 				updateTotal(portion.intValue());
+                // 			}
+                // 			updateProgress(progress.intValue());
+                // 			//System.out.println(mqi.message.getSequence() + " DEBUG > Test : " + Float.toString(progress.floatValue()) + " and portion: " + Float.toString(portion.floatValue()));
+                // 		} catch (NumberFormatException e) {
+                // 			System.err.println("Invalid progress message format: " + mqi.message.getText() + " " + e.getMessage());
+                // 		}
+                // 	} else {
+                // 		System.err.println("Invalid progress message format not enough parts in : " + mqi.message.getText());
+                // 	}
+                // }
+                // else 
+                {
+                    messagesMap.put(mqi.message.getSequence(), mqi);
+                    // String indent = " > ";
+                    // for (int i = 0; i < mqi.level; i++) {
+                    // 	indent += "|   ";
+                    // }
+                    // System.out.println(dateFormat.format(mqi.message.getTimeStamp()) +  indent + mqi.message.getText());
+                }
+            }
+            // else if(mqi.message instanceof ProgressMessage) {
+            // 		ProgressMessage jm = (ProgressMessage)mqi.message;
+            // 		BigDecimal portion = jm.getPortion();
+            // 		BigDecimal progress = jm.getProgress();
+            // 		ProgressMessage existing = (ProgressMessage) messagesMap.get(mqi.message.getSequence()).message;
+            // 		// if(existing.getPortion() != portion) {
+            // 		// 	System.out.println("DEBUG > Portion updated for message " + jm.getSequence() + jm.getText() + " from " + existing.getPortion() + " to " + portion);
+            // 		// }
+            // 		// if(existing.getProgress() != progress) {
+            // 		// 	System.out.println("DEBUG > Progress updated for message " + jm.getSequence() + jm.getText() + " from " + existing.getProgress() + " to " + progress);
+            // 		// }
+            // }
+        }
+
+    }
+
+    public synchronized HashMap<Integer, MessageQueueItem> getMessagesMap() {
+        return messagesMap;
+    }
+
+    private synchronized List<MessageQueueItem> parseMessages(Message m){
+        return parseMessages(m, 0);
+    }
+
+    private synchronized List<MessageQueueItem> parseMessages(Message m, int level) {
+        List<MessageQueueItem> result = new ArrayList<>();
+        if (m instanceof ProgressMessage) {
+            ProgressMessage jm = (ProgressMessage)m;
+            result.add(new MessageQueueItem(jm, level));
+            for (Message m2 : jm) {
+                result.addAll(parseMessages(m2, level + 1));
+            }
+        } else {
+            result.add(new MessageQueueItem(m, level));
+        }
+        
+        return result;
+    }
+
+    /**
+     * Get the list of new top-level messages (messages that have not been returned yet by a
+     * previous call to {@link #getNewMessages()}).
+     */
+    public synchronized List<String> getNewMessages() {
+
+        List<String> result = new ArrayList<>();
+        for (MessageQueueItem mqi : messagesMap.values()) {
+            if (!mqi.isPrinted) {
+                result.add(mqi.print());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get the list of all error messages reported during the job execution.
+     */
+    public List<Message> getErrors() {
+        return job.getMonitor().getMessageAccessor().getErrors();
+    }
+
+    /**
+     * For advanced job monitoring, get the job's {@link JobMonitor}. From this object, you can
+     * access all messages reported for the job through {@link JobMonitor#getMessageAccessor()},
+     * or register your own status notifications callback through {@link
+     * JobMonitor#getStatusUpdates()}.
+     */
+    public JobMonitor getMonitor() {
+        return job.getMonitor();
+    }
+
+    public void close() {
+        job.close();
+    }
+
+    private void writeResult(JobResult result, File dest) throws IOException {
+        dest.getParentFile().mkdirs();
+        try (InputStream is = result.read();
+                OutputStream os = new FileOutputStream(dest)) {
+            byte buff[] = new byte[1024];
+            int read = 0;
+            while ((read = is.read(buff)) > 0) {
+                os.write(buff, 0, read);
+            }
+        }
+    }
+}
