@@ -1,5 +1,7 @@
 import javax.swing.*;
 
+import api.SimpleAPI;
+import api.CommandLineJob;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+
 
 // TODO Plan on improving this micro app
 // - Add a dynamic window for conversion parameters form
@@ -139,7 +143,7 @@ public class SimpleUI {
                 }));
                 
                 logMessage("Starting conversion ... ");
-                SimpleAPI.CommandLineJob job = null;
+                CommandLineJob job = null;
                 try {
                     job = SimpleAPI.getInstance().startJob(script, options);
                 } catch (IllegalArgumentException e) {
