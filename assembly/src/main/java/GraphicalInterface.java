@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Executes an asynchronous task that can be cancelled. After task completion, the window
  * remains open for 5 seconds before closing and terminating the application.
  */
-public class SimpleUI {
+public class GraphicalInterface {
 
     private JFrame frame;
     private JProgressBar progressBar;
@@ -39,7 +39,7 @@ public class SimpleUI {
     private SwingWorker<Void, String> worker;
     private int exitCode = 0;
 
-    public SimpleUI(String script) {
+    public GraphicalInterface(String script) {
         initializeUI(script);
     }
 
@@ -172,9 +172,13 @@ public class SimpleUI {
                         break;
                     case FAIL:
                     case ERROR:
+                        // TODO : 
+                        // - Asks the user if they want to open the error log file in the system's default text editor
+                        // - if yes, open the error log file in the system's default text editor if possible
                         logMessage("Job finished with status: " + job.getStatus());
                         finished = true;
                         throw new RuntimeException("Job failed with status: " + job.getStatus());
+                    
                     case IDLE:
                     case RUNNING:
                     default:
@@ -272,7 +276,7 @@ public class SimpleUI {
 
         // Create and show the UI on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            SimpleUI ui = new SimpleUI(script);
+            GraphicalInterface ui = new GraphicalInterface(script);
             ui.startAsyncTask(script, options);
         });
     }
