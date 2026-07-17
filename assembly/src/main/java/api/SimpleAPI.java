@@ -112,8 +112,14 @@ public class SimpleAPI {
 		File fileBase = new File(System.getProperty("org.daisy.pipeline.cli.cwd", "."));
 		CommandLineJobParser parser = new CommandLineJobParser(script, fileBase);
 		for (Map.Entry<String,? extends Iterable<String>> e : options.entrySet())
-			for (String value : e.getValue())
-				parser.withArgument(e.getKey(), value);
+			for (String value : e.getValue()) {
+				try{
+					parser.withArgument(e.getKey(), value);
+				} catch (IllegalArgumentException ex) {
+					System.out.println("[WARNING] ignoring " + e.getKey() + " : " + ex.getMessage());
+				}
+				
+			}
 		CommandLineJob job = parser.createJob(jobFactory);
 		System.out.println(dateFormat.format(new java.util.Date()) + " : Job created, starting ... ");
 		new Thread(job).start();

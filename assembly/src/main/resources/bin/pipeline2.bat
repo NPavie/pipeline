@@ -55,7 +55,8 @@ goto :EOF
 rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 :BEGIN
-    call:warn %DATE:~10,4%-%DATE:~4,2%-%DATE:~7,2% %TIME:~0,2%:%TIME:~3,2%:%TIME:~6,2%
+    call:warn %DATE% %TIME%
+    REM call:warn %DATE:~10,4%-%DATE:~4,2%-%DATE:~7,2% %TIME:~0,2%:%TIME:~3,2%:%TIME:~6,2%
 
     rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -87,8 +88,9 @@ rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
         )
     )
 
-    set DEFAULT_JAVA_OPTS=-Dcom.sun.management.jmxremote
-    if "%JAVA_OPTS%" == "" set JAVA_OPTS=%DEFAULT_JAVA_OPTS%
+    REM NP - disabling jmxremote by default to avoid a firewall notice
+    REM set DEFAULT_JAVA_OPTS=-Dcom.sun.management.jmxremote
+    REM if "%JAVA_OPTS%" == "" set JAVA_OPTS=%DEFAULT_JAVA_OPTS%
 
     set DEFAULT_JAVA_DEBUG_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
     if "%PIPELINE2_DEBUG%" == "" goto :PIPELINE2_DEBUG_END
@@ -103,6 +105,9 @@ rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     set MODE=webservice
 :RUN_LOOP
     if [%1]==[] goto :EXECUTE
+    REM additionnal parsing : if %1 starts with -D, add it to SYSTEM props
+    set "PARSING=%1"
+    if "%PARSING:~0,2%" == "-D" goto :PARSE_SYSTEM_PROPS
     if "%1" == "cli" goto :EXECUTE_CLI
     if "%1" == "ui" goto :EXECUTE_UI
     if "%1" == "osgi" goto :EXECUTE_OSGI
@@ -115,6 +120,16 @@ rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     set exitCode=2
     goto END
 goto :EXECUTE
+
+:PARSE_SYSTEM_PROPS
+    set "OPTION=%1"
+    set "VALUE=%~2"
+    set "SYSTEM_PROPS=%SYSTEM_PROPS% %OPTION%=^"%VALUE%^""
+    REM echo %JAVA_OPTS%
+    shift
+    shift
+goto :RUN_LOOP
+    
 
 :EXECUTE_UI
     set PIPELINE2_WS_LOCALFS=true
@@ -188,6 +203,7 @@ goto :RUN_LOOP
         ) else (
             rem set PATHS=!PATHS! system\webservice
             set PATHS=!PATHS! system\webservice
+            set JAVA_OPTS=-Dcom.sun.management.jmxremote %JAVA_OPTS%
         )
     ) else ( rem for cli and ui modes, through the simple-api package provided in the assembly
         if not exist "%PIPELINE2_HOME%\system\simple-api" (
@@ -222,7 +238,7 @@ goto :RUN_LOOP
         if %ENABLE_OSGI% == true (
             set PATHS=!PATHS! system\osgi\gogo
         ) else (
-            call:warn Shell can only be enabled under OSGi
+            REM call:warn Shell can only be enabled under OSGi
         )
     )
     if %ENABLE_PERSISTENCE% == true (
@@ -327,16 +343,28 @@ goto :RUN_LOOP
             rem -Djava.endorsed.dirs="%JAVA_HOME%\jre\lib\endorsed;%JAVA_HOME%\lib\endorsed;%PIPELINE2_HOME%\lib\endorsed" ^
             rem -Djava.ext.dirs="%JAVA_HOME%\jre\lib\ext;%JAVA_HOME%\lib\ext;%PIPELINE2_HOME%\lib\ext" ^
     )
-    call:warn Starting java: %COMMAND%
-    call:warn Output is written to daisy-pipeline-java.log
-    rem endlocal & (
-    rem     set "PIPELINE2_HOME=%PIPELINE2_HOME%"
-    rem     set "PIPELINE2_DATA=%PIPELINE2_DATA%"
-    rem     set "PIPELINE2_LOGDIR=%PIPELINE2_LOGDIR%"
-    rem     set "PIPELINE2_WS_LOCALFS=%PIPELINE2_WS_LOCALFS%"
-    rem     set "PIPELINE2_WS_AUTHENTICATION=%PIPELINE2_WS_AUTHENTICATION%"
-    %COMMAND% > "%PIPELINE2_LOGDIR%\daisy-pipeline-java.log"
-    rem )
+    
+    REM call:warn Starting java: %COMMAND%
+    if %ENABLE_SHELL% == true (
+        rem endlocal & (
+        rem     set "PIPELINE2_HOME=%PIPELINE2_HOME%"
+        rem     set "PIPELINE2_DATA=%PIPELINE2_DATA%"
+        rem     set "PIPELINE2_LOGDIR=%PIPELINE2_LOGDIR%"
+        rem     set "PIPELINE2_WS_LOCALFS=%PIPELINE2_WS_LOCALFS%"
+        rem     set "PIPELINE2_WS_AUTHENTICATION=%PIPELINE2_WS_AUTHENTICATION%"
+        %COMMAND%
+        rem )
+    ) else (
+        call:warn Output is written to daisy-pipeline-java.log
+        rem endlocal & (
+        rem     set "PIPELINE2_HOME=%PIPELINE2_HOME%"
+        rem     set "PIPELINE2_DATA=%PIPELINE2_DATA%"
+        rem     set "PIPELINE2_LOGDIR=%PIPELINE2_LOGDIR%"
+        rem     set "PIPELINE2_WS_LOCALFS=%PIPELINE2_WS_LOCALFS%"
+        rem     set "PIPELINE2_WS_AUTHENTICATION=%PIPELINE2_WS_AUTHENTICATION%"
+        %COMMAND% > "%PIPELINE2_LOGDIR%\daisy-pipeline-java.log"
+        rem )
+    )
 
 rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
