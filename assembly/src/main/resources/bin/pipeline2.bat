@@ -99,9 +99,13 @@ rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 :PIPELINE2_DEBUG_END
 
     set ENABLE_PERSISTENCE=true
-
+    set ENABLE_SHELL=false
+    set MODE=webservice
 :RUN_LOOP
     if [%1]==[] goto :EXECUTE
+    if "%1" == "cli" goto :EXECUTE_CLI
+    if "%1" == "ui" goto :EXECUTE_UI
+    if "%1" == "osgi" goto :EXECUTE_OSGI
     if "%1" == "remote" goto :EXECUTE_REMOTE
     if "%1" == "local" goto :EXECUTE_LOCAL
     if "%1" == "clean" goto :EXECUTE_CLEAN
@@ -112,11 +116,51 @@ rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     goto END
 goto :EXECUTE
 
+:EXECUTE_UI
+    set PIPELINE2_WS_LOCALFS=true
+    set PIPELINE2_WS_AUTHENTICATION=false
+    set ENABLE_PERSISTENCE=false
+    set ENABLE_OSGI=false
+    set MODE=ui
+    set ENABLE_SHELL=true
+    shift
+    goto :PARSE_CLI_ARGS
+goto :RUN_LOOP
+
+:EXECUTE_CLI
+    set PIPELINE2_WS_LOCALFS=true
+    set PIPELINE2_WS_AUTHENTICATION=false
+    set ENABLE_PERSISTENCE=false
+    set ENABLE_OSGI=false
+    set MODE=cli
+    set ENABLE_SHELL=true
+    shift
+    goto :PARSE_CLI_ARGS
+goto :RUN_LOOP
+
+:PARSE_CLI_ARGS
+    if [%1]==[] (
+        goto :EXECUTE
+    ) else (
+        set CLI_ARGS=%CLI_ARGS% %1
+        shift
+        goto :PARSE_CLI_ARGS
+    )
+    rem stop parsing argument
+rem goto :EXECUTE
+
+
+:EXECUTE_OSGI
+    set ENABLE_OSGI=true
+    shift
+goto :RUN_LOOP
+
 :EXECUTE_REMOTE
     set PIPELINE2_WS_LOCALFS=false
     set PIPELINE2_WS_AUTHENTICATION=true
     shift
 goto :RUN_LOOP
+
 
 :EXECUTE_LOCAL
     set PIPELINE2_WS_LOCALFS=true
@@ -136,12 +180,51 @@ goto :RUN_LOOP
 goto :RUN_LOOP
 
 :EXECUTE
-    if not exist "%PIPELINE2_HOME%\system\webservice" (
-        rem fatal
-        set exitCode=3
-        goto END
+    if "%MODE%" == "webservice" (
+        if not exist "%PIPELINE2_HOME%\system\webservice" (
+            rem fatal
+            set exitCode=3
+            goto END
+        ) else (
+            rem set PATHS=!PATHS! system\webservice
+            set PATHS=!PATHS! system\webservice
+        )
+    ) else ( rem for cli and ui modes, through the simple-api package provided in the assembly
+        if not exist "%PIPELINE2_HOME%\system\simple-api" (
+            rem fatal
+            set exitCode=3
+            goto END
+        ) else (
+            rem set PATHS=!PATHS! system\webservice
+            rem set PATHS=!PATHS! system\simple-api
+        )
+        
     )
-    set PATHS=!PATHS! system\webservice
+    
+    if %ENABLE_OSGI% == true (
+        if not exist "%PIPELINE2_HOME%\system\osgi\bootstrap" (
+            call:warn OSGi can not be enabled
+            set ENABLE_OSGI=false
+        )
+    )
+    if %ENABLE_OSGI% == true (
+        set PATHS=!PATHS! system\osgi\bundles
+    ) else (
+        set PATHS=!PATHS! system\no-osgi
+    )
+    
+    if %ENABLE_OSGI% == true (
+        set PATHS=!PATHS! system\osgi\webservice
+    ) else (
+        set PATHS=!PATHS! system\no-osgi\webservice
+    )
+    if %ENABLE_SHELL% == true (
+        if %ENABLE_OSGI% == true (
+            set PATHS=!PATHS! system\osgi\gogo
+        ) else (
+            call:warn Shell can only be enabled under OSGi
+        )
+    )
     if %ENABLE_PERSISTENCE% == true (
         if not exist "%PIPELINE2_HOME%\system\persistence" (
             call:warn Running without persistence
@@ -150,17 +233,54 @@ goto :RUN_LOOP
     )
     if %ENABLE_PERSISTENCE% == true (
         set PATHS=!PATHS! system\persistence
-    )
-    for %%D in (system\common !PATHS! modules) do (
-        if exist "%PIPELINE2_HOME%\%%D" (
-            rem Using wildcard to avoid "The input line is too long" error
-            set CLASSPATH=!CLASSPATH!;%%D\*
-            rem for /f %%F in ('dir /b "%PIPELINE2_HOME%\%%D\*.jar"') do (
-            rem     set CLASSPATH=!CLASSPATH!;%%D\%%F
-            rem )
+        if %ENABLE_OSGI% == true (
+            set PATHS=!PATHS! system\osgi\persistence
+        ) else (
+            set PATHS=!PATHS! system\no-osgi\persistence
         )
     )
-    set MAIN=org.daisy.pipeline.webservice.restlet.impl.PipelineWebService
+    if %ENABLE_OSGI% == true (
+        for %%D in (system\osgi\bootstrap) do (
+            for /f %%F in ('dir /b "%PIPELINE2_HOME%\%%D\*.jar"') do (
+                set CLASSPATH=!CLASSPATH!;%%D\%%F
+            )
+        )
+        set MAIN=org.apache.felix.main.Main
+        for %%D in (%PATHS%) do (
+            for /f %%F in ('dir /b "%PIPELINE2_HOME%\%%D\*.jar"') do (
+                set AUTO_START_BUNDLES=!AUTO_START_BUNDLES! file:%%D\%%F
+            )
+        )
+        rem system/common is included through felix.auto.deploy.dir setting
+        rem  (see felix.properties)
+        rem modules is included through felix.fileinstall.dir settings
+        rem  (see felix.properties and org.apache.felix.fileinstall-modules.cfg)
+        set OSGI_OPTS=-Dfelix.config.properties="file:%PIPELINE2_HOME:\=/%/etc/felix.properties" ^
+                      -Dfelix.auto.start.1="!AUTO_START_BUNDLES!"
+    ) else (
+        for %%D in (system\common !PATHS! modules) do (
+            if exist "%PIPELINE2_HOME%\%%D" (
+                rem Using wildcard to avoid "The input line is too long" error
+                set CLASSPATH=!CLASSPATH!;%%D\*
+                rem for /f %%F in ('dir /b "%PIPELINE2_HOME%\%%D\*.jar"') do (
+                rem     set CLASSPATH=!CLASSPATH!;%%D\%%F
+                rem )
+            )
+        )
+        if "%MODE%" == "webservice" (
+            set MAIN=org.daisy.pipeline.webservice.restlet.impl.PipelineWebService
+        ) else (
+            rem Using runner class from the simple-api unnamed module
+            set CLASSPATH=!CLASSPATH!;system\simple-api\api;system\simple-api\xml;system\simple-api\ui;system\simple-api
+            if "%MODE%" == "ui" (
+                set MAIN=GraphicalInterface %CLI_ARGS%
+            ) else (
+                set MAIN=CommandLineInterface %CLI_ARGS%
+            )
+        )
+        
+        
+    )
 
     rem Execute the Java Virtual Machine
     cd "%PIPELINE2_HOME%"

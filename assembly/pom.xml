@@ -3069,7 +3069,7 @@
                   <goal>generate-spi-classes</goal>
                 </goals>
                 <configuration>
-                  <includes>SimpleAPI</includes>
+                  <includes>api.SimpleAPI</includes>
                 </configuration>
               </execution>
             </executions>
