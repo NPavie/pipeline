@@ -101,9 +101,11 @@ rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     set ENABLE_OSGI=false
     set ENABLE_PERSISTENCE=true
     set ENABLE_SHELL=false
-
+    set MODE=webservice
 :RUN_LOOP
     if [%1]==[] goto :EXECUTE
+    if "%1" == "cli" goto :EXECUTE_CLI
+    if "%1" == "ui" goto :EXECUTE_UI
     if "%1" == "osgi" goto :EXECUTE_OSGI
     if "%1" == "remote" goto :EXECUTE_REMOTE
     if "%1" == "local" goto :EXECUTE_LOCAL
@@ -116,6 +118,40 @@ rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     goto END
 goto :EXECUTE
 
+:EXECUTE_UI
+    set PIPELINE2_WS_LOCALFS=true
+    set PIPELINE2_WS_AUTHENTICATION=false
+    set ENABLE_PERSISTENCE=false
+    set ENABLE_OSGI=false
+    set MODE=ui
+    set ENABLE_SHELL=true
+    shift
+    goto :PARSE_CLI_ARGS
+goto :RUN_LOOP
+
+:EXECUTE_CLI
+    set PIPELINE2_WS_LOCALFS=true
+    set PIPELINE2_WS_AUTHENTICATION=false
+    set ENABLE_PERSISTENCE=false
+    set ENABLE_OSGI=false
+    set MODE=cli
+    set ENABLE_SHELL=true
+    shift
+    goto :PARSE_CLI_ARGS
+goto :RUN_LOOP
+
+:PARSE_CLI_ARGS
+    if [%1]==[] (
+        goto :EXECUTE
+    ) else (
+        set CLI_ARGS=%CLI_ARGS% %1
+        shift
+        goto :PARSE_CLI_ARGS
+    )
+    rem stop parsing argument
+rem goto :EXECUTE
+
+
 :EXECUTE_OSGI
     set ENABLE_OSGI=true
     shift
@@ -126,6 +162,7 @@ goto :RUN_LOOP
     set PIPELINE2_WS_AUTHENTICATION=true
     shift
 goto :RUN_LOOP
+
 
 :EXECUTE_LOCAL
     set PIPELINE2_WS_LOCALFS=true
@@ -150,11 +187,27 @@ goto :RUN_LOOP
 goto :RUN_LOOP
 
 :EXECUTE
-    if not exist "%PIPELINE2_HOME%\system\webservice" (
-        rem fatal
-        set exitCode=3
-        goto END
+    if "%MODE%" == "webservice" (
+        if not exist "%PIPELINE2_HOME%\system\webservice" (
+            rem fatal
+            set exitCode=3
+            goto END
+        ) else (
+            rem set PATHS=!PATHS! system\webservice
+            set PATHS=!PATHS! system\webservice
+        )
+    ) else ( rem for cli and ui modes, through the simple-api package provided in the assembly
+        if not exist "%PIPELINE2_HOME%\system\simple-api" (
+            rem fatal
+            set exitCode=3
+            goto END
+        ) else (
+            rem set PATHS=!PATHS! system\webservice
+            rem set PATHS=!PATHS! system\simple-api
+        )
+        
     )
+    
     if %ENABLE_OSGI% == true (
         if not exist "%PIPELINE2_HOME%\system\osgi\bootstrap" (
             call:warn OSGi can not be enabled
@@ -166,7 +219,7 @@ goto :RUN_LOOP
     ) else (
         set PATHS=!PATHS! system\no-osgi
     )
-    set PATHS=!PATHS! system\webservice
+    
     if %ENABLE_OSGI% == true (
         set PATHS=!PATHS! system\osgi\webservice
     ) else (
@@ -221,7 +274,19 @@ goto :RUN_LOOP
                 rem )
             )
         )
-        set MAIN=org.daisy.pipeline.webservice.restlet.impl.PipelineWebService
+        if "%MODE%" == "webservice" (
+            set MAIN=org.daisy.pipeline.webservice.restlet.impl.PipelineWebService
+        ) else (
+            rem Using runner class from the simple-api unnamed module
+            set CLASSPATH=!CLASSPATH!;system\simple-api\api;system\simple-api\xml;system\simple-api\ui;system\simple-api
+            if "%MODE%" == "ui" (
+                set MAIN=GraphicalInterface %CLI_ARGS%
+            ) else (
+                set MAIN=CommandLineInterface %CLI_ARGS%
+            )
+        )
+        
+        
     )
 
     rem Execute the Java Virtual Machine

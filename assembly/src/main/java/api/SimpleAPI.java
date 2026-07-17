@@ -1,27 +1,13 @@
 package api;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringWriter;
-import java.io.UncheckedIOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,22 +21,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.daisy.common.messaging.Message;
-import org.daisy.common.messaging.ProgressMessage;
-import org.daisy.common.messaging.Message.Level;
-import org.daisy.common.messaging.MessageAccessor;
 import org.daisy.common.spi.CreateOnStart;
 import org.daisy.common.spi.ServiceLoader;
 import org.daisy.pipeline.datatypes.DatatypeRegistry;
 import org.daisy.pipeline.datatypes.DatatypeService;
-import org.daisy.pipeline.job.Job;
 import org.daisy.pipeline.job.JobFactory;
-import org.daisy.pipeline.job.JobMonitor;
-import org.daisy.pipeline.job.JobResult;
-import org.daisy.pipeline.script.BoundScript;
 import org.daisy.pipeline.script.Script;
-import org.daisy.pipeline.script.ScriptOption;
-import org.daisy.pipeline.script.ScriptPort;
 import org.daisy.pipeline.script.ScriptRegistry;
 import org.daisy.pipeline.script.ScriptService;
 
@@ -69,13 +45,12 @@ import xml.ScriptsXmlWriter;
 import org.w3c.dom.Document;
 import com.google.common.base.Optional;
 
-import java.math.BigDecimal;
 
 /**
  * A simplified Java API consisting of a {@link #startJob()} method that starts a job based on a
  * script name and a list of options and returns a {@link CommandLineJob}. This object provices
  * convenience methods for monitoring the status and messages. This class is used to build a simple
- * Java CLI (see the {@link #main()} method). The simplified API also makes it easier to bridge with
+ * Java CLI (see the {@link CommandLineInterface#main()} method). The simplified API also makes it easier to bridge with
  * other programming languages using JNI.
  */
 @Component(
@@ -324,66 +299,5 @@ public class SimpleAPI {
 			System.out.println(dateFormat.format(new java.util.Date()) + " : SimpleAPI instance created");
 		}
 		return INSTANCE;
-	}
-
-
-	/**
-	 * Simple command line interface
-	 */
-	public static void main(String[] args) throws InterruptedException, IOException {
-		// Print start date and time with milliseconds precision
-		System.out.println(dateFormat.format(new java.util.Date()) + " : Starting SimpleAPI command line interface");
-
-		if (args.length < 1) {
-			System.err.println("Expected script argument");
-			System.exit(1);
-		}
-		String script = args[0];
-		Map<String,List<String>> options = new HashMap<>();
-		for (int i = 1; i < args.length; i += 2) {
-			if (!args[i].startsWith("--")) {
-				System.err.println("Expected option name argument, got " + args[i]);
-				System.exit(1);
-			}
-			String option = args[i].substring(2);
-			if (i + 1 >= args.length) {
-				System.err.println("Expected option value argument");
-				System.exit(1);
-			}
-			List<String> list = options.get(option);
-			if (list == null) {
-				list = new ArrayList<>();
-				options.put(option, list);
-			}
-			list.add(args[i + 1]);
-		}
-		CommandLineJob job = null;
-		try {
-			job = SimpleAPI.getInstance().startJob(script, options);
-		} catch (IllegalArgumentException e) {
-			System.err.println(e.getMessage());
-			System.exit(1);
-		} catch (FileNotFoundException|URISyntaxException e) {
-			System.err.println("File does not exist: " + e.getMessage());
-			System.exit(1);
-		}
-		while (true) {
-			for (String m : job.getNewMessages()) System.out.println(m);
-			//System.out.println("accessor progress : " + accessor.getProgress().doubleValue() * 100 + "%");
-			if(job.isProgressUpdated()) {
-				System.out.println("Progression: " + job.getUpdatedProgress() * 100 + "%");
-			}
-			switch (job.getStatus()) {
-			case SUCCESS:
-			case FAIL:
-			case ERROR:
-				System.out.println("Job finished with status: " + job.getStatus());
-				System.exit(0);
-			case IDLE:
-			case RUNNING:
-			default:
-				Thread.sleep(1000);
-			}
-		}
 	}
 }
