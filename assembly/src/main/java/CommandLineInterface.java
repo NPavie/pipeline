@@ -14,6 +14,100 @@ import api.SimpleAPI;
 public class CommandLineInterface {
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
+	/**
+	 * Additional commands that can be run from the command line interface, in addition to running scripts
+	 */
+	public enum Command
+    {
+        Descriptors("descriptors"),
+        Scripts("scripts"),
+        ScriptDetails("script"),
+        Datatypes("datatypes"),
+        DatatypeDetails("datatype"),
+        SettableProperties("settable-properties");
+
+        private final String name;
+
+        Command(String name) {
+            this.name = name;
+        }
+        public String getName() {
+            return name;
+        }
+
+		public void run(Map<String,List<String>> options) throws InterruptedException, IOException, Exception {
+			// Default to the current working directory if no output directory is specified
+			String outputDirectory = new java.io.File(".").getCanonicalPath();
+			String outputFile = new java.io.File(outputDirectory, this.getName().toLowerCase() + ".xml").getAbsolutePath();
+
+			if (options.containsKey("output"))
+			{
+				outputDirectory = options.get("output").get(0);
+				outputFile = options.get("output").get(0);
+				java.io.File outputFileObj = new java.io.File(outputFile);
+				if (outputFileObj.isDirectory())
+				{
+					// Output selected is a directory, we create a file name based on the command inside it
+					outputFile = new java.io.File(outputFile, this.getName().toLowerCase() + ".xml").getAbsolutePath();
+				} else
+				{
+					outputDirectory = outputFileObj.getParent();
+				}
+			}
+			String scriptsDescriptors;
+			String datatypesDescriptors;
+			String result;
+			switch (this)
+			{
+				case Descriptors:
+					System.out.println("Retrieving all descriptors...");
+					scriptsDescriptors = SimpleAPI.getInstance().getScripts(true);
+					java.nio.file.Files.write(java.nio.file.Paths.get(outputDirectory, "scripts.xml"), scriptsDescriptors.getBytes());
+					datatypesDescriptors = SimpleAPI.getInstance().getDatatypes();
+					java.nio.file.Files.write(java.nio.file.Paths.get(outputDirectory, "datatypes.xml"), datatypesDescriptors.getBytes());
+					break;
+				case Scripts:
+					System.out.println("Retrieving scripts descriptors...");
+					result = SimpleAPI.getInstance().getScripts(true);
+					java.nio.file.Files.write(java.nio.file.Paths.get(outputFile), result.getBytes());
+					break;
+				case ScriptDetails:
+					if (!options.containsKey("id"))
+					{
+						throw new Exception("The 'id' option is required for the ScriptDetails command");
+					}
+					String scriptId = options.get("id").get(0);
+					System.out.println("Retrieving details for script " + scriptId + "...");
+					result = SimpleAPI.getInstance().getScriptDetails(scriptId);
+					java.nio.file.Files.write(java.nio.file.Paths.get(outputFile), result.getBytes());
+					break;
+				case Datatypes:
+					System.out.println("Retrieving datatypes descriptors...");
+					result = SimpleAPI.getInstance().getDatatypes();
+					java.nio.file.Files.write(java.nio.file.Paths.get(outputFile), result.getBytes());
+					break;
+				case DatatypeDetails:
+					if (!options.containsKey("id"))
+					{
+						throw new Exception("The 'id' option is required for the DatatypeDetails command");
+					}
+					String datatypeId = options.get("id").get(0);
+					System.out.println("Retrieving details for datatype " + datatypeId + "...");
+					result = SimpleAPI.getInstance().getDatatypeDetails(datatypeId);
+					java.nio.file.Files.write(java.nio.file.Paths.get(outputFile), result.getBytes());
+					break;
+				case SettableProperties:
+					System.out.println("Retrieving settable properties descriptors...");
+					result = SimpleAPI.getInstance().getSettableProperties();
+					java.nio.file.Files.write(java.nio.file.Paths.get(outputFile), result.getBytes());
+					break;
+				default:
+					throw new Exception("Command not implemented: " + this.getName());
+			}
+		}
+    }
+
+
     /**
 	 * Simple command line interface
 	 */
@@ -22,10 +116,10 @@ public class CommandLineInterface {
 		System.out.println(dateFormat.format(new java.util.Date()) + " : Starting SimpleAPI command line interface");
 
 		if (args.length < 1) {
-			System.err.println("Expected script argument");
+			System.err.println("Expected script or command argument");
 			System.exit(1);
 		}
-		String script = args[0];
+		String scriptOrCommand = args[0];
 		Map<String,List<String>> options = new HashMap<>();
 		for (int i = 1; i < args.length; i += 2) {
 			if (!args[i].startsWith("--")) {
@@ -44,9 +138,23 @@ public class CommandLineInterface {
 			}
 			list.add(args[i + 1]);
 		}
+		// Check if scriptOrCommand is one of the known commands
+		try{
+            CommandLineInterface.Command command = CommandLineInterface.Command.valueOf(scriptOrCommand);
+            try {
+				command.run(options);
+            } catch (Exception e) {
+                System.err.println("Error running the command " + command.getName() + ": " + e.getMessage());
+                System.exit(1);
+            }
+            System.exit(0);
+        } catch (Exception e) {
+			// Not a command, we continue to treat it as a script name
+        }
+
 		CommandLineJob job = null;
 		try {
-			job = SimpleAPI.getInstance().startJob(script, options);
+			job = SimpleAPI.getInstance().startJob(scriptOrCommand, options);
 		} catch (IllegalArgumentException e) {
 			System.err.println(e.getMessage());
 			System.exit(1);

@@ -5,8 +5,13 @@ import api.CommandLineJob;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -114,10 +119,64 @@ public class GraphicalInterface {
         });
     }
 
+    private void showErrorDialogAndMaybeOpenLogFile(String logFilePath) {
+        final int[] choice = new int[] { JOptionPane.NO_OPTION };
+
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                String message = "The conversion failed.\r\n" +
+                                 "Do you want to open the conversion log file?\r\n" +
+                                 "(Please send those logs after review to the DAISY Pipeline team if you need additional troubleshooting.)";
+                choice[0] = JOptionPane.showConfirmDialog(
+                    frame,
+                    message,
+                    "The conversion failed",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.ERROR_MESSAGE
+                );
+            });
+        } catch (Exception e) {
+            logMessage("Unable to show error dialog: " + e.getMessage());
+            return;
+        }
+
+        if (choice[0] == JOptionPane.YES_OPTION) {
+            if (logFilePath == null || logFilePath.trim().isEmpty()) {
+                logMessage("No log file path was provided by the job.");
+                return;
+            }
+
+            File logFile = new File(logFilePath);
+            if (!logFile.exists()) {
+                logMessage("Log file not found: " + logFilePath);
+                return;
+            }
+
+            if (!Desktop.isDesktopSupported()) {
+                logMessage("Desktop integration is not supported on this system.");
+                return;
+            }
+
+            try {
+                Desktop desktop = Desktop.getDesktop();
+                if (desktop.isSupported(Desktop.Action.EDIT)) {
+                    desktop.edit(logFile);
+                } else if (desktop.isSupported(Desktop.Action.OPEN)) {
+                    desktop.open(logFile);
+                } else {
+                    logMessage("No supported desktop action to open log file: " + logFilePath);
+                }
+            } catch (IOException e) {
+                logMessage("Unable to open log file: " + e.getMessage());
+            }
+        }
+    }
+
     private void startAsyncTask(String script, Map<String, List<String>> options) {
         worker = new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() throws Exception {
+                final int[] choice = new int[] { JOptionPane.NO_OPTION };
                 // Redirect stdout and stderr to logMessage
                 System.setOut(new java.io.PrintStream(new java.io.OutputStream() {
                     private StringBuilder sb = new StringBuilder();
@@ -172,11 +231,70 @@ public class GraphicalInterface {
                         break;
                     case FAIL:
                     case ERROR:
-                        // TODO : 
-                        // - Asks the user if they want to open the error log file in the system's default text editor
-                        // - if yes, open the error log file in the system's default text editor if possible
                         logMessage("Job finished with status: " + job.getStatus());
                         finished = true;
+                        String logFilePath =  job.getLogFile();
+                        if(logFilePath.startsWith("file:")) {
+                            try {
+                                logFilePath = new File(new URL(logFilePath).toURI()).getAbsolutePath();
+                            } catch (Exception e) {
+                                logMessage("Unable to convert log file URL to path: " + e.getMessage());
+                            }
+                        }
+                        String message = "The conversion failed.\r\n" +
+                                 "Do you want to open the conversion log file?\r\n" +
+                                 "(Please send those logs after review to the DAISY Pipeline team if you need additional troubleshooting.)";
+                        choice[0] = JOptionPane.showConfirmDialog(
+                            frame,
+                            message,
+                            "Conversion failed",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                        if (choice[0] == JOptionPane.YES_OPTION) {
+                            // copy the log file to add a .txt extension to the log file if it doesn't have one, to make sure it can be opened by the system default text editor
+                            // (else it can fail to open due to not having an associated application, especially on Windows)
+                            if (!logFilePath.endsWith(".txt")) {
+                                File originalLogFile = new File(logFilePath);
+                                File txtLogFile = new File(logFilePath + ".txt");
+                                try {
+                                    Files.copy(originalLogFile.toPath(), txtLogFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                    logFilePath = txtLogFile.getAbsolutePath();
+                                } catch (IOException e) {
+                                    logMessage("Unable to copy log file to .txt: " + e.getMessage());
+                                }
+                            }
+                            
+                            logMessage("Opening log file: " + logFilePath);
+                            if (logFilePath == null || logFilePath.trim().isEmpty()) {
+                                logMessage("No log file path was provided by the job.");
+                                break;
+                            }
+
+                            File logFile = new File(logFilePath);
+                            if (!logFile.exists()) {
+                                logMessage("Log file not found: " + logFilePath);
+                                break;
+                            }
+
+                            if (!Desktop.isDesktopSupported()) {
+                                logMessage("Desktop integration is not supported on this system.");
+                                break;
+                            }
+
+                            try {
+                                Desktop desktop = Desktop.getDesktop();
+                                if (desktop.isSupported(Desktop.Action.EDIT)) {
+                                    desktop.edit(logFile);
+                                } else if (desktop.isSupported(Desktop.Action.OPEN)) {
+                                    desktop.open(logFile);
+                                } else {
+                                    logMessage("No supported desktop action to open log file: " + logFilePath);
+                                }
+                            } catch (IOException e) {
+                                logMessage("Unable to open log file: " + e.getMessage());
+                            }
+                        }
                         throw new RuntimeException("Job failed with status: " + job.getStatus());
                     
                     case IDLE:
@@ -235,6 +353,8 @@ public class GraphicalInterface {
         worker.execute();
     }
 
+
+    
     /**
      * Main method to launch the SimpleUI application.
      */
@@ -245,10 +365,11 @@ public class GraphicalInterface {
         java.util.logging.Logger.getLogger("javax.swing").setLevel(java.util.logging.Level.OFF);
         java.util.logging.Logger.getLogger("sun.awt").setLevel(java.util.logging.Level.OFF);
         if (args.length < 1) {
-			System.err.println("Expected script argument");
+			System.err.println("Expected script or command argument");
 			System.exit(1);
 		}
-        String script = args[0];
+
+        String scriptOrCommand = args[0];
         Map<String,List<String>> options = new HashMap<>();
 		for (int i = 1; i < args.length; i += 2) {
 			if (!args[i].startsWith("--")) {
@@ -267,6 +388,22 @@ public class GraphicalInterface {
 			}
 			list.add(args[i + 1]);
 		}
+        
+        // Check if scriptOrCommand is one of the known commands of the CommandLineInterface
+		try{
+            CommandLineInterface.Command command = CommandLineInterface.Command.valueOf(scriptOrCommand);
+            try {
+				command.run(options);
+            } catch (Exception e) {
+                System.err.println("Error running the command " + command.getName() + ": " + e.getMessage());
+                System.exit(1);
+            }
+            System.exit(0);
+        } catch (Exception e) {
+            // System.err.println("Error parsing command line arguments: " + e.getMessage());
+            // System.exit(1);
+        }
+
         // Set look and feel to system default
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -276,8 +413,8 @@ public class GraphicalInterface {
 
         // Create and show the UI on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            GraphicalInterface ui = new GraphicalInterface(script);
-            ui.startAsyncTask(script, options);
+            GraphicalInterface ui = new GraphicalInterface(scriptOrCommand);
+            ui.startAsyncTask(scriptOrCommand, options);
         });
     }
 }
