@@ -71,7 +71,7 @@ public class SimpleAPI {
 		policy = ReferencePolicy.STATIC
 	)
 	public void setScriptRegistry(ScriptRegistry scriptRegistry) {
-		System.out.println(dateFormat.format(new java.util.Date()) + " : setting script registry ");
+		//System.out.println(dateFormat.format(new java.util.Date()) + " : setting script registry ");
 		this.scriptRegistry = scriptRegistry;
 	}
 
@@ -83,7 +83,7 @@ public class SimpleAPI {
 		policy = ReferencePolicy.STATIC
 	)
 	public void setDatatypeRegistry(DatatypeRegistry datatypeRegistry) {
-		System.out.println(dateFormat.format(new java.util.Date()) + " : setting datatype registry ");
+		//System.out.println(dateFormat.format(new java.util.Date()) + " : setting datatype registry ");
 		this.datatypeRegistry = datatypeRegistry;
 	}
 
@@ -95,20 +95,17 @@ public class SimpleAPI {
 		policy = ReferencePolicy.STATIC
 	)
 	public void setJobFactory(JobFactory jobFactory) {
-		System.out.println(dateFormat.format(new java.util.Date()) + " : setting job factory ");
 		this.jobFactory = jobFactory;
 	}
 
 	public CommandLineJob startJob(String scriptName, Map<String,? extends Iterable<String>> options)
 			throws IllegalArgumentException, FileNotFoundException, URISyntaxException {
-		System.out.println(dateFormat.format(new java.util.Date()) + " : Start searching for script in the registry");
+		System.out.println(dateFormat.format(new java.util.Date()) + " : Loading conversion script ... ");
 		ScriptService<?> scriptService = scriptRegistry.getScript(scriptName);
 		if (scriptService == null)
 			throw new IllegalArgumentException(scriptName + " script not found");
-		System.out.println(dateFormat.format(new java.util.Date()) + " : found script in the registry, loading ... ");
 		Script script = scriptService.load();
-		System.out.println(dateFormat.format(new java.util.Date()) + " : Loaded the script, creating job ... ");
-
+		System.out.println(dateFormat.format(new java.util.Date()) + " : Creating a conversion job ... ");
 		File fileBase = new File(System.getProperty("org.daisy.pipeline.cli.cwd", "."));
 		CommandLineJobParser parser = new CommandLineJobParser(script, fileBase);
 		for (Map.Entry<String,? extends Iterable<String>> e : options.entrySet())
@@ -121,9 +118,8 @@ public class SimpleAPI {
 				
 			}
 		CommandLineJob job = parser.createJob(jobFactory);
-		System.out.println(dateFormat.format(new java.util.Date()) + " : Job created, starting ... ");
+		System.out.println(dateFormat.format(new java.util.Date()) + " : Starting conversion ... ");
 		new Thread(job).start();
-		System.out.println(dateFormat.format(new java.util.Date()) + " : Job started");
 		return job;
 	}
 
@@ -170,6 +166,12 @@ public class SimpleAPI {
 		}
 	}
 
+	/**
+	 * Get the XML descriptor for a specific script, including detailed information about the script.
+	 * @param scriptName
+	 * @return A string containing the XML descriptor for the specified script.
+	 * @throws Exception
+	 */
 	public String getScriptDetails(String scriptName) throws Exception {
 		ScriptService<?> scriptService = this.scriptRegistry.getScript(scriptName);
 		if (scriptService == null)
@@ -289,7 +291,7 @@ public class SimpleAPI {
 
 	protected SimpleAPI() {
 		// private constructor to prevent instantiation
-		System.out.println(dateFormat.format(new java.util.Date()) + " : SimpleAPI constructor called ");
+		System.out.println(dateFormat.format(new java.util.Date()) + " : Starting the embedded pipeline API ... ");
 	}
 
 	/**
@@ -302,7 +304,7 @@ public class SimpleAPI {
 					INSTANCE = (SimpleAPI)o;
 			if (INSTANCE == null)
 				throw new IllegalStateException();
-			System.out.println(dateFormat.format(new java.util.Date()) + " : SimpleAPI instance created");
+			//System.out.println(dateFormat.format(new java.util.Date()) + " : SimpleAPI instance created");
 		}
 		return INSTANCE;
 	}

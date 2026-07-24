@@ -20,20 +20,38 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 
-// TODO Plan on improving this micro app
+// TODO Plan on improving this micro app for SaveAsDAISY or other embedded use cases :
 // - Add a dynamic window for conversion parameters form
 //   - If no document is provided, add a file chooser to select a document
 //   - if no script is provided, add a dropdown to select a script
 //   - When a script is selected, dynamically generate the form for the script parameters
-// - Move the
+// - Add a user settings panel to configure the "SettablesProperties" and load them on startup
 
 
 /**
  * Simple Swing UI with progress bar, message display, scrollable text area, and cancel button.
  * Executes an asynchronous task that can be cancelled. After task completion, the window
  * remains open for 5 seconds before closing and terminating the application.
+ * 
+ * (Note : this was made by AI for quick prototyping, and may not be perfect. Use at your own risk, review and test before using in production.)
  */
 public class GraphicalInterface {
+
+    /**
+     * Additional/specialized commands that can be run through the embedded graphical interface, in addition to command line commands and running scripts
+     */
+    public enum Command {
+        Help("help");
+
+        private final String name;
+
+        Command(String name) {
+            this.name = name;
+        }
+        public String getName() {
+            return name;
+        }
+    }
 
     private JFrame frame;
     private JProgressBar progressBar;
@@ -117,59 +135,6 @@ public class GraphicalInterface {
             progressBar.setValue(value);
             progressLabel.setText(message);
         });
-    }
-
-    private void showErrorDialogAndMaybeOpenLogFile(String logFilePath) {
-        final int[] choice = new int[] { JOptionPane.NO_OPTION };
-
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                String message = "The conversion failed.\r\n" +
-                                 "Do you want to open the conversion log file?\r\n" +
-                                 "(Please send those logs after review to the DAISY Pipeline team if you need additional troubleshooting.)";
-                choice[0] = JOptionPane.showConfirmDialog(
-                    frame,
-                    message,
-                    "The conversion failed",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.ERROR_MESSAGE
-                );
-            });
-        } catch (Exception e) {
-            logMessage("Unable to show error dialog: " + e.getMessage());
-            return;
-        }
-
-        if (choice[0] == JOptionPane.YES_OPTION) {
-            if (logFilePath == null || logFilePath.trim().isEmpty()) {
-                logMessage("No log file path was provided by the job.");
-                return;
-            }
-
-            File logFile = new File(logFilePath);
-            if (!logFile.exists()) {
-                logMessage("Log file not found: " + logFilePath);
-                return;
-            }
-
-            if (!Desktop.isDesktopSupported()) {
-                logMessage("Desktop integration is not supported on this system.");
-                return;
-            }
-
-            try {
-                Desktop desktop = Desktop.getDesktop();
-                if (desktop.isSupported(Desktop.Action.EDIT)) {
-                    desktop.edit(logFile);
-                } else if (desktop.isSupported(Desktop.Action.OPEN)) {
-                    desktop.open(logFile);
-                } else {
-                    logMessage("No supported desktop action to open log file: " + logFilePath);
-                }
-            } catch (IOException e) {
-                logMessage("Unable to open log file: " + e.getMessage());
-            }
-        }
     }
 
     private void startAsyncTask(String script, Map<String, List<String>> options) {

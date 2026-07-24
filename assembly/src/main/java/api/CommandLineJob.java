@@ -133,16 +133,6 @@ public class CommandLineJob implements Runnable, AutoCloseable {
         return jobStepProgress;
     }
 
-    // public synchronized void updateTotal(int total) {
-    // 	this.jobStepTotal = total;
-    // 	this.progressIsUpdated = true;
-    // }
-
-    // public synchronized int getUpdatedTotal() {
-    // 	return jobStepTotal;
-    // }
-
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
     // Note : fallback solution while i cannot get the deep progress.
     // - Added a progress message starting with "progress:" in the xsl i want to monitor
     // - When consuming messages, if a message starts with "progress:", parse the progress value materialized by regex \d+\\\d+.
@@ -166,49 +156,8 @@ public class CommandLineJob implements Runnable, AutoCloseable {
         for (MessageQueueItem mqi : temp) {
             if(!messagesMap.containsKey(mqi.message.getSequence()))
             {
-                // if(mqi.message.getText().startsWith("progress: "))
-                // {
-                // 	// Special "progress: message not to be printed but to update the job progress."
-                // 	String[] parts = mqi.message.getText().split("progress: ")[1].trim().split("/");
-                // 	if (parts.length == 2) {
-                // 		try {
-                // 			//System.out.println(mqi.message.getSequence() + " DEBUG > Found progress message with progress: " + parts[0] + " and portion: " + parts[1]);
-                // 			BigDecimal progress = new BigDecimal(parts[0]);
-                // 			BigDecimal portion = new BigDecimal(parts[1]);
-                // 			if(jobStepTotal != portion.intValue()) {
-                // 				updateTotal(portion.intValue());
-                // 			}
-                // 			updateProgress(progress.intValue());
-                // 			//System.out.println(mqi.message.getSequence() + " DEBUG > Test : " + Float.toString(progress.floatValue()) + " and portion: " + Float.toString(portion.floatValue()));
-                // 		} catch (NumberFormatException e) {
-                // 			System.err.println("Invalid progress message format: " + mqi.message.getText() + " " + e.getMessage());
-                // 		}
-                // 	} else {
-                // 		System.err.println("Invalid progress message format not enough parts in : " + mqi.message.getText());
-                // 	}
-                // }
-                // else 
-                {
-                    messagesMap.put(mqi.message.getSequence(), mqi);
-                    // String indent = " > ";
-                    // for (int i = 0; i < mqi.level; i++) {
-                    // 	indent += "|   ";
-                    // }
-                    // System.out.println(dateFormat.format(mqi.message.getTimeStamp()) +  indent + mqi.message.getText());
-                }
+                messagesMap.put(mqi.message.getSequence(), mqi);
             }
-            // else if(mqi.message instanceof ProgressMessage) {
-            // 		ProgressMessage jm = (ProgressMessage)mqi.message;
-            // 		BigDecimal portion = jm.getPortion();
-            // 		BigDecimal progress = jm.getProgress();
-            // 		ProgressMessage existing = (ProgressMessage) messagesMap.get(mqi.message.getSequence()).message;
-            // 		// if(existing.getPortion() != portion) {
-            // 		// 	System.out.println("DEBUG > Portion updated for message " + jm.getSequence() + jm.getText() + " from " + existing.getPortion() + " to " + portion);
-            // 		// }
-            // 		// if(existing.getProgress() != progress) {
-            // 		// 	System.out.println("DEBUG > Progress updated for message " + jm.getSequence() + jm.getText() + " from " + existing.getProgress() + " to " + progress);
-            // 		// }
-            // }
         }
 
     }
