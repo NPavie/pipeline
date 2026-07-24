@@ -1,11 +1,18 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.daisy.pipeline.job.Job;
+
 import java.util.List;
 
 import api.CommandLineJob;
@@ -24,7 +31,9 @@ public class CommandLineInterface {
         ScriptDetails("script"),
         Datatypes("datatypes"),
         DatatypeDetails("datatype"),
-        SettableProperties("settable-properties");
+        SettableProperties("settable-properties"),
+		Help("help");
+
 
         private final String name;
 
@@ -113,7 +122,7 @@ public class CommandLineInterface {
 	 */
 	public static void main(String[] args) throws InterruptedException, IOException {
 		// Print start date and time with milliseconds precision
-		System.out.println(dateFormat.format(new java.util.Date()) + " : Starting SimpleAPI command line interface");
+		System.out.println(dateFormat.format(new java.util.Date()) + " : DAISY Pipeline embedded command line interface");
 
 		if (args.length < 1) {
 			System.err.println("Expected script or command argument");
@@ -148,7 +157,7 @@ public class CommandLineInterface {
                 System.exit(1);
             }
             System.exit(0);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
 			// Not a command, we continue to treat it as a script name
         }
 
@@ -173,6 +182,41 @@ public class CommandLineInterface {
 			case FAIL:
 			case ERROR:
 				System.out.println("Job finished with status: " + job.getStatus());
+				if(job.getStatus() != Job.Status.SUCCESS) {
+					// If the job failed, we save the log file for more details	
+					String outputDirectory = new java.io.File(".").getCanonicalPath();
+					String outputFile = new java.io.File(outputDirectory, job.getStatus() + ".log.txt").getAbsolutePath();
+					if (options.containsKey("output"))
+					{
+						String outputValue = options.get("output").get(0);
+						java.io.File outputFileObj = new java.io.File(outputValue);
+						if (outputFileObj.isDirectory())
+						{
+							// Output selected is a directory, we create a file name based on the status
+							outputDirectory = outputFileObj.getAbsolutePath();
+							outputFile = new java.io.File(outputDirectory, scriptOrCommand + "-" + job.getStatus() + ".log.txt").getAbsolutePath();
+						} else
+						{
+							// Output was a file, we use its parent directory and create a new file name based on the status
+							outputDirectory = outputFileObj.getParent();
+							outputFile = new java.io.File(outputDirectory, scriptOrCommand + "-" + job.getStatus() + ".log.txt").getAbsolutePath();
+						}
+					}
+					String logFilePath =  job.getLogFile();
+					if(logFilePath.startsWith("file:")) {
+						try {
+							logFilePath = new File(new URL(logFilePath).toURI()).getAbsolutePath();
+						} catch (Exception e) {
+							System.err.println("Unable to convert log file URL to path: " + e.getMessage());
+						}
+					}
+					try {
+						Files.copy(new File(logFilePath).toPath(), new File(outputFile).toPath(), StandardCopyOption.REPLACE_EXISTING);	
+					} catch (IOException e) {
+						System.err.println("Unable to copy log file " + logFilePath + ": " + e.getMessage());
+					}
+					System.out.println("Please consult the log file saved at the following location for more details : " + outputFile);
+				}
 				System.exit(0);
 			case IDLE:
 			case RUNNING:
