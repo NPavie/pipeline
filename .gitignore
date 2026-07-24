@@ -20,3 +20,5 @@ bin/
 target/
 /build/
 /node_modules/
+/testfiles/
+/pipeline2-1.15.4_sad/
