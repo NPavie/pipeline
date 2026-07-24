@@ -351,6 +351,13 @@ run() {
         'cli')
             MODE=cli
             ENABLE_PERSISTENCE=false
+            ENABLE_SHELL=true
+            shift
+            ;;
+        'ui')
+            MODE=ui
+            ENABLE_PERSISTENCE=false
+            ENABLE_SHELL=true
             shift
             ;;
         'osgi')
@@ -383,15 +390,15 @@ run() {
             shift
             ;;
         '--')
-            if ! [ "$MODE" = "cli" ]; then
-                die "Additional arguments can only be provided in CLI mode (\"--\" must follow \"cli\")"
+            if [ "$MODE" = "webservice" ]; then
+                die "Additional arguments can only be provided in CLI or UI mode (\"--\" must follow \"cli\")"
             fi
             shift
             CLI_ARGS=("$@")
             break
             ;;
         *)
-            if [ "$MODE" = "cli" ]; then
+            if [ "$MODE" = "cli" ] || [ "$MODE" = "ui" ]; then
                 die "Unexpected argument: $1. CLI arguments must follow \"--\"."
             else
                 die "Unexpected argument: $1"
@@ -416,6 +423,13 @@ run() {
         PIPELINE2_WS_LOCALFS=true
         if [ "$ENABLE_OSGI" = "true" ]; then
             warn "OSGi can not be enabled in CLI mode"
+            ENABLE_OSGI=false
+        fi
+    fi
+    if [ "$MODE" = "ui" ]; then
+        PIPELINE2_WS_LOCALFS=true
+        if [ "$ENABLE_OSGI" = "true" ]; then
+            warn "OSGi can not be enabled in UI mode"
             ENABLE_OSGI=false
         fi
     fi
@@ -467,13 +481,15 @@ run() {
     else
         eval listJars JARS system/common $PATHS modules
         CLASSPATH="$(join : ${JARS[@]})"
-        if [ "$MODE" = "cli" ]; then
-            CLASSPATH="$CLASSPATH:system/simple-api"
-        fi
         if [ "$MODE" = "webservice" ]; then
             MAIN=org.daisy.pipeline.webservice.restlet.impl.PipelineWebService
         else
-            MAIN=SimpleAPI
+            CLASSPATH="$CLASSPATH:system/simple-api/api:system/simple-api/xml:system/simple-api/ui:system/simple-api"
+            if [ "$MODE" = "ui" ]; then
+                MAIN=GraphicalInterface
+            else
+                MAIN=CommandLineInterface
+            fi
         fi
     fi
 
