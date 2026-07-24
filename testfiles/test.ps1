@@ -12,6 +12,10 @@ Copy-Item   -Path C:\Users\admin\devs\_Perso\pipeline\assembly\target\simple-api
             -Destination C:\Users\admin\devs\_Perso\pipeline\pipeline2-1.15.4_sad\daisy-pipeline\system\ `
             -Recurse -Force
 
+Copy-Item   -Path C:\Users\admin\devs\_Perso\pipeline\assembly\src\main\resources\bin\pipeline2.bat`
+            -Destination C:\Users\admin\devs\_Perso\pipeline\pipeline2-1.15.4_sad\daisy-pipeline\bin\pipeline2.bat `
+            -Recurse -Force
+
 Remove-Item "C:\Users\admin\devs\_Perso\pipeline\pipeline2-1.15.4_sad\test" -Recurse -Force
 
 # Print start date and time with milliseconds precision
@@ -20,11 +24,19 @@ $dateFormat.DateTimeFormat.ShortDatePattern = "yyyy-MM-dd"
 $dateFormat.DateTimeFormat.LongTimePattern = "HH:mm:ss.fff"
 Write-Output ((Get-Date).ToString("yyyy-MM-dd'T'HH:mm:ss.fff", $dateFormat) + " : Launching simple cli from command line ")
 
-&"C:\Users\admin\devs\_Perso\pipeline\pipeline2-1.15.4_sad\daisy-pipeline\bin\simplecli.bat" `
+# &"C:\Users\admin\devs\_Perso\pipeline\pipeline2-1.15.4_sad\daisy-pipeline\bin\simplecli.bat" `
+#    word-to-dtbook `
+#    --source "C:\Users\admin\devs\_Perso\pipeline\testfiles\default_sample_for_dtbook_conversion.docx" `
+#    --result "C:\Users\admin\devs\_Perso\pipeline\pipeline2-1.15.4_sad\test"
+
+&"C:\Users\admin\devs\_Perso\pipeline\pipeline2-1.15.4_sad\daisy-pipeline\bin\pipeline2.bat" `
+   "-Dorg.daisy.pipeline.ocr.mistral.apikey" "4yhuRHwEDH1ffkS2lH8YBb7UDvSAacnK" `
+   ui `
    word-to-dtbook `
    --source "C:\Users\admin\devs\_Perso\pipeline\testfiles\default_sample_for_dtbook_conversion.docx" `
    --result "C:\Users\admin\devs\_Perso\pipeline\pipeline2-1.15.4_sad\test"
 
+# 9791028536817_SanteMentaleTousConcernes.docx
 # &"C:\Users\admin\devs\_Perso\pipeline\pipeline2-1.15.4_sad\daisy-pipeline\bin\simplecli.bat" `
 #     word-to-dtbook `
 #     --source "C:\Users\admin\AppData\Local\Temp\miekkq0q.fn4\9791097150501_FemmeDeCoquilles.docx" `
