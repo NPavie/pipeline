@@ -145,12 +145,18 @@ public class SimpleAPI {
 	 */
 	public String getScripts(boolean withDetails) throws Exception {
 		List<Script> scripts = new ArrayList<>();
-		for (ScriptService<?> s : this.scriptRegistry.getScripts()) {
-			ScriptService<?> _s = this.scriptRegistry.getScript(s.getId());
-			scripts.add(_s.load());
-		}
-		TransformerFactory t = TransformerFactory.newInstance();
 		try {
+			for (ScriptService<?> s : this.scriptRegistry.getScripts()) {
+				try{
+					ScriptService<?> _s = this.scriptRegistry.getScript(s.getId());
+					scripts.add(_s.load());
+				} catch (Exception e) {
+					System.err.println("could not load script " + s.getId() + ": " + e.getMessage());
+				}
+				// ScriptService<?> _s = this.scriptRegistry.getScript(s.getId());
+				// scripts.add(_s.load());
+			}
+			TransformerFactory t = TransformerFactory.newInstance();
 			Transformer transformer = t.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
@@ -161,7 +167,11 @@ public class SimpleAPI {
 			transformer.transform(source, result);
 			writer.close();
 			return writer.toString();
-		} catch (TransformerException e) {
+		} 
+		catch (TransformerException e) {
+			throw new Exception("Could not export scripts xml descriptors", e);
+		}
+		catch (Exception e) {
 			throw new Exception("Could not export scripts xml descriptors", e);
 		}
 	}

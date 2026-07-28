@@ -51,7 +51,8 @@ public class CommandLineJob implements Runnable, AutoCloseable {
     public void run() {
         job.run();
         try {
-            switch (job.getStatus()) {
+            Job.Status status = job.getStatus();
+            switch (status) {
             case SUCCESS:
             case FAIL:
                 List<File> existingFiles = new ArrayList<>();
@@ -75,8 +76,31 @@ public class CommandLineJob implements Runnable, AutoCloseable {
                                     writeResult(r, f);
                     }
                 }
+                if(status == Job.Status.FAIL && resultLocations.containsKey("result")){
+                    File logFile = new File(job.getLogFile());
+                    File destFolder = new File(resultLocations.get("result"));
+                    if(!destFolder.exists()){
+                        destFolder.mkdirs();
+                    }
+                    File dest = new File(destFolder, "failed.log.txt");
+                    java.nio.file.Files.move(logFile.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    movedLogFile = dest.getAbsolutePath();
+                }
                 if (!existingFiles.isEmpty())
                     throw new IOException("Some results could not be written: " + existingFiles);
+                break;
+            case ERROR:
+                if(resultLocations.containsKey("result")){
+                    File logFile = new File(job.getLogFile());
+                    File destFolder = new File(resultLocations.get("result"));
+                    if(!destFolder.exists()){
+                        destFolder.mkdirs();
+                    }
+                    File dest = new File(destFolder, "error.log.txt");
+                    java.nio.file.Files.move(logFile.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    movedLogFile = dest.getAbsolutePath();
+                }
+                break;
             default:
             }
         } catch (IOException e) {
@@ -102,8 +126,12 @@ public class CommandLineJob implements Runnable, AutoCloseable {
         }
     }
 
+    private String movedLogFile = null;
     public String getLogFile() {
-        return job.getLogFile().toString();
+        if(movedLogFile != null) {
+            return movedLogFile;
+        }
+        return new File(job.getLogFile()).getAbsolutePath();
     }
 
 

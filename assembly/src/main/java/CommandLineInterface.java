@@ -44,15 +44,24 @@ public class CommandLineInterface {
             return name;
         }
 
+		public static Command fromName(String name) {
+			for (Command command : Command.values()) {
+				if (command.getName().equals(name)) {
+					return command;
+				}
+			}
+			throw new IllegalArgumentException("Unknown command: " + name);
+		}
+
 		public void run(Map<String,List<String>> options) throws InterruptedException, IOException, Exception {
 			// Default to the current working directory if no output directory is specified
 			String outputDirectory = new java.io.File(".").getCanonicalPath();
 			String outputFile = new java.io.File(outputDirectory, this.getName().toLowerCase() + ".xml").getAbsolutePath();
-
-			if (options.containsKey("output"))
+			// Using "result" as the option name for the output file/directory, to be consistent with the script output port name
+			if (options.containsKey("result"))
 			{
-				outputDirectory = options.get("output").get(0);
-				outputFile = options.get("output").get(0);
+				outputDirectory = options.get("result").get(0);
+				outputFile = options.get("result").get(0);
 				java.io.File outputFileObj = new java.io.File(outputFile);
 				if (outputFileObj.isDirectory())
 				{
@@ -60,7 +69,7 @@ public class CommandLineInterface {
 					outputFile = new java.io.File(outputFile, this.getName().toLowerCase() + ".xml").getAbsolutePath();
 				} else
 				{
-					outputDirectory = outputFileObj.getParent();
+					outputDirectory = outputFileObj.getAbsoluteFile().getParent();
 				}
 			}
 			String scriptsDescriptors;
@@ -71,8 +80,10 @@ public class CommandLineInterface {
 				case Descriptors:
 					System.out.println("Retrieving all descriptors...");
 					scriptsDescriptors = SimpleAPI.getInstance().getScripts(true);
+					System.out.println("Writing scripts descriptors to " + new java.io.File(outputDirectory, "scripts.xml").getAbsolutePath());
 					java.nio.file.Files.write(java.nio.file.Paths.get(outputDirectory, "scripts.xml"), scriptsDescriptors.getBytes());
 					datatypesDescriptors = SimpleAPI.getInstance().getDatatypes();
+					System.out.println("Writing datatypes descriptors to " + new java.io.File(outputDirectory, "datatypes.xml").getAbsolutePath());
 					java.nio.file.Files.write(java.nio.file.Paths.get(outputDirectory, "datatypes.xml"), datatypesDescriptors.getBytes());
 					break;
 				case Scripts:
@@ -88,11 +99,13 @@ public class CommandLineInterface {
 					String scriptId = options.get("id").get(0);
 					System.out.println("Retrieving details for script " + scriptId + "...");
 					result = SimpleAPI.getInstance().getScriptDetails(scriptId);
+					System.out.println("Writing script details to " + outputFile);
 					java.nio.file.Files.write(java.nio.file.Paths.get(outputFile), result.getBytes());
 					break;
 				case Datatypes:
 					System.out.println("Retrieving datatypes descriptors...");
 					result = SimpleAPI.getInstance().getDatatypes();
+					System.out.println("Writing datatypes to " + outputFile);
 					java.nio.file.Files.write(java.nio.file.Paths.get(outputFile), result.getBytes());
 					break;
 				case DatatypeDetails:
@@ -103,11 +116,13 @@ public class CommandLineInterface {
 					String datatypeId = options.get("id").get(0);
 					System.out.println("Retrieving details for datatype " + datatypeId + "...");
 					result = SimpleAPI.getInstance().getDatatypeDetails(datatypeId);
+					System.out.println("Writing datatype details to " + outputFile);
 					java.nio.file.Files.write(java.nio.file.Paths.get(outputFile), result.getBytes());
 					break;
 				case SettableProperties:
 					System.out.println("Retrieving settable properties descriptors...");
 					result = SimpleAPI.getInstance().getSettableProperties();
+					System.out.println("Writing settable properties to " + outputFile);
 					java.nio.file.Files.write(java.nio.file.Paths.get(outputFile), result.getBytes());
 					break;
 				default:
@@ -149,11 +164,12 @@ public class CommandLineInterface {
 		}
 		// Check if scriptOrCommand is one of the known commands
 		try{
-            CommandLineInterface.Command command = CommandLineInterface.Command.valueOf(scriptOrCommand);
+            CommandLineInterface.Command command = CommandLineInterface.Command.fromName(scriptOrCommand);
             try {
 				command.run(options);
             } catch (Exception e) {
                 System.err.println("Error running the command " + command.getName() + ": " + e.getMessage());
+				e.printStackTrace();
                 System.exit(1);
             }
             System.exit(0);
@@ -163,6 +179,10 @@ public class CommandLineInterface {
 
 		CommandLineJob job = null;
 		try {
+			System.out.println("Starting job for script : " + scriptOrCommand + " with options: ");
+			for(Map.Entry<String, List<String>> entry : options.entrySet()) {
+				System.out.println("--" + entry.getKey() + " = " + entry.getValue());
+			}
 			job = SimpleAPI.getInstance().startJob(scriptOrCommand, options);
 		} catch (IllegalArgumentException e) {
 			System.err.println(e.getMessage());
@@ -183,39 +203,7 @@ public class CommandLineInterface {
 			case ERROR:
 				System.out.println("Job finished with status: " + job.getStatus());
 				if(job.getStatus() != Job.Status.SUCCESS) {
-					// If the job failed, we save the log file for more details	
-					String outputDirectory = new java.io.File(".").getCanonicalPath();
-					String outputFile = new java.io.File(outputDirectory, job.getStatus() + ".log.txt").getAbsolutePath();
-					if (options.containsKey("output"))
-					{
-						String outputValue = options.get("output").get(0);
-						java.io.File outputFileObj = new java.io.File(outputValue);
-						if (outputFileObj.isDirectory())
-						{
-							// Output selected is a directory, we create a file name based on the status
-							outputDirectory = outputFileObj.getAbsolutePath();
-							outputFile = new java.io.File(outputDirectory, scriptOrCommand + "-" + job.getStatus() + ".log.txt").getAbsolutePath();
-						} else
-						{
-							// Output was a file, we use its parent directory and create a new file name based on the status
-							outputDirectory = outputFileObj.getParent();
-							outputFile = new java.io.File(outputDirectory, scriptOrCommand + "-" + job.getStatus() + ".log.txt").getAbsolutePath();
-						}
-					}
-					String logFilePath =  job.getLogFile();
-					if(logFilePath.startsWith("file:")) {
-						try {
-							logFilePath = new File(new URL(logFilePath).toURI()).getAbsolutePath();
-						} catch (Exception e) {
-							System.err.println("Unable to convert log file URL to path: " + e.getMessage());
-						}
-					}
-					try {
-						Files.copy(new File(logFilePath).toPath(), new File(outputFile).toPath(), StandardCopyOption.REPLACE_EXISTING);	
-					} catch (IOException e) {
-						System.err.println("Unable to copy log file " + logFilePath + ": " + e.getMessage());
-					}
-					System.out.println("Please consult the log file saved at the following location for more details : " + outputFile);
+					System.out.println("Please consult the log file saved at the following location for more details : " + job.getLogFile());
 				}
 				System.exit(0);
 			case IDLE:

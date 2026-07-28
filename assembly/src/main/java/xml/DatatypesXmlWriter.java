@@ -36,19 +36,24 @@ public class DatatypesXmlWriter {
 		Document doc = XmlUtils.createDom("datatypes");
 		Element datatypesElem= doc.getDocumentElement();
 		datatypesElem.setAttribute("href", baseUrl + "/datatypes");
-                for (DatatypeService ds : this.datatypes) {
-                        Element dsElem=doc.createElementNS(XmlUtils.NS_PIPELINE_DATA,"datatype");
-                        dsElem.setAttribute("id",ds.getId());
-                        dsElem.setAttribute("href",String.format("%s%s/%s", baseUrl, "/datatypes/",ds.getId()));
-                        datatypesElem.appendChild(dsElem);
-                        try {
-                                Document dsDoc = ds.asDocument();
-                                Element imported = (Element) doc.importNode(dsDoc.getDocumentElement(), true);
-                                dsElem.appendChild(imported);
-                        } catch (Exception e) {
-                                logger.warn("getting datatype as document",e);
+                try{ 
+                        for (DatatypeService ds : this.datatypes) {
+                                try {
+                                        Element dsElem=doc.createElementNS(XmlUtils.NS_PIPELINE_DATA,"datatype");
+                                        dsElem.setAttribute("id",ds.getId());
+                                        dsElem.setAttribute("href",String.format("%s%s/%s", baseUrl, "/datatypes/",ds.getId()));
+                                        datatypesElem.appendChild(dsElem);
+                                        Document dsDoc = ds.asDocument();
+                                        Element imported = (Element) doc.importNode(dsDoc.getDocumentElement(), true);
+                                        dsElem.appendChild(imported);
+                                } catch (Exception e) {
+                                        logger.warn("getting datatype as document",e);
+                                }
+                                
                         }
-                        
+                }
+                catch (Exception e) {
+                        logger.warn("getting datatypes",e);
                 }
 
 		// for debugging only
