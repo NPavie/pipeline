@@ -104,17 +104,17 @@ rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     set ENABLE_SHELL=false
     set MODE=webservice
 :RUN_LOOP
-    if [%1]==[] goto :EXECUTE
+    if "%~1"=="" goto :EXECUTE
     REM additionnal parsing : if %1 starts with -D, add it to SYSTEM props
-    set "PARSING=%1"
-    if "%PARSING:~0,2%" == "-D" goto :PARSE_SYSTEM_PROPS
-    if "%1" == "cli" goto :EXECUTE_CLI
-    if "%1" == "ui" goto :EXECUTE_UI
-    if "%1" == "osgi" goto :EXECUTE_OSGI
-    if "%1" == "remote" goto :EXECUTE_REMOTE
-    if "%1" == "local" goto :EXECUTE_LOCAL
-    if "%1" == "clean" goto :EXECUTE_CLEAN
-    if "%1" == "debug" goto :EXECUTE_DEBUG
+    set "PARSING=%~1"
+    if "!PARSING:~0,2!" == "-D" goto :PARSE_SYSTEM_PROPS
+    if /I "%~1" == "cli" goto :EXECUTE_CLI
+    if /I "%~1" == "ui" goto :EXECUTE_UI
+    if /I "%~1" == "osgi" goto :EXECUTE_OSGI
+    if /I "%~1" == "remote" goto :EXECUTE_REMOTE
+    if /I "%~1" == "local" goto :EXECUTE_LOCAL
+    if /I "%~1" == "clean" goto :EXECUTE_CLEAN
+    if /I "%~1" == "debug" goto :EXECUTE_DEBUG
     call:warn Unexpected argument: "%1"
     rem user-fixable
     set exitCode=2
@@ -122,10 +122,9 @@ rem # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 goto :EXECUTE
 
 :PARSE_SYSTEM_PROPS
-    set "OPTION=%1"
+    set "OPTION=%~1"
     set "VALUE=%~2"
     set "SYSTEM_PROPS=%SYSTEM_PROPS% %OPTION%=^"%VALUE%^""
-    REM echo %JAVA_OPTS%
     shift
     shift
 goto :RUN_LOOP
@@ -154,13 +153,10 @@ goto :RUN_LOOP
 goto :RUN_LOOP
 
 :PARSE_CLI_ARGS
-    if [%1]==[] (
-        goto :EXECUTE
-    ) else (
-        set CLI_ARGS=%CLI_ARGS% %1
-        shift
-        goto :PARSE_CLI_ARGS
-    )
+    if "%~1"=="" goto :EXECUTE
+    set CLI_ARGS=%CLI_ARGS% "%~1"
+    shift
+    goto :PARSE_CLI_ARGS
     rem stop parsing argument
 rem goto :EXECUTE
 
