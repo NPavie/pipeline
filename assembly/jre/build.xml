@@ -134,7 +134,7 @@
                 <configuration>
                   <classifier>win32</classifier>
                   <modulePaths>
-                    <modulePath>src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.19_10/jdk-17.0.19+10/jmods</modulePath>
+                    <modulePath>src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.7_7/jdk-17.0.7+7/jmods</modulePath>
                   </modulePaths>
                 </configuration>
               </execution>

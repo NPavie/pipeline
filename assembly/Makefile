@@ -189,10 +189,12 @@ endif
 endif
 
 target/assembly-$(assembly/VERSION)-sad.zip                                   : mvn -Pwithout-persistence \
+																					 -Pwithout-webservice \
                                                                                      -Pwithout-cli \
                                                                                      -Pwith-simple-api \
                                                                                      -Pcopy-artifacts \
-                                                                                     -Pbuild-jre-win64
+                                                                                     -Pbuild-jre-win64 \
+																					 -Pbuild-jre-win32
 ifndef DUMP_PROFILES
 	exec("$(SHELL)", $(call quote-for-java,$(MVN)), "--", "assembly:single", "-Passemble-sad-zip");
 endif																				 
@@ -492,36 +494,42 @@ endif
 -Pbuild-jre-mac -Pbuild-jre-linux -Pbuild-jre-linux-arm64 -Pbuild-jre-win32 -Pbuild-jre-win64 : mvn # to make sure they are run after other profiles
 
 ifeq ($(OS), MACOSX)
--Pbuild-jre-linux -Pbuild-jre-linux-arm64 -Pbuild-jre-win32 -Pbuild-jre-win64 -Pbuild-jre-mac : src/main/jre/OpenJDK17U-jdk_x64_mac_hotspot_17.0.7_7/jdk-17.0.7+7
+-Pbuild-jre-linux -Pbuild-jre-linux-arm64 -Pbuild-jre-win32 -Pbuild-jre-win64 -Pbuild-jre-mac : src/main/jre/OpenJDK17U-jdk_x64_mac_hotspot_17.0.19_10/jdk-17.0.19+10
 ifndef DUMP_PROFILES
 	exec(env("JAVA_HOME", "$(CURDIR)/$</Contents/Home"), \
 	     "$(SHELL)", $(call quote-for-java,$(MVN)), "--", "-f", "jre/build.xml", "jlink:jlink", "$@");
 endif
 else ifeq ($(OS), WINDOWS)
--Pbuild-jre-linux -Pbuild-jre-linux-arm64 -Pbuild-jre-win32 -Pbuild-jre-win64                 : src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.7_7/jdk-17.0.7+7
+-Pbuild-jre-linux -Pbuild-jre-linux-arm64 -Pbuild-jre-win32 -Pbuild-jre-win64                 : src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.19_10/jdk-17.0.19+10
 ifndef DUMP_PROFILES
 	exec(env("JAVA_HOME", "$(CURDIR)/$<"), \
 	     "$(SHELL)", $(call quote-for-java,$(MVN)), "--", "-f", "jre/build.xml", "jlink:jlink", "$@");
 endif
 else
--Pbuild-jre-linux -Pbuild-jre-linux-arm64-Pbuild-jre-win32 -Pbuild-jre-win64                 : src/main/jre/OpenJDK17U-jdk_x64_linux_hotspot_17.0.7_7/jdk-17.0.7+7
+-Pbuild-jre-linux -Pbuild-jre-linux-arm64 -Pbuild-jre-win32 -Pbuild-jre-win64  				  : src/main/jre/OpenJDK17U-jdk_x64_linux_hotspot_17.0.19_10/jdk-17.0.19+10
 ifndef DUMP_PROFILES
 	exec(env("JAVA_HOME", "$(CURDIR)/$<"), \
 	     "$(SHELL)", $(call quote-for-java,$(MVN)), "--", "-f", "jre/build.xml", "jlink:jlink", "$@");
 endif
 endif
+
+
 
 # for dependencies to jmods
 -Pbuild-jre-mac         : src/main/jre/OpenJDK17U-jdk_x64_mac_hotspot_17.0.19_10/jdk-17.0.19+10
 -Pbuild-jre-linux       : src/main/jre/OpenJDK17U-jdk_x64_linux_hotspot_17.0.19_10/jdk-17.0.19+10
 -Pbuild-jre-linux-arm64 : src/main/jre/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.19_10/jdk-17.0.19+10
 -Pbuild-jre-win64       : src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.19_10/jdk-17.0.19+10
--Pbuild-jre-win32       : src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.19_10/jdk-17.0.19+10
+# temurin has stopped distributing 32-bit Windows JDKs for Java 17, so we have to use the last available version (17.0.7+7) for that platform.
+-Pbuild-jre-win32       : src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.7_7/jdk-17.0.7+7
 
 # JDKs
 
-src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.19_10/jdk-17.0.19+10 \
-src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.19_10/jdk-17.0.19+10 : %/jdk-17.0.19+10 : %.zip
+src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.19_10/jdk-17.0.19+10 : %/jdk-17.0.19+10 : %.zip
+	mkdirs("$(dir $@)"); \
+	unzip(new File("$<"), new File("$(dir $@)"));
+
+src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.7_7/jdk-17.0.7+7 : %/jdk-17.0.7+7 : %.zip
 	mkdirs("$(dir $@)"); \
 	unzip(new File("$<"), new File("$(dir $@)"));
 
@@ -540,17 +548,23 @@ endif
 .INTERMEDIATE : src/main/jre/OpenJDK17U-jdk_x64_mac_hotspot_17.0.19_10.tar.gz
 .INTERMEDIATE : src/main/jre/OpenJDK17U-jdk_x64_linux_hotspot_17.0.19_10.tar.gz
 .INTERMEDIATE : src/main/jre/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.19_10.tar.gz
-.INTERMEDIATE : src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.19_10.zip
 .INTERMEDIATE : src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.19_10.zip
+.INTERMEDIATE : src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.7_7.zip
 
 src/main/jre/OpenJDK17U-jdk_x64_mac_hotspot_17.0.19_10.tar.gz \
 src/main/jre/OpenJDK17U-jdk_x64_linux_hotspot_17.0.19_10.tar.gz \
 src/main/jre/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.19_10.tar.gz \
-src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.19_10.zip \
 src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.19_10.zip :
 	mkdirs("$(dir $@)");                                                                                        \
 	copy(new URL("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.19%2B10/$(notdir $@)"), \
 	     new File("$@"));
+
+
+src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.7_7.zip :
+	mkdirs("$(dir $@)");                                                                                          \
+	copy(new URL("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.7%2B7/$(notdir $@)"), \
+	     new File("$@"));
+
 
 .PHONY : clean-jdk
 clean : clean-jdk
@@ -559,4 +573,4 @@ clean-jdk :
 	rm("src/main/jre/OpenJDK17U-jdk_x64_linux_hotspot_17.0.19_10/jdk-17.0.19+10");      \
 	rm("src/main/jre/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.19_10/jdk-17.0.19+10");  \
 	rm("src/main/jre/OpenJDK17U-jdk_x64_windows_hotspot_17.0.19_10/jdk-17.0.19+10");    \
-	rm("src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.19_10/jdk-17.0.19+10");
+	rm("src/main/jre/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.7_7/jdk-17.0.7+7");
