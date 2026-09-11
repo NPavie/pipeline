@@ -3423,6 +3423,40 @@
       </build>
     </profile>
     <profile>
+      <id>assemble-sad-zip</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-cli</id> <!-- run directly from Makefile -->
+                <!-- <id>assemble-sad-zip</id> -->
+                <!-- <phase>prepare-package</phase> -->
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <attach>false</attach> <!-- installed by Makefile -->
+                  <formats>
+                    <format>zip</format>
+                  </formats>
+                  <descriptors>
+                    <descriptor>src/main/assembly/dist-sad.xml</descriptor>
+                  </descriptors>
+                  <filters>
+                    <filter>src/main/assembly/dist.properties</filter>
+                    <filter>src/main/assembly/dist-sad.properties</filter>
+                  </filters>
+                  <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>package-exe</id>
       <properties>
         <nsis.scriptfile>${project.build.directory}/nsis/installer.nsi</nsis.scriptfile>
