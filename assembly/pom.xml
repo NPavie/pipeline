@@ -3083,7 +3083,7 @@
                   <goal>generate-spi-classes</goal>
                 </goals>
                 <configuration>
-                  <includes>SimpleAPI</includes>
+                  <includes>api.SimpleAPI</includes>
                 </configuration>
               </execution>
             </executions>
@@ -3098,8 +3098,8 @@
                   <goal>compile</goal>
                 </goals>
                 <configuration>
-                  <source>10</source>
-                  <target>10</target>
+                  <source>8</source>
+                  <target>8</target>
                 </configuration>
               </execution>
             </executions>
@@ -3119,7 +3119,7 @@
                     <resource>
                       <directory>${project.build.outputDirectory}</directory>
                       <includes>
-                        <include>*.class</include>
+                        <include>**/*.class</include>
                         <include>META-INF/services/*</include>
                       </includes>
                     </resource>

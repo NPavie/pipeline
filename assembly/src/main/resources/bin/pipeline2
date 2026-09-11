@@ -349,6 +349,13 @@ run() {
         'cli')
             MODE=cli
             ENABLE_PERSISTENCE=false
+            ENABLE_SHELL=true
+            shift
+            ;;
+        'ui')
+            MODE=ui
+            ENABLE_PERSISTENCE=false
+            ENABLE_SHELL=true
             shift
             ;;
         'remote')
@@ -373,15 +380,15 @@ run() {
             shift
             ;;
         '--')
-            if ! [ "$MODE" = "cli" ]; then
-                die "Additional arguments can only be provided in CLI mode (\"--\" must follow \"cli\")"
+            if [ "$MODE" = "webservice" ]; then
+                die "Additional arguments can only be provided in CLI or UI mode (\"--\" must follow \"cli\")"
             fi
             shift
             CLI_ARGS=("$@")
             break
             ;;
         *)
-            if [ "$MODE" = "cli" ]; then
+            if [ "$MODE" = "cli" ] || [ "$MODE" = "ui" ]; then
                 die "Unexpected argument: $1. CLI arguments must follow \"--\"."
             else
                 die "Unexpected argument: $1"
@@ -399,6 +406,10 @@ run() {
     if [ "$MODE" = "cli" ]; then
         PIPELINE2_WS_LOCALFS=true
     fi
+    if [ "$MODE" = "ui" ]; then
+        PIPELINE2_WS_LOCALFS=true
+    fi
+    
     PATHS="$PATHS system/$MODE"
     if [ "$ENABLE_PERSISTENCE" = "true" ]; then
         if ! [ -e "$PIPELINE2_HOME/system/persistence" ]; then
@@ -411,13 +422,15 @@ run() {
     fi
     eval listJars JARS system/common $PATHS modules
     CLASSPATH="$(join : ${JARS[@]})"
-    if [ "$MODE" = "cli" ]; then
-        CLASSPATH="$CLASSPATH:system/simple-api"
-    fi
     if [ "$MODE" = "webservice" ]; then
         MAIN=org.daisy.pipeline.webservice.restlet.impl.PipelineWebService
     else
-        MAIN=SimpleAPI
+        CLASSPATH="$CLASSPATH:system/simple-api/api:system/simple-api/xml:system/simple-api/ui:system/simple-api"
+        if [ "$MODE" = "ui" ]; then
+            MAIN=GraphicalInterface
+        else
+            MAIN=CommandLineInterface
+        fi
     fi
 
     JAVA_ENDORSED_DIRS="${JAVA_HOME}/jre/lib/endorsed:${JAVA_HOME}/lib/endorsed:${PIPELINE2_HOME}/lib/endorsed"
