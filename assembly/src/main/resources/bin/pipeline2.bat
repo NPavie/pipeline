@@ -282,6 +282,15 @@ goto :RUN_LOOP
             rem -Djava.ext.dirs="%JAVA_HOME%\jre\lib\ext;%JAVA_HOME%\lib\ext;%PIPELINE2_HOME%\lib\ext" ^
     )
     
+    if "%MODE%" == "ui" (
+        REM launch Java Access Bridge for UI
+		REM remove "java.exe" from java var to get the bin folder
+		set "JAVA_BIN_DIR=!JAVA:~0,-9!"
+        if exist "!JAVA_BIN_DIR!jabswitch.exe" (
+            "!JAVA_BIN_DIR!jabswitch.exe" /enable
+        )
+    )
+
     REM call:warn Starting java: %COMMAND%
     if %ENABLE_SHELL% == true (
         rem endlocal & (
