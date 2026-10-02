@@ -2755,6 +2755,87 @@ public class DaisyClass {
 			return structuralNodes.pop();
 	}
 
+	// Test : replace the concat style test of bidi and east asian characters by java-side regex match
+	/* 
+	' check the first character to determine whether East Asia, Complex or Latin script
+                    ' there could be more than one language in the run, but we can only have a single language in a span in HTML
+                    ' .net support for unicode blocks is here: https://docs.microsoft.com/en-us/dotnet/standard/base-types/character-classes-in-regular-expressions
+                    If (Regex.IsMatch(run.InnerText, "\p{IsHangulJamo}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsHanunoo}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsHangulCompatibilityJamo}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsHangulSyllables}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsBopomofo}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsBopomofoExtended}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsHiragana}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsKatakana}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsKatakanaPhoneticExtensions}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsYiRadicals}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsYiSyllables}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsYijingHexagramSymbols}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsKatakana}")) Then
+                        thisScript = "EastAsia"
+                    ElseIf (Regex.IsMatch(thisRunText, "\p{IsArabic}") Or
+                       Regex.IsMatch(thisRunText, "\p{IsArabicPresentationForms-A}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsArabicPresentationForms-B}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsSyriac}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsThaana}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsBengali}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsDevanagari}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsBengali}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsGurmukhi}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsGujarati}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsOriya}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsTamil}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsTelugu}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsKannada}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsMalayalam}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsSinhala}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsThai}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsLao}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsTibetan}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsMyanmar}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsGeorgian}") Or
+                        Regex.IsMatch(thisRunText, "\p{IsHebrew}")) Then
+                        thisScript = "BiDi"
+                    Else
+                        thisScript = "Latin"
+                    End If
+	*/
+
+	private static final Pattern EAST_ASIAN_PATTERN = Pattern.compile(
+		"[\\p{InHangulJamo}\\p{InHanunoo}\\p{InHangulCompatibilityJamo}\\p{InHangulSyllables}\\p{InBopomofo}\\p{InBopomofoExtended}"
+		+ "\\p{InHiragana}\\p{InKatakana}\\p{InKatakanaPhoneticExtensions}"
+		+ "\\p{InYiRadicals}\\p{InYiSyllables}\\p{InYijingHexagramSymbols}]");
+
+	public boolean IsEastAsia(String thisRunText) {
+		if (thisRunText == null || thisRunText.isEmpty())
+			return false;
+		return EAST_ASIAN_PATTERN.matcher(thisRunText).find();
+	}
+
+	private static final Pattern BIDI_PATTERN = Pattern.compile(
+		"[\\p{InArabic}\\p{InArabicPresentationForms-A}\\p{InArabicPresentationForms-B}\\p{InSyriac}\\p{InThaana}"
+		+ "\\p{InBengali}\\p{InDevanagari}\\p{InGurmukhi}\\p{InGujarati}\\p{InOriya}"
+		+ "\\p{InTamil}\\p{InTelugu}\\p{InKannada}\\p{InMalayalam}\\p{InSinhala}"
+		+ "\\p{InThai}\\p{InLao}\\p{InTibetan}\\p{InMyanmar}\\p{InGeorgian}\\p{InHebrew}]");
+
+	public boolean IsBiDi(String thisRunText) {
+		if (thisRunText == null || thisRunText.isEmpty())
+			return false;
+		return BIDI_PATTERN.matcher(thisRunText).find();
+	}
+
+	
+	public String lastRunLanguage = "";
+
+	public String getLastRunLanguage() {
+		return lastRunLanguage;
+	}
+	public void setLastRunLanguage(String lastRunLanguage) {
+		this.lastRunLanguage = lastRunLanguage;
+	}
+
+
 	@Component(
 		name = "DaisyClass",
 		service = { ExtensionFunctionProvider.class }
