@@ -398,6 +398,58 @@ public class DaisyClass {
 
 	public static void sink(Object item) {}
 
+	/**
+	 * East Asian character ranges used for run language detection.
+	 * Identical to the character set that was previously embedded as string
+	 * literals in the $EastAsianCharacters variable of Common3.xsl (extracted
+	 * programmatically, so the detected characters are unchanged).
+	 */
+	private static final int[][] EAST_ASIAN_RANGES = {
+		{0x1100, 0x11FF}, {0x1720, 0x173F}, {0x3040, 0x318F}, {0x31A0, 0x31BF},
+		{0x31F0, 0x31FF}, {0x4DC0, 0xA4CF}, {0xAC00, 0xD7AF}};
+
+	/**
+	 * Bidirectional (complex script) character ranges used for run language detection.
+	 * Identical to the character set that was previously embedded as string
+	 * literals in the $BidiCharacters variable of Common3.xsl.
+	 */
+	private static final int[][] BIDI_RANGES = {
+		{0x0590, 0x074F}, {0x0780, 0x07BF}, {0x0900, 0x10FF}, {0xFB50, 0xFDFF}, {0xFE70, 0xFEFF}};
+
+	/**
+	 * Checks whether the given character belongs to the East Asian character set.
+	 * Replacement for the contains($EastAsianCharacters, substring($innerText,1,1))
+	 * test that was done in the XSLT : same result, O(1) per run instead of a scan
+	 * of a 34000+ characters string.
+	 */
+	public boolean IsEastAsia(String character) {
+		return isCharacterInRange(character, EAST_ASIAN_RANGES);
+	}
+
+	/**
+	 * Checks whether the given character belongs to the bidirectional (complex
+	 * script) character set. Same replacement as IsEastAsia.
+	 */
+	public boolean IsBiDi(String character) {
+		return isCharacterInRange(character, BIDI_RANGES);
+	}
+
+	/**
+	 * Mirrors the XPath contains($characters, $needle) test that was done on the
+	 * character sets : true if the needle is a single character of the set (the
+	 * sets only contain Basic Multilingual Plane characters, so a multi-character
+	 * needle - an astral character in XPath - never matched).
+	 */
+	private static boolean isCharacterInRange(String character, int[][] ranges) {
+		if (character == null || character.length() != 1)
+			return false;
+		char c = character.charAt(0);
+		for (int[] range : ranges)
+			if (c >= range[0] && c <= range[1])
+				return true;
+		return false;
+	}
+
 	private static String GetFileNameWithoutExtension(File f) {
 		String name = f.getName();
 		if (name.lastIndexOf('.') >= 0)
@@ -2754,87 +2806,6 @@ public class DaisyClass {
 		else
 			return structuralNodes.pop();
 	}
-
-	// Test : replace the concat style test of bidi and east asian characters by java-side regex match
-	/* 
-	' check the first character to determine whether East Asia, Complex or Latin script
-                    ' there could be more than one language in the run, but we can only have a single language in a span in HTML
-                    ' .net support for unicode blocks is here: https://docs.microsoft.com/en-us/dotnet/standard/base-types/character-classes-in-regular-expressions
-                    If (Regex.IsMatch(run.InnerText, "\p{IsHangulJamo}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsHanunoo}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsHangulCompatibilityJamo}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsHangulSyllables}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsBopomofo}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsBopomofoExtended}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsHiragana}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsKatakana}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsKatakanaPhoneticExtensions}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsYiRadicals}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsYiSyllables}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsYijingHexagramSymbols}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsKatakana}")) Then
-                        thisScript = "EastAsia"
-                    ElseIf (Regex.IsMatch(thisRunText, "\p{IsArabic}") Or
-                       Regex.IsMatch(thisRunText, "\p{IsArabicPresentationForms-A}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsArabicPresentationForms-B}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsSyriac}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsThaana}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsBengali}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsDevanagari}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsBengali}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsGurmukhi}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsGujarati}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsOriya}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsTamil}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsTelugu}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsKannada}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsMalayalam}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsSinhala}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsThai}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsLao}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsTibetan}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsMyanmar}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsGeorgian}") Or
-                        Regex.IsMatch(thisRunText, "\p{IsHebrew}")) Then
-                        thisScript = "BiDi"
-                    Else
-                        thisScript = "Latin"
-                    End If
-	*/
-
-	private static final Pattern EAST_ASIAN_PATTERN = Pattern.compile(
-		"[\\p{InHangulJamo}\\p{InHanunoo}\\p{InHangulCompatibilityJamo}\\p{InHangulSyllables}\\p{InBopomofo}\\p{InBopomofoExtended}"
-		+ "\\p{InHiragana}\\p{InKatakana}\\p{InKatakanaPhoneticExtensions}"
-		+ "\\p{InYiRadicals}\\p{InYiSyllables}\\p{InYijingHexagramSymbols}]");
-
-	public boolean IsEastAsia(String thisRunText) {
-		if (thisRunText == null || thisRunText.isEmpty())
-			return false;
-		return EAST_ASIAN_PATTERN.matcher(thisRunText).find();
-	}
-
-	private static final Pattern BIDI_PATTERN = Pattern.compile(
-		"[\\p{InArabic}\\p{InArabicPresentationForms-A}\\p{InArabicPresentationForms-B}\\p{InSyriac}\\p{InThaana}"
-		+ "\\p{InBengali}\\p{InDevanagari}\\p{InGurmukhi}\\p{InGujarati}\\p{InOriya}"
-		+ "\\p{InTamil}\\p{InTelugu}\\p{InKannada}\\p{InMalayalam}\\p{InSinhala}"
-		+ "\\p{InThai}\\p{InLao}\\p{InTibetan}\\p{InMyanmar}\\p{InGeorgian}\\p{InHebrew}]");
-
-	public boolean IsBiDi(String thisRunText) {
-		if (thisRunText == null || thisRunText.isEmpty())
-			return false;
-		return BIDI_PATTERN.matcher(thisRunText).find();
-	}
-
-	
-	public String lastRunLanguage = "";
-
-	public String getLastRunLanguage() {
-		return lastRunLanguage;
-	}
-	public void setLastRunLanguage(String lastRunLanguage) {
-		this.lastRunLanguage = lastRunLanguage;
-	}
-
 
 	@Component(
 		name = "DaisyClass",

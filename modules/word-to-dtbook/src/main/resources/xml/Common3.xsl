@@ -21,7 +21,11 @@
 	<xsl:variable name="styles" select="$stylesXml//w:styles" />
 	
 	<xsl:variable name="ignorableCharacters" select="concat('[](){}=+-_;.~$*%&amp;&quot;,0123456789!?@#:&lt;&gt;/| ', &quot;&apos;&quot;)"/>
-
+	<!-- Keys for note lookups : hash-based O(1) access by note id instead of a full scan of
+	     footnotes.xml / endnotes.xml per note reference -->
+	<xsl:key name="footnote-by-id" match="w:footnote" use="number(@w:id)"/>
+	<xsl:key name="endnote-by-id" match="w:endnote" use="number(@w:id)"/>
+	
 	<xsl:variable name="defaultLatin">
 		<xsl:choose>
 			<xsl:when test="$styles/w:style[@w:type='paragraph' and (@w:styleId='Normal' or w:default='1')]/w:rPr/w:lang/@w:val">
@@ -99,7 +103,8 @@
 				<xsl:with-param name="runNode" select="." />
 			</xsl:call-template>
 		</xsl:variable>
-		<xsl:if test="$footnotesXml//w:footnotes/w:footnote[@w:id=$noteID]or $endnotesXml//w:endnotes/w:endnote[@w:id=$noteID]">
+		<xsl:if test="(exists($footnotesXml) and exists(key('footnote-by-id', $noteID, $footnotesXml)))
+			or (exists($endnotesXml) and exists(key('endnote-by-id', $noteID, $endnotesXml)))">
 			<xsl:variable name="idref">
 				<!--If Note_Class is Footnotereference then it will have footnote id value -->
 				<xsl:if test="$noteClass='FootnoteReference'">
@@ -147,7 +152,7 @@
 		<!-- Checking for the matching Id and level returned from java code -->
 		<xsl:if test="$checkid!=0">
 			<!--Traversing through each footnote element in footnotes.xml file-->
-			<xsl:for-each select="$footnotesXml//w:footnotes/w:footnote">
+			<xsl:for-each select="if (exists($footnotesXml)) then key('footnote-by-id', $checkid, $footnotesXml) else ()">
 				<!--Checking if Id returned from C# is equal to the footnote Id in footnotes.xml file-->
 				<xsl:if test="number(@w:id)=$checkid">
 					<!-- <xsl:message terminate="no">progress:Insert footnote <xsl:value-of select="$checkid"/></xsl:message> -->
@@ -1922,38 +1927,33 @@
 			</xsl:choose>
 		</xsl:variable>
 		
-		<!-- deduce languages from runner first-->
-		<xsl:variable name="runnerLanguages">
+		<!-- deduce languages from runner first.
+		     Languages are computed once per run and deduplicated / counted using
+		     xsl:for-each-group (hash based, O(n)) instead of repeated preceding/following-sibling
+		     scans over temporary trees (O(n²) on paragraphs with many runs). -->
+		<xsl:variable name="runnerLanguages" as="xs:string*">
 			<xsl:for-each select="$paragraphNode/w:r">
-				<xsl:variable name="found">
+				<xsl:variable name="found" as="xs:string">
 					<xsl:call-template name="GetRunLanguage">
 						<xsl:with-param name="runNode" select="." />
 					</xsl:call-template>
 				</xsl:variable>
-				<lang val="{$found}" />
+				<xsl:sequence select="$found"/>
 			</xsl:for-each>
 		</xsl:variable>
-		<!-- Count languages -->
-		<xsl:variable name="uniqLanguages">
-			<xsl:for-each select="$runnerLanguages/*:lang">
-				<xsl:variable name="currentVal" select="@*:val"/>
-				<xsl:if test="count(preceding-sibling::*:lang[@*:val=$currentVal])=0">
-					<lang val="{$currentVal}"
-						count="{count(following-sibling::*:lang[@*:val=$currentVal]) + 1}" />
+		<!-- Most frequent runner language (ties keep first appearance order) -->
+		<xsl:variable name="topRunnerLanguage" as="xs:string?">
+			<xsl:for-each-group select="$runnerLanguages" group-by=".">
+				<xsl:sort select="count(current-group())" data-type="number" order="descending"/>
+				<xsl:if test="position()=1">
+					<xsl:sequence select="current-grouping-key()"/>
 				</xsl:if>
-			</xsl:for-each>
-		</xsl:variable>
-		
-		<xsl:variable name="languagesSorted">
-			<xsl:for-each select="$uniqLanguages/*:lang">
-				<xsl:sort select="@*:count" data-type="number" order="descending"/>
-				<lang val="{@*:val}" count="{@*:count}" />
-			</xsl:for-each>
+			</xsl:for-each-group>
 		</xsl:variable>
 		<xsl:choose>
-			<!-- Prioritize the language count -->
-			<xsl:when test="$languagesSorted/*:lang[1]/@*:val">
-				<xsl:value-of select="$languagesSorted/*:lang[1]/@*:val"/>
+			<!-- Prioritize the language count (at least one run, even if its language is an empty string) -->
+			<xsl:when test="exists($runnerLanguages)">
+				<xsl:value-of select="$topRunnerLanguage"/>
 			</xsl:when>
 			<!-- then check if east asia is used as default -->
 			<xsl:when test="w:rPr/w:eastAsianLayout or (w:rPr/w:rFonts/@w:hint='eastAsia') or (w:pPr/w:rPr/w:rFonts/@w:hint='eastAsia')">
@@ -2093,20 +2093,17 @@
 			<!-- Not sure about the character test, also adding cs and layout check as backup-->
 			<xsl:when test="string-length($innerText) &gt; 0">
 				<xsl:choose>
-					<xsl:when test="$runNode/w:rPr/w:eastAsianLayout
-						or ($runNode/w:rPr/w:rFonts/@w:hint='eastAsia')
-						or d:IsEastAsia($myObj, substring($innerText,1,1))">
-						<xsl:sequence select="d:setLastRunLanguage($myObj, $runEastAsia)"/>
+					<xsl:when test="d:IsEastAsia($myObj, substring($innerText,1,1))
+						or $runNode/w:rPr/w:eastAsianLayout
+						or ($runNode/w:rPr/w:rFonts/@w:hint='eastAsia')">
 						<xsl:value-of select="$runEastAsia"/>
 					</xsl:when>
-					<xsl:when test="$runNode/w:rPr/w:cs
-						or ($runNode/w:rPr/w:rFonts/@w:hint='cs')
-						or d:IsBiDi($myObj, substring($innerText,1,1))">
-						<xsl:sequence select="d:setLastRunLanguage($myObj, $runComplex)"/>
+					<xsl:when test="d:IsBiDi($myObj, substring($innerText,1,1))
+						or $runNode/w:rPr/w:cs
+						or ($runNode/w:rPr/w:rFonts/@w:hint='cs')">
 						<xsl:value-of select="$runComplex"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:sequence select="d:setLastRunLanguage($myObj, $runLatin)"/>
 						<xsl:value-of select="$runLatin"/>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -2116,16 +2113,10 @@
 					<!-- Required to avoid breaks in sentences that are written in complex script
 					like including numbers in indi or east asian text
 					Not sure if it is required or not -->
-					<!-- Self recursion could be a probleme in performance -->
-					<!-- <xsl:when test="$runNode/preceding-sibling::w:r[1]/w:t">
+					<xsl:when test="$runNode/preceding-sibling::w:r[1]/w:t">
 						<xsl:call-template name="GetRunLanguage">
 							<xsl:with-param name="runNode" select="$runNode/preceding-sibling::w:r[1]" />
 						</xsl:call-template>
-					</xsl:when> -->
-					<!-- Test : replace the recursive call, by a get and set of "previous language" in java
-					  -->
-					<xsl:when test="$runNode/preceding-sibling::w:r[1]/w:t">
-						<xsl:value-of select="d:getLastRunLanguage($myObj)"/>
 					</xsl:when>
 					<!--<xsl:when test="$runNode/following-sibling::w:r[1]/w:t">
 										<xsl:call-template name="GetRunLanguage">
@@ -2134,16 +2125,13 @@
 										</xsl:when>-->
 					<!-- Check east asian layout -->
 					<xsl:when test="$runNode/w:rPr/w:eastAsianLayout or ($runNode/w:rPr/w:rFonts/@w:hint='eastAsia')">
-						<xsl:sequence select="d:setLastRunLanguage($myObj, $runEastAsia)"/>	
 						<xsl:value-of select="$runEastAsia"/>
 					</xsl:when>
 					<!-- Check complex script -->
 					<xsl:when test="$runNode/w:rPr/w:cs or ($runNode/w:rPr/w:rFonts/@w:hint='cs')">
-						<xsl:sequence select="d:setLastRunLanguage($myObj, $runComplex)"/>
 						<xsl:value-of select="$runComplex"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:sequence select="d:setLastRunLanguage($myObj, $runLatin)"/>
 						<xsl:value-of select="$runLatin"/>
 					</xsl:otherwise>
 				</xsl:choose>
