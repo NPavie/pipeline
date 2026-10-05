@@ -1563,7 +1563,7 @@
 					<!-- <xsl:value-of disable-output-escaping="yes" select="concat('&lt;pagenum page=&quot;',$page,'&quot; id=&quot;page',d:GeneratePageId($myObj),'&quot;&gt;')"/> -->
 				</xsl:if>
 				<!-- pagenum only accept text-->
-				<xsl:if test="not($txt='')">
+				<xsl:if test="not(normalize-space($txt)='')">
 					<xsl:value-of select="$txt"/>
 				</xsl:if>
 				<xsl:value-of select="normalize-space(w:t)"/>
@@ -2478,7 +2478,7 @@
 						<xsl:variable name="valspace" as="xs:integer" select="w:rPr/w:spacing/@w:val"/>
 						<xsl:variable name="val_spacing" as="xs:integer" select="xs:integer(round(($valspace*0.1) div 2))"/>
 						<span class="{concat('text-decoration:Underline line-through;color:#',$val_color ,';letter-spacing:',$val_spacing ,';font-size:',$val_sz)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2489,7 +2489,7 @@
 						<xsl:variable name="val" as="xs:integer" select="w:rPr/w:sz/@w:val"/>
 						<xsl:variable name="val_sz" as="xs:integer" select="xs:integer(round(($val) div 2))"/>
 						<span class="{concat('text-decoration:Underline line-through;color:#',$val_color ,';font-size:',$val_sz)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2498,7 +2498,7 @@
 					<xsl:when test="w:rPr/w:strike and (w:rPr/w:u and(not(w:rPr/w:u[@w:val='none']))) and w:rPr/w:color">
 						<xsl:variable name="val" as="xs:string" select="w:rPr/w:color/@w:val"/>
 						<span class="{concat('text-decoration:Underline line-through;color:#',$val)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2509,7 +2509,7 @@
 						<xsl:variable name="val" as="xs:integer" select="w:rPr/w:sz/@w:val"/>
 						<xsl:variable name="val_sz" as="xs:integer" select="xs:integer(round(($val) div 2))"/>
 						<span class="{concat('text-decoration:Underline;color:#',$val_color,';font-size:',$val_sz)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2520,7 +2520,7 @@
 						<xsl:variable name="val" as="xs:integer" select="w:rPr/w:sz/@w:val"/>
 						<xsl:variable name="val_sz" as="xs:integer" select="xs:integer(round(($val) div 2))"/>
 						<span class="{concat('text-decoration:line-through;color:#',$val_color,';font-size:',$val_sz)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2528,7 +2528,7 @@
 					</xsl:when>
 					<xsl:when test="w:rPr/w:strike and ( w:rPr/w:u and(not(w:rPr/w:u[@w:val='none'])))">
 						<span class="text-decoration:Underline line-through">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2538,7 +2538,7 @@
 						<xsl:variable name="val" as="xs:integer" select="w:rPr/w:sz/@w:val"/>
 						<xsl:variable name="val_sz" as="xs:integer" select="xs:integer(round(($val) div 2))"/>
 						<span class="{concat('text-decoration:Underline;font-size:',$val_sz)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2548,7 +2548,7 @@
 						<xsl:variable name="val" as="xs:integer" select="w:rPr/w:sz/@w:val"/>
 						<xsl:variable name="val_sz" as="xs:integer" select="xs:integer(round(($val) div 2))"/>
 						<span class="{concat('text-decoration:line-through;font-size:',$val_sz)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2557,7 +2557,7 @@
 					<xsl:when test="( w:rPr/w:u and(not(w:rPr/w:u[@w:val='none']))) and w:rPr/w:color">
 						<xsl:variable name="val" as="xs:string" select="w:rPr/w:color/@w:val"/>
 						<span class="{concat('text-decoration:Underline;color:#',$val)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2566,7 +2566,7 @@
 					<xsl:when test="w:rPr/w:strike and w:rPr/w:color">
 						<xsl:variable name="val" as="xs:string" select="w:rPr/w:color/@w:val"/>
 						<span class="{concat('text-decoration:line-through;color:#',$val)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2577,7 +2577,7 @@
 						<xsl:variable name="val" as="xs:integer" select="w:rPr/w:sz/@w:val"/>
 						<xsl:variable name="val_sz" as="xs:integer" select="xs:integer(round(($val) div 2))"/>
 						<span class="{concat('color:#',$val_color,';font-size:',$val_sz)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2586,7 +2586,7 @@
 					<xsl:when test="w:rPr/w:color and w:rPr/w:caps">
 						<xsl:variable name="val_color" as="xs:string" select="w:rPr/w:color/@w:val"/>
 						<span class="{concat('color:#',$val_color,';text-transform:uppercase')}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2594,7 +2594,7 @@
 					</xsl:when>
 					<xsl:when test="( w:rPr/w:u and(not(w:rPr/w:u[@w:val='none']))) and w:rPr/w:caps">
 						<span class="text-decoration:Underline;'text-transform:uppercase'">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2602,7 +2602,7 @@
 					</xsl:when>
 					<xsl:when test="( w:rPr/w:u and(not(w:rPr/w:u[@w:val='none']))) and w:rPr/w:smallCaps">
 						<span class="text-decoration:Underline;font-variant:small-caps">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2610,7 +2610,7 @@
 					</xsl:when>
 					<xsl:when test="w:rPr/w:strike and w:rPr/w:caps">
 						<span class="text-decoration:line-through;text-transform:uppercase">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2618,7 +2618,7 @@
 					</xsl:when>
 					<xsl:when test="w:rPr/w:strike and w:rPr/w:smallCaps">
 						<span class="text-decoration:line-through;font-variant:small-caps">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2627,7 +2627,7 @@
 					<xsl:when test="w:rPr/w:color and w:rPr/w:smallCaps">
 						<xsl:variable name="val_color" as="xs:string" select="w:rPr/w:color/@w:val"/>
 						<span class="{concat('font-variant:small-caps,color:#',$val_color)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2636,7 +2636,7 @@
 
 					<xsl:when test="( w:rPr/w:u and(not(w:rPr/w:u[@w:val='none'])))">
 						<span class="text-decoration:underline">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2644,7 +2644,7 @@
 					</xsl:when>
 					<xsl:when test="w:rPr/w:strike">
 						<span class="text-decoration:line-through">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2652,7 +2652,7 @@
 					</xsl:when>
 					<xsl:when test="w:rPr/w:smallCaps">
 						<span class="font-variant:small-caps">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2662,7 +2662,7 @@
 						<xsl:variable name="val" as="xs:integer" select="w:rPr/w:spacing/@w:val"/>
 						<xsl:variable name="val_spacing" as="xs:integer" select="xs:integer(round(($val*0.1) div 2))"/>
 						<span class="{concat('letter-spacing:',$val_spacing,'pt')}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2671,7 +2671,7 @@
 					<xsl:when test="w:rPr/w:color">
 						<xsl:variable name="val" as="xs:string" select="w:rPr/w:color/@w:val"/>
 						<span class="{concat('color:#',$val)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2679,7 +2679,7 @@
 					</xsl:when>
 					<xsl:when test="w:rPr/w:caps">
 						<span class="text-transform:uppercase">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
@@ -2689,14 +2689,14 @@
 						<xsl:variable name="val" as="xs:integer" select="w:rPr/w:sz/@w:val"/>
 						<xsl:variable name="val_sz" as="xs:integer" select="xs:integer(round(($val) div 2))"/>
 						<span class="{concat('font-size:',$val_sz)}">
-							<xsl:if test="not($txt='')">
+							<xsl:if test="not(normalize-space($txt)='')">
 								<xsl:value-of select="$txt"/>
 							</xsl:if>
 							<xsl:value-of select="w:t"/>
 						</span>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:if test="not($txt='')">
+						<xsl:if test="not(normalize-space($txt)='')">
 							<xsl:value-of select="$txt"/>
 						</xsl:if>
 						<xsl:value-of select="w:t"/>
@@ -2704,7 +2704,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="not($txt='')">
+				<xsl:if test="not(normalize-space($txt)='')">
 					<xsl:value-of select="$txt"/>
 				</xsl:if>
 				<xsl:value-of select="w:t"/>

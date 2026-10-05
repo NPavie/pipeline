@@ -2411,7 +2411,7 @@ public class DaisyClass {
 			temp = temp.replace("%", "");
 			text = lvlText.substring(0, lvlText.indexOf('%')) + temp;
 		}
-		return text + " ";
+		return text.trim() + " ";
 	}
 
 	public void IncrementHeadingCounters(String iLvlString, String numId, String absId) {
