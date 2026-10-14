@@ -176,7 +176,10 @@ public class GraphicalInterface {
                         }
                     }
                 }));
-                
+                logMessage("Starting job for script : " + script + " with options: ");
+                for(Map.Entry<String, List<String>> entry : options.entrySet()) {
+                    logMessage("--" + entry.getKey() + " = " + entry.getValue());
+                }
                 updateProgress(0, "Starting conversion ... ");
                 CommandLineJob job = null;
                 try {
@@ -372,7 +375,7 @@ public class GraphicalInterface {
         
         // Check if scriptOrCommand is one of the known commands of the CommandLineInterface
 		try{
-            CommandLineInterface.Command command = CommandLineInterface.Command.valueOf(scriptOrCommand);
+            CommandLineInterface.Command command = CommandLineInterface.Command.fromName(scriptOrCommand);
             try {
 				command.run(options);
             } catch (Exception e) {
