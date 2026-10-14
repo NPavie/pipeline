@@ -57,10 +57,9 @@ public class PropertyXmlWriter {
 			element.setAttribute("desc", description);
 		if (val != null) {
 			try {
-				Element xmlContent = XmlUtils.parseXml(val, element.getOwnerDocument());
-				element.appendChild(xmlContent);
-			} catch (IOException|SAXException e) {
 				element.setAttribute("value", scrub && property.isSensitive() ? "***" : val);
+			} catch (Exception ex) {
+				System.out.println(property.getName() + " : " + ex);
 			}
 		}
 	}
