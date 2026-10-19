@@ -746,36 +746,13 @@ public class DaisyClass {
 			PackageRelationship imgRelationship = mainPartxml.getRelationship(inNum);
 			PackagePart imgPartxml = mainPartxml.getRelatedPart(imgRelationship);
 			ImageIO.read(imgPartxml.getInputStream());
-			/* Checking if full filename (along with extn) of the image exists */
-			if (imageName.lastIndexOf('.') >= 0) {
-				String strImgName = imageName;
-				String retimg2007Name = ImageExt(
-					inNum,
-					new File(outputFilename, inputName + "-" + strImgName),
-					inputName + "-" + strImgName);
-				return ImageProcessing.UriEscape(retimg2007Name);
-			}
-			/* Checking if full filename (along with extn) of the image does not exist */
-			else if (!imageName.isEmpty()) {
-				String strImgName = imgPartxml.getPartName().getURI().toString()
-					                          .substring(imgPartxml.getPartName().getURI().toString().lastIndexOf('.') + 1);
-				String img2007Name = imageName + "." + strImgName;
-				String retimg2007Name = ImageExt(
-					inNum,
-					new File(outputFilename, inputName + "-" + img2007Name),
-					inputName + "-" + img2007Name);
-				return ImageProcessing.UriEscape(retimg2007Name);
-			}
-			/* Checking if entire filename of the image doesn't exist */
-			else {
-				String strImgName = imgPartxml.getPartName().getURI().toString()
+			String strImgName = imgPartxml.getPartName().getURI().toString()
 					                          .substring(imgPartxml.getPartName().getURI().toString().lastIndexOf('/') + 1);
-				String retimg2007Name = ImageExt(
-					inNum,
-					new File(outputFilename, inputName + "-" + strImgName),
-					inputName + "-" + strImgName);
-				return ImageProcessing.UriEscape(retimg2007Name);
-			}
+			String retimg2007Name = ExportImage(
+				inNum,
+				new File(outputFilename, inputName + "-" + strImgName),
+				inputName + "-" + strImgName);
+			return ImageProcessing.UriEscape(retimg2007Name);
 		} catch (Throwable e) {
 			return "translation.oox2Daisy.ImageContent";
 		}
@@ -804,8 +781,14 @@ public class DaisyClass {
 
 	/**
 	 * Function to Copy image to the Output/destination folder
+	 * @param inNum The relationship ID of the image in the Word document.
+	 * @param pathName The destination path where the image should be copied.
+	 * @param imageName The name of the image file.
+	 * @return The relative path of the exported image file (to be used as src attribute value)
+	 * @throws IOException If an I/O error occurs.
+	 * @throws InvalidFormatException If the image format is invalid.
 	 */
-	private String ImageExt(String inNum, File pathName, String imageName)
+	private String ExportImage(String inNum, File pathName, String imageName)
 			throws IOException, InvalidFormatException {
 		PackageRelationship relationship = null;
 		for (PackageRelationship searchRelation : pack().getRelationshipsByType(wordRelationshipType)) {
