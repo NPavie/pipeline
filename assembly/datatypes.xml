@@ -1,0 +1,1613 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datatypes xmlns="http://www.daisy.org/ns/pipeline/data" href="file:///./datatypes">
+   <datatype href="file:///./datatypes//px:word-to-dtbook.script-footnotes-numbering"
+             id="px:word-to-dtbook.script-footnotes-numbering">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:word-to-dtbook.script-footnotes-numbering">
+					    <value>none</value>
+					    <a:documentation>Disable note numbering</a:documentation>
+					    <value>word</value>
+					    <a:documentation>Use original word numbering</a:documentation>
+					    <value>number</value>
+					    <a:documentation>Use custom numbering, starting from the footnotes start value</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-pef.script-pdf-offset-x"
+             id="px:dtbook-to-pef.script-pdf-offset-x">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            id="px:dtbook-to-pef.script-pdf-offset-x"
+            type="string">
+					    <a:documentation xml:lang="en" xml:space="preserve">A positive or negative length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : '0' | unary_operator number unit
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px'
+     ;
+</a:documentation>
+					    <param name="pattern">^0|[+-]?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px)?$</param>
+				  </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-latex.script-font-size"
+             id="px:dtbook-to-latex.script-font-size">
+      <choice xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:dtbook-to-latex.script-font-size">
+					    <value>12pt</value>
+					    <value>14pt</value>
+					    <value>17pt</value>
+					    <value>20pt</value>
+					    <value>25pt</value>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-pef.script-pdf-offset-y"
+             id="px:dtbook-to-pef.script-pdf-offset-y">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            id="px:dtbook-to-pef.script-pdf-offset-y"
+            type="string">
+					    <a:documentation xml:lang="en" xml:space="preserve">A positive or negative length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : '0' | unary_operator number unit
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px'
+     ;
+</a:documentation>
+					    <param name="pattern">^0|[+-]?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px)?$</param>
+				  </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:html-to-pef.script-formatting-standard"
+             id="px:html-to-pef.script-formatting-standard">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pef="http://www.daisy.org/ns/2008/pef"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:html-to-pef.script-formatting-standard">
+                    <value/>
+                    <a:documentation>-</a:documentation>
+                    <value>https://raw.githubusercontent.com/daisy/braille-stylesheets/refs/heads/main/bana/bana.scss</value>
+                    <a:documentation xml:lang="en" xml:space="preserve">United States and Canada (BANA)
+
+The document is formatted according to the rules of the [Braille Authority of North America
+(BANA)](https://www.brailleauthority.org/). Note that this does not select
+[UEB](https://iceb.org/) as the braille code automatically.
+
+Equivalent to specifying the value
+`https://raw.githubusercontent.com/daisy/braille-stylesheets/refs/heads/main/bana/bana.scss` for the
+"Custom style sheets" option.
+
+See the [online documentation](https://daisy.github.io/braille-stylesheets/bana/) for more information.
+</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub-to-daisy.script-tts"
+             id="px:epub-to-daisy.script-tts">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:epub-to-daisy.script-tts">
+					    <value>true</value>
+					    <a:documentation>Yes</a:documentation>
+					    <value>false</value>
+					    <a:documentation>No</a:documentation>
+					    <value>default</value>
+					    <a:documentation>If publication has no media overlays yet</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub3-to-pef.script-page-height"
+             id="px:epub3-to-pef.script-page-height">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container"
+            xmlns:opf="http://www.idpf.org/2007/opf"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pef="http://www.daisy.org/ns/2008/pef"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:epub3-to-pef.script-page-height"
+            type="string">
+                    <a:documentation xml:lang="en" xml:space="preserve">A length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : number unit?
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px' | 'em'
+     ;
+</a:documentation>
+                    <param name="pattern">^\+?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px|em)?$</param>
+                </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub3-to-daisy202.script-validation"
+             id="px:epub3-to-daisy202.script-validation">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:epub3-to-daisy202.script-validation">
+					    <value>off</value>
+					    <a:documentation>No validation</a:documentation>
+					    <value>report</value>
+					    <a:documentation>Report validation issues</a:documentation>
+					    <value>abort</value>
+					    <a:documentation>Abort on validation issues</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:html-to-pef.script-pdf-offset-x"
+             id="px:html-to-pef.script-pdf-offset-x">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:d="http://www.daisy.org/ns/pipeline/data"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pef="http://www.daisy.org/ns/2008/pef"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:html-to-pef.script-pdf-offset-x"
+            type="string">
+					    <a:documentation xml:lang="en" xml:space="preserve">A positive or negative length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : '0' | unary_operator number unit
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px'
+     ;
+</a:documentation>
+					    <param name="pattern">^0|[+-]?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px)?$</param>
+				  </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:html-to-pef.script-pdf-offset-y"
+             id="px:html-to-pef.script-pdf-offset-y">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:d="http://www.daisy.org/ns/pipeline/data"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pef="http://www.daisy.org/ns/2008/pef"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:html-to-pef.script-pdf-offset-y"
+            type="string">
+					    <a:documentation xml:lang="en" xml:space="preserve">A positive or negative length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : '0' | unary_operator number unit
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px'
+     ;
+</a:documentation>
+					    <param name="pattern">^0|[+-]?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px)?$</param>
+				  </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:daisy3-to-epub3.script-validation"
+             id="px:daisy3-to-epub3.script-validation">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:daisy3-to-epub3.script-validation">
+					    <value>off</value>
+					    <a:documentation>No validation</a:documentation>
+					    <value>report</value>
+					    <a:documentation>Report validation issues</a:documentation>
+					    <value>abort</value>
+					    <a:documentation>Abort on validation issues</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:word-to-dtbook.script-pagination"
+             id="px:word-to-dtbook.script-pagination">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:word-to-dtbook.script-pagination">
+					    <value>custom</value>
+					    <a:documentation>Use numbers tagged with the style 'PageNumberDAISY' in the document</a:documentation>
+					    <value>automatic</value>
+					    <a:documentation>Use Word page breaks to compute and insert page numbers in content</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//liblouis-table-query"
+             id="liblouis-table-query">
+      <choice>
+         <value/>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">-</documentation>
+         <value>(liblouis-table:"afr-za-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Afrikaans, contracted</documentation>
+         <value>(liblouis-table:"afr-za-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Afrikaans, uncontracted</documentation>
+         <value>(liblouis-table:"akk-borger.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Akkadian, Borger</documentation>
+         <value>(liblouis-table:"akk.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Akkadian, U.S.</documentation>
+         <value>(liblouis-table:"ancient-languages-borger.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Ancient languages, Borger</documentation>
+         <value>(liblouis-table:"ancient-languages-us.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Ancient languages, U.S.</documentation>
+         <value>(liblouis-table:"ar-ar-comp8.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Arabic, computer</documentation>
+         <value>(liblouis-table:"ar-ar-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Arabic, contracted</documentation>
+         <value>(liblouis-table:"ar.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Arabic, uncontracted</documentation>
+         <value>(liblouis-table:"hy.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Armenian, computer</documentation>
+         <value>(liblouis-table:"as.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Assamese</documentation>
+         <value>(liblouis-table:"awa.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Awadhi</documentation>
+         <value>(liblouis-table:"ba.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Bashkir</documentation>
+         <value>(liblouis-table:"bel.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Belarusian</documentation>
+         <value>(liblouis-table:"bel-comp.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Belarusian, computer</documentation>
+         <value>(liblouis-table:"bel-detailed.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Belarusian, with capitals</documentation>
+         <value>(liblouis-table:"bn.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Bengali</documentation>
+         <value>(liblouis-table:"bh.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Bihari</documentation>
+         <value>(liblouis-table:"bra.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Braj</documentation>
+         <value>(liblouis-table:"bg.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Bulgarian</documentation>
+         <value>(liblouis-table:"bg.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Bulgarian, computer</documentation>
+         <value>(liblouis-table:"my-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Burmese, contracted</documentation>
+         <value>(liblouis-table:"my-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Burmese, uncontracted</documentation>
+         <value>(liblouis-table:"zh-hk.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Cantonese</documentation>
+         <value>(liblouis-table:"ca.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Catalan</documentation>
+         <value>(liblouis-table:"chr-us-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Cherokee</documentation>
+         <value>(liblouis-table:"ny-mw.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Chichewa</documentation>
+         <value>(liblouis-table:"cop.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Coptic</documentation>
+         <value>(liblouis-table:"cop-eg-comp8.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Coptic, computer</documentation>
+         <value>(liblouis-table:"hr-g1.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Croatian</documentation>
+         <value>(liblouis-table:"hr-comp8.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Croatian, computer</documentation>
+         <value>(liblouis-table:"cuneiform-transliterated.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Cuneiform, transliterated</documentation>
+         <value>(liblouis-table:"cuneiform-transliterated-compact.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Cuneiform, transliterated, compact</documentation>
+         <value>(liblouis-table:"cs.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Czech</documentation>
+         <value>(liblouis-table:"cs-comp8.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Czech, computer</documentation>
+         <value>(liblouis-table:"da-dk-g08_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, computer, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g08.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, computer, 2022</documentation>
+         <value>(liblouis-table:"da-dk-g26_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, contracted, 6-dot, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g26-lit_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, contracted, 6-dot, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g26.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, contracted, 6-dot, 2022</documentation>
+         <value>(liblouis-table:"da-dk-g28_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, contracted, 8-dot, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g28.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, contracted, 8-dot, 2022</documentation>
+         <value>(liblouis-table:"da-dk-g26l-lit_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, partially contracted, 6-dot, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g26l_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, partially contracted, 6-dot, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g28l_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, partially contracted, 8-dot, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g16_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, uncontracted, 6-dot, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g16-lit_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, uncontracted, 6-dot, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g16.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, uncontracted, 6-dot, 2022</documentation>
+         <value>(liblouis-table:"da-dk-g18_1993.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, uncontracted, 8-dot, 1993</documentation>
+         <value>(liblouis-table:"da-dk-g18.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Danish, uncontracted, 8-dot, 2022</documentation>
+         <value>(liblouis-table:"dra.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Dravidian, computer</documentation>
+         <value>(liblouis-table:"nl-NL-g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Dutch</documentation>
+         <value>(liblouis-table:"nl-comp8.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Dutch, computer</documentation>
+         <value>(liblouis-table:"ovd-6g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Elfdalian, 6-dot</documentation>
+         <value>(liblouis-table:"ovd-8g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Elfdalian, 8-dot</documentation>
+         <value>(liblouis-table:"en_CA.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, Canada, computer</documentation>
+         <value>(liblouis-table:"en-g3.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, contracted, grade 3</documentation>
+         <value>(liblouis-table:"en-gb-comp8.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, U.K., computer</documentation>
+         <value>(liblouis-table:"en_GB.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, U.K., contracted</documentation>
+         <value>(liblouis-table:"en-gb-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, U.K., uncontracted</documentation>
+         <value>(liblouis-table:"en-us-comp6.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, U.S., computer, 6-dot</documentation>
+         <value>(liblouis-table:"en_US-comp8-ext.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, U.S., computer, 8-dot</documentation>
+         <value>(liblouis-table:"en-nabcc.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, U.S., computer, NABCC</documentation>
+         <value>(liblouis-table:"en_US.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, U.S., contracted</documentation>
+         <value>(liblouis-table:"en-us-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, U.S., uncontracted</documentation>
+         <value>(liblouis-table:"en-ueb-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, unified, contracted</documentation>
+         <value>(liblouis-table:"en-ueb-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">English, unified, uncontracted</documentation>
+         <value>(liblouis-table:"eo.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Esperanto</documentation>
+         <value>(liblouis-table:"eo-g1-x-system.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Esperanto x-system</documentation>
+         <value>(liblouis-table:"et-6dot.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Estonian</documentation>
+         <value>(liblouis-table:"et-g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Estonian, computer</documentation>
+         <value>(liblouis-table:"gez.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Ethiopic</documentation>
+         <value>(liblouis-table:"fil-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Filipino, contracted</documentation>
+         <value>(liblouis-table:"fi.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Finnish</documentation>
+         <value>(liblouis-table:"fi-fi-8dot.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Finnish, computer</documentation>
+         <value>(liblouis-table:"fr-bfu-comp8.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">French, computer</documentation>
+         <value>(liblouis-table:"fr-bfu-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">French, contracted</documentation>
+         <value>(liblouis-table:"fr-bfu-comp6.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">French, uncontracted</documentation>
+         <value>(liblouis-table:"ka.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Georgian</documentation>
+         <value>(liblouis-table:"de-comp6.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">German, computer, 6-dot</documentation>
+         <value>(liblouis-table:"de-de-comp8.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">German, computer, 8-dot</documentation>
+         <value>(liblouis-table:"de-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">German, contracted</documentation>
+         <value>(liblouis-table:"de-g2-detailed.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">German, contracted, with capitals</documentation>
+         <value>(liblouis-table:"de-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">German, partially contracted</documentation>
+         <value>(liblouis-table:"de-g1-detailed.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">German, partially contracted, with capitals</documentation>
+         <value>(liblouis-table:"de-g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">German, uncontracted</documentation>
+         <value>(liblouis-table:"de-g0-detailed.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">German, uncontracted, with capitals</documentation>
+         <value>(liblouis-table:"gon.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Gondi</documentation>
+         <value>(liblouis-table:"el.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Greek</documentation>
+         <value>(liblouis-table:"grc-international-en-composed.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Greek, international, English, composed</documentation>
+         <value>(liblouis-table:"grc-international-en.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Greek, international, English, decomposed</documentation>
+         <value>(liblouis-table:"grc-international-es.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Greek, international, Spanish</documentation>
+         <value>(liblouis-table:"gu.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Gujarati</documentation>
+         <value>(liblouis-table:"haw-us-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hawaiian</documentation>
+         <value>(liblouis-table:"hbo-cantillated.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hebrew, classical, cantillated</documentation>
+         <value>(liblouis-table:"hbo.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hebrew, classical, IHBC</documentation>
+         <value>(liblouis-table:"hbo-slim.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hebrew, classical, slim</documentation>
+         <value>(liblouis-table:"he-IL.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hebrew, modern</documentation>
+         <value>(liblouis-table:"he-IL-comp8.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hebrew, modern, computer</documentation>
+         <value>(liblouis-table:"hi.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hindi</documentation>
+         <value>(liblouis-table:"hu-hu-comp8.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hungarian, computer</documentation>
+         <value>(liblouis-table:"hu-hu-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hungarian, contracted</documentation>
+         <value>(liblouis-table:"hu-hu-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Hungarian, uncontracted</documentation>
+         <value>(liblouis-table:"is.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Icelandic</documentation>
+         <value>(liblouis-table:"IPA.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">International Phonetic Alphabet</documentation>
+         <value>(liblouis-table:"iu-ca-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Inuktitut</documentation>
+         <value>(liblouis-table:"ga-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Irish, contracted</documentation>
+         <value>(liblouis-table:"ga-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Irish, uncontracted</documentation>
+         <value>(liblouis-table:"xh-za-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">isiXhosa, contracted</documentation>
+         <value>(liblouis-table:"xh-za-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">isiXhosa, uncontracted</documentation>
+         <value>(liblouis-table:"zu-za-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">isiZulu, contracted</documentation>
+         <value>(liblouis-table:"zu-za-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">isiZulu, uncontracted</documentation>
+         <value>(liblouis-table:"it-it-comp6.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Italian</documentation>
+         <value>(liblouis-table:"it-it-comp8.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Italian, computer</documentation>
+         <value>(liblouis-table:"ja-kantenji.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Japanese, Kantenji</documentation>
+         <value>(liblouis-table:"ja-kantenji-ucs2.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Japanese, Kantenji</documentation>
+         <value>(liblouis-table:"ja-rokutenkanji.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Japanese, Rokuten Kanji</documentation>
+         <value>(liblouis-table:"kn.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Kannada</documentation>
+         <value>(liblouis-table:"kk.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Kazakh</documentation>
+         <value>(liblouis-table:"kha.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Khasi</documentation>
+         <value>(liblouis-table:"km-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Khmer</documentation>
+         <value>(liblouis-table:"rw-rw-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Kinyarwanda</documentation>
+         <value>(liblouis-table:"kok.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Konkani</documentation>
+         <value>(liblouis-table:"ko-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Korean, contracted</documentation>
+         <value>(liblouis-table:"ko-2006-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Korean, contracted, 2006</documentation>
+         <value>(liblouis-table:"ko-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Korean, uncontracted</documentation>
+         <value>(liblouis-table:"ko-2006-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Korean, uncontracted, 2006</documentation>
+         <value>(liblouis-table:"ckb.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Kurdish</documentation>
+         <value>(liblouis-table:"kru.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Kurukh</documentation>
+         <value>(liblouis-table:"lo-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Lao</documentation>
+         <value>(liblouis-table:"lv.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Latvian</documentation>
+         <value>(liblouis-table:"lt-6dot.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Lithuanian, 6-dot</documentation>
+         <value>(liblouis-table:"lt-8dot.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Lithuanian, 8-dot</documentation>
+         <value>(liblouis-table:"lg-ug-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Luganda</documentation>
+         <value>(liblouis-table:"mk-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Macedonian</documentation>
+         <value>(liblouis-table:"ms-my-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Malay</documentation>
+         <value>(liblouis-table:"ml.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Malayalam</documentation>
+         <value>(liblouis-table:"mt.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Maltese, computer</documentation>
+         <value>(liblouis-table:"zhcn-cbs.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Mandarin, mainland China, common braille scheme</documentation>
+         <value>(liblouis-table:"zhcn-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Mandarin, mainland China, double-phonic</documentation>
+         <value>(liblouis-table:"zhcn-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Mandarin, mainland China, with tones</documentation>
+         <value>(liblouis-table:"zh_CHN.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Mandarin, mainland China, without tones</documentation>
+         <value>(liblouis-table:"zh-tw.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Mandarin, Taiwan, bopomofo</documentation>
+         <value>(liblouis-table:"mni.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Manipuri</documentation>
+         <value>(liblouis-table:"mao-nz-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Maori</documentation>
+         <value>(liblouis-table:"mr.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Marathi</documentation>
+         <value>(liblouis-table:"mwr.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Marwari</documentation>
+         <value>(liblouis-table:"mn-MN-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Mongolian, contracted</documentation>
+         <value>(liblouis-table:"mn-MN-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Mongolian, uncontracted</documentation>
+         <value>(liblouis-table:"mun.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Munda</documentation>
+         <value>(liblouis-table:"ne.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Nepali</documentation>
+         <value>(liblouis-table:"kmr.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Northern Kurdish</documentation>
+         <value>(liblouis-table:"no-no-comp8.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Norwegian, computer</documentation>
+         <value>(liblouis-table:"no-no-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Norwegian, contracted, grade 1</documentation>
+         <value>(liblouis-table:"no-no-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Norwegian, contracted, grade 2</documentation>
+         <value>(liblouis-table:"no-no-g3.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Norwegian, contracted, grade 3</documentation>
+         <value>(liblouis-table:"no-no-g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Norwegian, uncontracted, 6-dot</documentation>
+         <value>(liblouis-table:"no-no-8dot.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Norwegian, uncontracted, 8-dot</documentation>
+         <value>(liblouis-table:"no-no-8dot-fallback-6dot-g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Norwegian, uncontracted, 8-dot, 6-dot fallback</documentation>
+         <value>(liblouis-table:"or.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Oriya</documentation>
+         <value>(liblouis-table:"pi.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Pali</documentation>
+         <value>(liblouis-table:"fa-ir-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Persian</documentation>
+         <value>(liblouis-table:"fa-ir-comp8.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Persian, computer</documentation>
+         <value>(liblouis-table:"pl.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Polish</documentation>
+         <value>(liblouis-table:"pl-pl-comp8.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Polish, computer</documentation>
+         <value>(liblouis-table:"pt-comp6.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Portuguese, computer, 6-dot</documentation>
+         <value>(liblouis-table:"pt-pt-comp8.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Portuguese, computer, 8-dot</documentation>
+         <value>(liblouis-table:"pt.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Portuguese, contracted</documentation>
+         <value>(liblouis-table:"pt-pt-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Portuguese, uncontracted</documentation>
+         <value>(liblouis-table:"pa.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Punjabi</documentation>
+         <value>(liblouis-table:"ro.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Romanian, computer</documentation>
+         <value>(liblouis-table:"ro-g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Romanian, uncontracted</documentation>
+         <value>(liblouis-table:"ru-litbrl.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Russian</documentation>
+         <value>(liblouis-table:"ru-comp6.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Russian, computer, 6-dot</documentation>
+         <value>(liblouis-table:"ru-comp8.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Russian, computer, 8-dot</documentation>
+         <value>(liblouis-table:"ru-ru-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Russian, contracted</documentation>
+         <value>(liblouis-table:"ru-litbrl-detailed.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Russian, with capitals</documentation>
+         <value>(liblouis-table:"smi-6g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Sami, 6-dot</documentation>
+         <value>(liblouis-table:"smi-8g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Sami, 8-dot</documentation>
+         <value>(liblouis-table:"sa.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Sanskrit</documentation>
+         <value>(liblouis-table:"gd.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Scottish Gaelic, computer</documentation>
+         <value>(liblouis-table:"nso-za-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Sepedi, contracted</documentation>
+         <value>(liblouis-table:"nso-za-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Sepedi, uncontracted</documentation>
+         <value>(liblouis-table:"sr-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Serbian</documentation>
+         <value>(liblouis-table:"sr-Cyrl.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Serbian, Cyrillic</documentation>
+         <value>(liblouis-table:"sot-za-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Sesotho, contracted</documentation>
+         <value>(liblouis-table:"sot-za-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Sesotho, uncontracted</documentation>
+         <value>(liblouis-table:"tsn-za-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Setswana, contracted</documentation>
+         <value>(liblouis-table:"tsn-za-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Setswana, uncontracted</documentation>
+         <value>(liblouis-table:"sd.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Sindhi</documentation>
+         <value>(liblouis-table:"sk-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Slovak</documentation>
+         <value>(liblouis-table:"sl.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Slovenian</documentation>
+         <value>(liblouis-table:"sl-si-comp8.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Slovenian, computer</documentation>
+         <value>(liblouis-table:"Es-Es-G0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Spanish, computer</documentation>
+         <value>(liblouis-table:"es-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Spanish, contracted</documentation>
+         <value>(liblouis-table:"es-no.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Spanish, Norway</documentation>
+         <value>(liblouis-table:"es.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Spanish, uncontracted</documentation>
+         <value>(liblouis-table:"sw-ke-g1-2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swahili, contracted, grade 1.2</documentation>
+         <value>(liblouis-table:"sw-ke-g1-3.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swahili, contracted, grade 1.3</documentation>
+         <value>(liblouis-table:"sw-ke-g1-4.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swahili, contracted, grade 1.4</documentation>
+         <value>(liblouis-table:"sw-ke-g1-5.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swahili, contracted, grade 1.5</documentation>
+         <value>(liblouis-table:"sw-ke-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swahili, contracted, grade 2</documentation>
+         <value>(liblouis-table:"sw-ke-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swahili, uncontracted</documentation>
+         <value>(liblouis-table:"sv-1989.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, computer, 1989</documentation>
+         <value>(liblouis-table:"sv-1996.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, computer, 1996</documentation>
+         <value>(liblouis-table:"sv-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, contracted, 6-dot</documentation>
+         <value>(liblouis-table:"sv-6g2d.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, contracted, 6-dot, detailed</documentation>
+         <value>(liblouis-table:"sv-8g2n.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, contracted, 8-dot</documentation>
+         <value>(liblouis-table:"sv-8g2d.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, contracted, 8-dot, detailed</documentation>
+         <value>(liblouis-table:"sv-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, partially contracted, 6-dot</documentation>
+         <value>(liblouis-table:"sv-6g1d.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, partially contracted, 6-dot, detailed</documentation>
+         <value>(liblouis-table:"sv-8g1n.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, partially contracted, 8-dot</documentation>
+         <value>(liblouis-table:"sv-8g1d.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, partially contracted, 8-dot, detailed</documentation>
+         <value>(liblouis-table:"sv-g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, uncontracted, 6-dot</documentation>
+         <value>(liblouis-table:"sv-6g0d.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, uncontracted, 6-dot, detailed</documentation>
+         <value>(liblouis-table:"sv-6g0p.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, uncontracted, 6-dot, phonetics</documentation>
+         <value>(liblouis-table:"sv-8g0n.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, uncontracted, 8-dot</documentation>
+         <value>(liblouis-table:"sv-8g0d.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Swedish, uncontracted, 8-dot, detailed</documentation>
+         <value>(liblouis-table:"syc.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Syriac</documentation>
+         <value>(liblouis-table:"ta-ta-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Tamil</documentation>
+         <value>(liblouis-table:"ta.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Tamil, computer</documentation>
+         <value>(liblouis-table:"tt.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Tatar</documentation>
+         <value>(liblouis-table:"te.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Telugu</documentation>
+         <value>(liblouis-table:"th-comp8-backward.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Thai, computer</documentation>
+         <value>(liblouis-table:"th-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Thai, contracted</documentation>
+         <value>(liblouis-table:"th-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Thai, partially contracted</documentation>
+         <value>(liblouis-table:"th-g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Thai, uncontracted</documentation>
+         <value>(liblouis-table:"bo.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Tibetan, computer</documentation>
+         <value>(liblouis-table:"ve-za-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Tshivenda, contracted</documentation>
+         <value>(liblouis-table:"ve-za-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Tshivenda, uncontracted</documentation>
+         <value>(liblouis-table:"tr.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Turkish, computer</documentation>
+         <value>(liblouis-table:"tr-g2.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Turkish, contracted</documentation>
+         <value>(liblouis-table:"tr-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Turkish, uncontracted</documentation>
+         <value>(liblouis-table:"uga.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Ugaritic</documentation>
+         <value>(liblouis-table:"uk.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Ukrainian</documentation>
+         <value>(liblouis-table:"uk-comp.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Ukrainian, computer</documentation>
+         <value>(liblouis-table:"uk-detailed.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Ukrainian, with capitals</documentation>
+         <value>(liblouis-table:"ur-pk-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Urdu, contracted</documentation>
+         <value>(liblouis-table:"ur-pk-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Urdu, uncontracted</documentation>
+         <value>(liblouis-table:"uz-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Uzbek</documentation>
+         <value>(liblouis-table:"vi-cb8.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Vietnamese, computer</documentation>
+         <value>(liblouis-table:"vi-vn-g2.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Vietnamese, contracted</documentation>
+         <value>(liblouis-table:"vi-vn-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Vietnamese, partially contracted</documentation>
+         <value>(liblouis-table:"vi-saigon-g1.ctb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Vietnamese, Saigon, contracted</documentation>
+         <value>(liblouis-table:"vi-vn-g0.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Vietnamese, uncontracted</documentation>
+         <value>(liblouis-table:"cy.tbl")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Welsh, contracted</documentation>
+         <value>(liblouis-table:"cy-cy-g1.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Welsh, uncontracted</documentation>
+         <value>(liblouis-table:"sah.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Yakut</documentation>
+         <value>(liblouis-table:"yi.utb")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Yiddish</documentation>
+      </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub3-to-daisy3.script-validation"
+             id="px:epub3-to-daisy3.script-validation">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:epub3-to-daisy3.script-validation">
+					    <value>off</value>
+					    <a:documentation>No validation</a:documentation>
+					    <value>report</value>
+					    <a:documentation>Report validation issues</a:documentation>
+					    <value>abort</value>
+					    <a:documentation>Abort on validation issues</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-ebraille.script-validation"
+             id="px:dtbook-to-ebraille.script-validation">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:dtbook-to-ebraille.script-validation">
+					    <value>off</value>
+					    <a:documentation>No validation</a:documentation>
+					    <value>report</value>
+					    <a:documentation>Report validation issues</a:documentation>
+					    <value>abort</value>
+					    <a:documentation>Abort on validation issues</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub-to-daisy.script-validation"
+             id="px:epub-to-daisy.script-validation">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:epub-to-daisy.script-validation">
+					    <value>off</value>
+					    <a:documentation>No validation</a:documentation>
+					    <value>report</value>
+					    <a:documentation>Report validation issues</a:documentation>
+					    <value>abort</value>
+					    <a:documentation>Abort on validation issues</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-latex.script-line-spacing"
+             id="px:dtbook-to-latex.script-line-spacing">
+      <choice xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:dtbook-to-latex.script-line-spacing">
+					    <value>singlespacing</value>
+					    <value>onehalfspacing</value>
+					    <value>doublespacing</value>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-latex.script-alignment"
+             id="px:dtbook-to-latex.script-alignment">
+      <choice xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:dtbook-to-latex.script-alignment">
+					    <value>justified</value>
+					    <value>left</value>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:word-to-dtbook.script-footnotes-position"
+             id="px:word-to-dtbook.script-footnotes-position">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:word-to-dtbook.script-footnotes-position">
+					    <value>inline</value>
+					    <a:documentation>Inline note in content (after the paragraph containing its first reference)</a:documentation>
+					    <value>end</value>
+					    <a:documentation>Put notes at the end of a level defined in footnotes insertion level</a:documentation>
+					    <value>page</value>
+					    <a:documentation>Put the notes near the page break</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-latex.script-endnotes"
+             id="px:dtbook-to-latex.script-endnotes">
+      <choice xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:dtbook-to-latex.script-endnotes">
+					    <value>none</value>
+					    <value>document</value>
+					    <value>chapter</value>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-html.script-validation"
+             id="px:dtbook-to-html.script-validation">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:dtbook-to-html.script-validation">
+					    <value>off</value>
+					    <a:documentation>No validation</a:documentation>
+					    <value>report</value>
+					    <a:documentation>Report validation issues</a:documentation>
+					    <value>abort</value>
+					    <a:documentation>Abort on validation issues</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//sass-map" id="sass-map">
+      <data type="string">
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0"
+                        lang="en"
+                        space="preserve">A Sass map
+
+A [Sass map](https://sass-lang.com/documentation/values/maps/) is a set of pairs
+of keys and values written as:
+
+    (&lt;expression&gt;: &lt;expression&gt;, &lt;expression&gt;: &lt;expression&gt;, ...)
+
+where the
+[expression](https://sass-lang.com/documentation/syntax/structure#expressions)
+before the `:` is the key, and the expression after is the value associated
+with that key. The keys must be unique. An empty map is written `()`.</documentation>
+         <param name="pattern">^(\s*\(\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*)|(?:\s*\(\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*))\s*(?:,\s*(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*))\s*)*)?\)\s*))\s*(?:,\s*(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*)|(?:\s*\(\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*))\s*(?:,\s*(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*))\s*)*)?\)\s*))\s*)*)?\)\s*)$</param>
+      </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-epub3.script-validation"
+             id="px:dtbook-to-epub3.script-validation">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:dtbook-to-epub3.script-validation">
+					    <value>off</value>
+					    <a:documentation>No validation</a:documentation>
+					    <value>report</value>
+					    <a:documentation>Report validation issues</a:documentation>
+					    <value>abort</value>
+					    <a:documentation>Abort on validation issues</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:html-to-pef.script-page-height"
+             id="px:html-to-pef.script-page-height">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:d="http://www.daisy.org/ns/pipeline/data"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pef="http://www.daisy.org/ns/2008/pef"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:html-to-pef.script-page-height"
+            type="string">
+                    <a:documentation xml:lang="en" xml:space="preserve">A length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : number unit?
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px' | 'em'
+     ;
+</a:documentation>
+                    <param name="pattern">^\+?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px|em)?$</param>
+                </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub2-to-epub3.script-validation"
+             id="px:epub2-to-epub3.script-validation">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:epub2-to-epub3.script-validation">
+					    <value>off</value>
+					    <a:documentation>No validation</a:documentation>
+					    <value>report</value>
+					    <a:documentation>Report validation issues</a:documentation>
+					    <value>abort</value>
+					    <a:documentation>Abort on validation issues</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//stylesheet-parameters"
+             id="stylesheet-parameters">
+      <data type="string">
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0"
+                        lang="en"
+                        space="preserve">A Sass map
+
+A [Sass map](https://sass-lang.com/documentation/values/maps/) is a set of pairs
+of keys and values written as:
+
+    (&lt;expression&gt;: &lt;expression&gt;, &lt;expression&gt;: &lt;expression&gt;, ...)
+
+where the
+[expression](https://sass-lang.com/documentation/syntax/structure#expressions)
+before the `:` is the key, and the expression after is the value associated
+with that key. The keys must be unique. An empty map is written `()`.</documentation>
+         <param name="pattern">^(\s*\(\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*)|(?:\s*\(\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*))\s*(?:,\s*(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*))\s*)*)?\)\s*))\s*(?:,\s*(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*)|(?:\s*\(\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*))\s*(?:,\s*(?:[_a-zA-Z][_a-zA-Z0-9-]*)\s*:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*))\s*)*)?\)\s*))\s*)*)?\)\s*|\s*(?:\(\s*(?:[_a-zA-Z][_a-zA-Z0-9-]*)(?:\s*\:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*)))?\s*\)\s*)*)$</param>
+      </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-pef.script-pdf-font-color"
+             id="px:dtbook-to-pef.script-pdf-font-color">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            id="px:dtbook-to-pef.script-pdf-font-color"
+            type="string">
+					    <a:documentation xml:lang="en" xml:space="preserve">An RGB hex color code</a:documentation>
+					    <param name="pattern">^#([0-9a-f]{6}|[0-9A-F]{6}|[0-9a-f]{3}|[0-9A-F]{3})$</param>
+				  </data>
+   </datatype>
+   <datatype href="file:///./datatypes//preview-table" id="preview-table">
+      <choice>
+         <value/>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">-</documentation>
+         <value>(id:"http://www.liblouis.org/tables/text_nabcc.dis")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">North American Braille Computer Code
+Table for English that supports 8-dot braille</documentation>
+         <value>(id:"http://www.liblouis.org/tables/nl-print.dis")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Liblouis table 'nl-print.dis'
+Table for Dutch that maps dot patterns to their original meaning as much as possible.</documentation>
+         <value>(id:"org_daisy.EmbosserTableProvider.TableType.ES_ES_TABLE_2")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for Spanish</documentation>
+         <value>(id:"org.daisy.braille.impl.table.DefaultTableProvider.TableType.EN_US")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for English</documentation>
+         <value>(id:"com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_046_01")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for Swedish
+Compatible with Braillo SWEDEN 6 DOT 046.01</documentation>
+         <value>(id:"org_daisy.EmbosserTableProvider.TableType.IT_IT_FIRENZE")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for Italian</documentation>
+         <value>(id:"org_daisy.EmbosserTableProvider.TableType.CS_CZ")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for Czech</documentation>
+         <value>(id:"org_daisy.EmbosserTableProvider.TableType.DA_DK")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for Danish</documentation>
+         <value>(id:"com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_031_01")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for Dutch
+Compatible with Braillo NETHERLANDS 6 DOT 031.01</documentation>
+         <value>(id:"com_braillo.BrailloTableProvider.TableType.BRAILLO_6DOT_047_01")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for Norwegian
+Compatible with Braillo NORWAY 6 DOT 047.01</documentation>
+         <value>(id:"org_daisy.EmbosserTableProvider.TableType.EN_GB")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for English (United Kingdom)</documentation>
+         <value>(id:"org_daisy.EmbosserTableProvider.TableType.DE_DE")</value>
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">Default table for German</documentation>
+      </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-latex.script-default-language"
+             id="px:dtbook-to-latex.script-default-language">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:dtbook-to-latex.script-default-language">
+					    <value>english</value>
+					    <a:documentation>English</a:documentation>
+					    <value>ngerman</value>
+					    <a:documentation>German (new/reformed orthography, post-1996)</a:documentation>
+					    <value>USenglish</value>
+					    <a:documentation>English (American)</a:documentation>
+					    <value>UKenglish</value>
+					    <a:documentation>English (British)</a:documentation>
+					    <value>swedish</value>
+					    <a:documentation>Swedish</a:documentation>
+					    <value>canadian</value>
+					    <a:documentation>English (Canadian)</a:documentation>
+					    <value>french</value>
+					    <a:documentation>French</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:html-to-pef.script-hyphenation-at-page-breaks"
+             id="px:html-to-pef.script-hyphenation-at-page-breaks">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pef="http://www.daisy.org/ns/2008/pef"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:html-to-pef.script-hyphenation-at-page-breaks">
+                    <value>false</value>
+                    <a:documentation>Never hyphenate words at page boundaries</a:documentation>
+                    <value>except-at-volume-breaks</value>
+                    <a:documentation>Allow hyphenation at page boundaries except when it's a volume boundary</a:documentation>
+                    <value>true</value>
+                    <a:documentation>Allow hyphenation at page boundaries</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//medium" id="medium">
+      <data type="string">
+         <documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0"
+                        lang="en"
+                        space="preserve">A medium specification
+
+A medium is specified using a resticted version of the 
+[media query syntax](https://www.w3.org/TR/mediaqueries-4/), that does not allow 
+the `not` keyword or `min-` and `max-` prefixes.</documentation>
+         <param name="pattern">^(\s*(embossed|braille|speech|screen|print|all|\(\s*((--|-?([_a-zA-Z]|[^\x00-\x7F]|\\([0-9a-fA-F]{1,6}(\r\n|[ \n\r\t\f])?|[^\n\r\f0-9a-fA-F])))([-_a-zA-Z0-9]|[^\x00-\x7F]|\\([0-9a-fA-F]{1,6}(\r\n|[ \n\r\t\f])?|[^\n\r\f0-9a-fA-F]))*)(\s*\:\s*((--|-?([_a-zA-Z]|[^\x00-\x7F]|\\([0-9a-fA-F]{1,6}(\r\n|[ \n\r\t\f])?|[^\n\r\f0-9a-fA-F])))([-_a-zA-Z0-9]|[^\x00-\x7F]|\\([0-9a-fA-F]{1,6}(\r\n|[ \n\r\t\f])?|[^\n\r\f0-9a-fA-F]))*|[+-]?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?([a-zA-Z]+|%)?))?\s*\))(\s+(AND|and)\s+(embossed|braille|speech|screen|print|all|\(\s*((--|-?([_a-zA-Z]|[^\x00-\x7F]|\\([0-9a-fA-F]{1,6}(\r\n|[ \n\r\t\f])?|[^\n\r\f0-9a-fA-F])))([-_a-zA-Z0-9]|[^\x00-\x7F]|\\([0-9a-fA-F]{1,6}(\r\n|[ \n\r\t\f])?|[^\n\r\f0-9a-fA-F]))*)(\s*\:\s*((--|-?([_a-zA-Z]|[^\x00-\x7F]|\\([0-9a-fA-F]{1,6}(\r\n|[ \n\r\t\f])?|[^\n\r\f0-9a-fA-F])))([-_a-zA-Z0-9]|[^\x00-\x7F]|\\([0-9a-fA-F]{1,6}(\r\n|[ \n\r\t\f])?|[^\n\r\f0-9a-fA-F]))*|[+-]?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?([a-zA-Z]+|%)?))?\s*\)))*\s*|\s*(?:\(\s*(?:[_a-zA-Z][_a-zA-Z0-9-]*)(?:\s*\:\s*(?:(?:[_a-zA-Z][_a-zA-Z0-9-]*)|(?:'[^']*'|"[^"]*")|(?:0|-?[1-9][0-9]*)))?\s*\)\s*)*)$</param>
+      </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-odt.script-asciimath"
+             id="px:dtbook-to-odt.script-asciimath">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+              id="px:dtbook-to-odt.script-asciimath">
+                    <value>ASCIIMATH</value>
+                    <a:documentation>Keep (as plain text)</a:documentation>
+                    <value>MATHML</value>
+                    <a:documentation xml:lang="en" xml:space="preserve">Convert to MathML
+
+Convert ASCIIMath elements to MathML elements. The ASCIIMath encoding is used as the name of the
+frame that contains the formula object.</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-pef.script-page-height"
+             id="px:dtbook-to-pef.script-page-height">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:dtbook-to-pef.script-page-height"
+            type="string">
+                    <a:documentation xml:lang="en" xml:space="preserve">A length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : number unit?
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px' | 'em'
+     ;
+</a:documentation>
+                    <param name="pattern">^\+?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px|em)?$</param>
+                </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub3-to-epub3.script-ensure-pagenum-text"
+             id="px:epub3-to-epub3.script-ensure-pagenum-text">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:epub3-to-epub3.script-ensure-pagenum-text">
+                    <value>true</value>
+                    <a:documentation>Yes</a:documentation>
+                    <value>false</value>
+                    <a:documentation>No</a:documentation>
+                    <value>hidden</value>
+                    <a:documentation>Yes, but not visible</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:daisy202-to-mp3.script-folder-depth"
+             id="px:daisy202-to-mp3.script-folder-depth">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:daisy202-to-mp3.script-folder-depth">
+					    <value>1</value>
+					    <a:documentation xml:lang="en" xml:space="preserve">1
+
+Produces a folder structure that is one level deep. At the top level there is 1 folder, that
+contains entire book.  This folder can have up to 999 MP3 files. Each MP3 file corresponds with a
+top-level section of the book. This setting is suited for simple devices of type Envoy Connect/Vine
+C2.</a:documentation>
+					    <value>2</value>
+					    <a:documentation xml:lang="en" xml:space="preserve">2
+
+Produces a folder structure that is two levels deep. At the top level there is 1 folder that
+contains entire book. This folder can have up to 999 sub-folders, each of which can contain up to
+999 MP3 files. Each MP3 file corresponds with a level-two section, a top-level section without
+sub-sections, or the content within a top-level section before the first
+sub-section.</a:documentation>
+					    <value>3</value>
+					    <a:documentation xml:lang="en" xml:space="preserve">3
+
+Produces a folder structure that is three levels deep. At the top level there is 1 folder that
+contains entire book. This folder can have up to 999 sub-folders. The sub-folders can have up to 999
+sub-sub-folders, each of which can contain up to 999 MP3 files. Each MP3 file corresponds with a
+level-three section, a top-level or level-two section without sub-sections, or the content within a
+top-level or level-two section before the first sub-section.</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:html-to-pef.script-pdf-font-color"
+             id="px:html-to-pef.script-pdf-font-color">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:d="http://www.daisy.org/ns/pipeline/data"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pef="http://www.daisy.org/ns/2008/pef"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:html-to-pef.script-pdf-font-color"
+            type="string">
+					    <a:documentation xml:lang="en" xml:space="preserve">An RGB hex color code</a:documentation>
+					    <param name="pattern">^#([0-9a-f]{6}|[0-9A-F]{6}|[0-9a-f]{3}|[0-9A-F]{3})$</param>
+				  </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:html-to-pef.script-pdf-scale-font"
+             id="px:html-to-pef.script-pdf-scale-font">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:d="http://www.daisy.org/ns/pipeline/data"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pef="http://www.daisy.org/ns/2008/pef"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:html-to-pef.script-pdf-scale-font"
+            type="string">
+					    <a:documentation xml:lang="en" xml:space="preserve">A percentage</a:documentation>
+					    <param name="pattern">^[+]?([0-9]*\.)?[0-9]+%?$</param>
+				  </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:word-to-dtbook.script-image-size"
+             id="px:word-to-dtbook.script-image-size">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:word-to-dtbook.script-image-size">
+					    <value>original</value>
+					    <a:documentation>Keep image size</a:documentation>
+					    <value>resize</value>
+					    <a:documentation>Resize images</a:documentation>
+					    <value>resample</value>
+					    <a:documentation>Resample images</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-odt.script-images"
+             id="px:dtbook-to-odt.script-images">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+              id="px:dtbook-to-odt.script-images">
+                    <value>EMBED</value>
+                    <a:documentation>Embed images in the OpenDocument package</a:documentation>
+                    <value>LINK</value>
+                    <a:documentation>Link to external image files</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:obfl-to-pef.script-hyphenation-at-page-breaks"
+             id="px:obfl-to-pef.script-hyphenation-at-page-breaks">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:dc="http://purl.org/dc/elements/1.1/"
+              xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pef="http://www.daisy.org/ns/2008/pef"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:obfl-to-pef.script-hyphenation-at-page-breaks">
+                    <value>false</value>
+                    <a:documentation>Never hyphenate words at page boundaries</a:documentation>
+                    <value>except-at-volume-breaks</value>
+                    <a:documentation>Allow hyphenation at page boundaries except when it's a volume boundary</a:documentation>
+                    <value>true</value>
+                    <a:documentation>Allow hyphenation at page boundaries</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-pef.script-page-width"
+             id="px:dtbook-to-pef.script-page-width">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:dtbook-to-pef.script-page-width"
+            type="string">
+                    <a:documentation xml:lang="en" xml:space="preserve">A length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : number unit?
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px' | 'ch'
+     ;
+</a:documentation>
+                    <param name="pattern">^\+?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px|ch)?$</param>
+                </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub3-to-pef.script-formatting-standard"
+             id="px:epub3-to-pef.script-formatting-standard">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:dc="http://purl.org/dc/elements/1.1/"
+              xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+              xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container"
+              xmlns:opf="http://www.idpf.org/2007/opf"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pef="http://www.daisy.org/ns/2008/pef"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:epub3-to-pef.script-formatting-standard">
+                    <value/>
+                    <a:documentation>-</a:documentation>
+                    <value>https://raw.githubusercontent.com/daisy/braille-stylesheets/refs/heads/main/bana/bana.scss</value>
+                    <a:documentation xml:lang="en" xml:space="preserve">United States and Canada (BANA)
+
+The document is formatted according to the rules of the [Braille Authority of North America
+(BANA)](https://www.brailleauthority.org/). Note that this does not select
+[UEB](https://iceb.org/) as the braille code automatically.
+
+Equivalent to specifying the value
+`https://raw.githubusercontent.com/daisy/braille-stylesheets/refs/heads/main/bana/bana.scss` for the
+"Custom style sheets" option.
+
+See the [online documentation](https://daisy.github.io/braille-stylesheets/bana/) for more information.
+</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub3-to-epub3.script-audio"
+             id="px:epub3-to-epub3.script-audio">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:epub3-to-epub3.script-audio">
+                    <value>true</value>
+                    <a:documentation>Yes</a:documentation>
+                    <value>false</value>
+                    <a:documentation>No</a:documentation>
+                    <value>default</value>
+                    <a:documentation>If publication has no media overlays yet</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:nimas-fileset-validator.script-mathml-version"
+             id="px:nimas-fileset-validator.script-mathml-version">
+      <choice xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+              id="px:nimas-fileset-validator.script-mathml-version">
+					    <value>3.0</value>
+					    <value>2.0</value>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-pef.script-pdf-scale-font"
+             id="px:dtbook-to-pef.script-pdf-scale-font">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            id="px:dtbook-to-pef.script-pdf-scale-font"
+            type="string">
+					    <a:documentation xml:lang="en" xml:space="preserve">A percentage</a:documentation>
+					    <param name="pattern">^[+]?([0-9]*\.)?[0-9]+%?$</param>
+				  </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub3-to-pef.script-page-width"
+             id="px:epub3-to-pef.script-page-width">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container"
+            xmlns:opf="http://www.idpf.org/2007/opf"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pef="http://www.daisy.org/ns/2008/pef"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:epub3-to-pef.script-page-width"
+            type="string">
+                    <a:documentation xml:lang="en" xml:space="preserve">A length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : number unit?
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px' | 'ch'
+     ;
+</a:documentation>
+                    <param name="pattern">^\+?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px|ch)?$</param>
+                </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-latex.script-page-style"
+             id="px:dtbook-to-latex.script-page-style">
+      <choice xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:dtbook-to-latex.script-page-style">
+					    <value>plain</value>
+					    <value>compact</value>
+					    <value>spacious</value>
+					    <value>withPageNums</value>
+					    <value>scientific</value>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:epub3-to-pef.script-hyphenation-at-page-breaks"
+             id="px:epub3-to-pef.script-hyphenation-at-page-breaks">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:dc="http://purl.org/dc/elements/1.1/"
+              xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+              xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container"
+              xmlns:opf="http://www.idpf.org/2007/opf"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pef="http://www.daisy.org/ns/2008/pef"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:epub3-to-pef.script-hyphenation-at-page-breaks">
+                    <value>false</value>
+                    <a:documentation>Never hyphenate words at page boundaries</a:documentation>
+                    <value>except-at-volume-breaks</value>
+                    <a:documentation>Allow hyphenation at page boundaries except when it's a volume boundary</a:documentation>
+                    <value>true</value>
+                    <a:documentation>Allow hyphenation at page boundaries</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:html-to-pef.script-page-width"
+             id="px:html-to-pef.script-page-width">
+      <data xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            xmlns:d="http://www.daisy.org/ns/pipeline/data"
+            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+            xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:pef="http://www.daisy.org/ns/2008/pef"
+            xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+            xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            id="px:html-to-pef.script-page-width"
+            type="string">
+                    <a:documentation xml:lang="en" xml:space="preserve">A length
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    length
+     : number unit?
+     ;
+    unit
+     : 'mm' | 'cm' | 'in' | 'px' | 'ch'
+     ;
+</a:documentation>
+                    <param name="pattern">^\+?([0-9]*\.)?[0-9]+([eE][+-]?[0-9]+)?(mm|cm|in|px|ch)?$</param>
+                </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:daisy3-to-mp3.script-folder-depth"
+             id="px:daisy3-to-mp3.script-folder-depth">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:daisy3-to-mp3.script-folder-depth">
+					    <value>1</value>
+					    <a:documentation xml:lang="en" xml:space="preserve">1
+
+Produces a folder structure that is one level deep. At the top level there is 1 folder, that
+contains entire book.  This folder can have up to 999 MP3 files. Each MP3 file corresponds with a
+top-level section of the book. This setting is suited for simple devices of type Envoy Connect/Vine
+C2.</a:documentation>
+					    <value>2</value>
+					    <a:documentation xml:lang="en" xml:space="preserve">2
+
+Produces a folder structure that is two levels deep. At the top level there is 1 folder that
+contains entire book. This folder can have up to 999 sub-folders, each of which can contain up to
+999 MP3 files. Each MP3 file corresponds with a level-two section, a top-level section without
+sub-sections, or the content within a top-level section before the first
+sub-section.</a:documentation>
+					    <value>3</value>
+					    <a:documentation xml:lang="en" xml:space="preserve">3
+
+Produces a folder structure that is three levels deep. At the top level there is 1 folder that
+contains entire book. This folder can have up to 999 sub-folders. The sub-folders can have up to 999
+sub-sub-folders, each of which can contain up to 999 MP3 files. Each MP3 file corresponds with a
+level-three section, a top-level or level-two section without sub-sections, or the content within a
+top-level or level-two section before the first sub-section.</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-validator.script-mathml-version"
+             id="px:dtbook-validator.script-mathml-version">
+      <choice xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+              id="px:dtbook-validator.script-mathml-version">
+					    <value>3.0</value>
+					    <value>2.0</value>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-latex.script-stock-size"
+             id="px:dtbook-to-latex.script-stock-size">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:dtbook-to-latex.script-stock-size">
+					    <value>a3paper</value>
+					    <a:documentation>ISO 216 A3 paper size</a:documentation>
+					    <value>a4paper</value>
+					    <a:documentation>ISO 216 A4 paper size</a:documentation>
+					    <value>a5paper</value>
+					    <a:documentation>ISO 216 A5 paper size</a:documentation>
+					    <value>letterpaper</value>
+					    <a:documentation>Letter paper size (11 in × 8.5 in)</a:documentation>
+					    <value>legalpaper</value>
+					    <a:documentation>Legal paper size (14 in × 8.5 in)</a:documentation>
+					    <value>executivepaper</value>
+					    <a:documentation>Legal paper size (10.5 in × 7.25 in)</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-zedai.script-validation"
+             id="px:dtbook-to-zedai.script-validation">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:d="http://www.daisy.org/ns/pipeline/data"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              id="px:dtbook-to-zedai.script-validation">
+					    <value>off</value>
+					    <a:documentation>No validation</a:documentation>
+					    <value>report</value>
+					    <a:documentation>Report validation issues</a:documentation>
+					    <value>abort</value>
+					    <a:documentation>Abort on validation issues</a:documentation>
+				  </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-pef.script-hyphenation-at-page-breaks"
+             id="px:dtbook-to-pef.script-hyphenation-at-page-breaks">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:dtbook-to-pef.script-hyphenation-at-page-breaks">
+                    <value>false</value>
+                    <a:documentation>Never hyphenate words at page boundaries</a:documentation>
+                    <value>except-at-volume-breaks</value>
+                    <a:documentation>Allow hyphenation at page boundaries except when it's a volume boundary</a:documentation>
+                    <value>true</value>
+                    <a:documentation>Allow hyphenation at page boundaries</a:documentation>
+                </choice>
+   </datatype>
+   <datatype href="file:///./datatypes//transform-query" id="transform-query">
+      <data type="string">
+         <documentation xml:lang="en" xml:space="preserve">A query
+
+The syntax is as follows (described in terms of [CSS grammar](https://www.w3.org/TR/CSS21/grammar.html)):
+
+    query
+     : feature*
+     ;
+    feature
+     : '(' S* IDENT S* [ ':' S* value ]? ')' S*
+     ;
+    value
+     : string | integer | IDENT
+     ;
+</documentation>
+         <param name="pattern">^\s*(\(\s*[_a-zA-Z][_a-zA-Z0-9-]*(\s*:\s*([_a-zA-Z][_a-zA-Z0-9-]*|'[^']*'|"[^"]*"|0|-?[1-9][0-9]*))?\s*\)\s*)*$</param>
+      </data>
+   </datatype>
+   <datatype href="file:///./datatypes//px:dtbook-to-pef.script-formatting-standard"
+             id="px:dtbook-to-pef.script-formatting-standard">
+      <choice xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+              xmlns:c="http://www.w3.org/ns/xproc-step"
+              xmlns:cx="http://xmlcalabash.com/ns/extensions"
+              xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+              xmlns:p="http://www.w3.org/ns/xproc"
+              xmlns:pf="http://www.daisy.org/ns/pipeline/functions"
+              xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+              id="px:dtbook-to-pef.script-formatting-standard">
+                    <value/>
+                    <a:documentation>-</a:documentation>
+                    <value>https://raw.githubusercontent.com/daisy/braille-stylesheets/refs/heads/main/bana/bana.scss</value>
+                    <a:documentation xml:lang="en" xml:space="preserve">United States and Canada (BANA)
+
+The document is formatted according to the rules of the [Braille Authority of North America
+(BANA)](https://www.brailleauthority.org/). Note that this does not select
+[UEB](https://iceb.org/) as the braille code automatically.
+
+Equivalent to specifying the value
+`https://raw.githubusercontent.com/daisy/braille-stylesheets/refs/heads/main/bana/bana.scss` for the
+"Custom style sheets" option.
+
+See the [online documentation](https://daisy.github.io/braille-stylesheets/bana/) for more information.
+</a:documentation>
+                </choice>
+   </datatype>
+</datatypes>
