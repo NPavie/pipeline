@@ -209,55 +209,59 @@ public class DaisyClass {
 	                  String output,
 					  Boolean extractShapes
 	) throws InvalidFormatException {
-
 		this.inputName = GetFileNameWithoutExtension(new File(URI.create(input))).replace(" ", "_");
 		outputFilename = new File(URI.create(output));
 		outputFilename.mkdirs();
 		File inputFile = new File(URI.create(input));
 		this.inputFile = inputFile;
 
-		if(extractShapes){
-		// first try to copy the current file in another location
-		// as the file might be opened by the user in word
-		OPCPackage copyOrOriginal;
-		try{
-			File tmpDirectory = Files.createTempDirectory("pipeline-").toFile();
-			tmpDirectory.deleteOnExit();
-			File copied = new File(tmpDirectory,inputFile.getName());
-			try (
-					InputStream in = new BufferedInputStream(
-							new FileInputStream(inputFile));
-					OutputStream out = new BufferedOutputStream(
-							new FileOutputStream(copied))) {
+		//if(extractShapes) {
+			// first try to copy the current file in another location
+			// as the file might be opened by the user in word
+			OPCPackage copyOrOriginal;
+			try{
+				File tmpDirectory = Files.createTempDirectory("pipeline-").toFile();
+				tmpDirectory.deleteOnExit();
+				File copied = new File(tmpDirectory,inputFile.getName());
+				try (
+						InputStream in = new BufferedInputStream(
+								new FileInputStream(inputFile));
+						OutputStream out = new BufferedOutputStream(
+								new FileOutputStream(copied))) {
 
-				byte[] buffer = new byte[4096];
-				int lengthRead;
-				while ((lengthRead = in.read(buffer)) > 0) {
-					out.write(buffer, 0, lengthRead);
-					out.flush();
-				}
-			}
-			if(extractShapes){
-				try{
-					//throw new java.lang.Exception("Disabling WordShapesExporter for test");
-					WordShapesExporter.ProcessShapes(copied.toURI().toString(), outputFilename.toURI().toString());
-				} catch (java.lang.Exception e){
-					LOGGER.info(e.getMessage());
-					LOGGER.info("Trying openoffice shapes export...");
-					try {
-						OOShapesExporter.ProcessShapes(copied.toURI().toString(), outputFilename.toURI().toString());
-					} catch (Exception ex) {
-						LOGGER.info("Could not export shapes with openoffice, shapes will be ignored");
+					byte[] buffer = new byte[4096];
+					int lengthRead;
+					while ((lengthRead = in.read(buffer)) > 0) {
+						out.write(buffer, 0, lengthRead);
+						out.flush();
 					}
 				}
-			}
+				boolean shapesAreExtracted = false;
+				try{
+					//throw new java.lang.Exception("Disabling WordShapesExporter for test");
+					LOGGER.info("Trying to export shapes with word ...");
+					WordShapesExporter.ProcessShapes(copied.toURI().toString(), outputFilename.toURI().toString());
+					shapesAreExtracted = true;
+				} catch (java.lang.Exception e){
+					LOGGER.info(e.getMessage());
+					LOGGER.info("Trying to export shapes with openoffice or libreoffice ...");
+					try {
+						OOShapesExporter.ProcessShapes(copied.toURI().toString(), outputFilename.toURI().toString());
+						shapesAreExtracted = true;
+					} catch (Exception ex) {
+						LOGGER.info("Could not export shapes with openoffice or libreoffice, shapes will be ignored");
+					}
+				}
+				if(!shapesAreExtracted){
+					LOGGER.info("Shapes could not be extracted with Word or OpenOffice/LibreOffice");
+				}
 				copyOrOriginal = OPCPackage.open(copied);
-		} catch (Exception e){
-			LOGGER.info("Could not copy the input for shapes treatment");
-			copyOrOriginal = OPCPackage.open(inputFile);
-		}
-		pack = copyOrOriginal;
-		}
+			} catch (Exception e){
+				LOGGER.info("Could not copy the input for shapes treatment");
+				copyOrOriginal = OPCPackage.open(inputFile);
+			}
+			pack = copyOrOriginal;
+		//}
 		// when the shapes export is not requested, no copy of the input document is
 		// made here : the OPC package is opened lazily by pack() on first use,
 		// read-only on the original input file
