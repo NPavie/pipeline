@@ -580,41 +580,38 @@ public class DaisyClass {
 		}
 	}
 
-	/**
-	 * - In the input document name (inputName), replace all spaces by underscore
-	 * - If the output is set to the %APPDATA%/SaveAsDaisy folder and if a png image ending by the "id"
-	 *   parameter exists in it, copy it to the "output_pipeline" folder
-	 * - If the output is not the temporary folder and if a png image ending by the "id" parameter
-	 *   exists in %APPDATA%/SaveAsDAISY, move the image to the output folder
-	 */
-	public String CheckShapeId(String id) throws IOException {
-		String fileName = inputName + "-" + id + ".png";
-		shapeIsExported = false;
-		File expectedShapeFile = new File(outputFilename, fileName);
-		if(!expectedShapeFile.exists()){
-			// Check for files exported by the SaveAsDAISY Addin
-			File shapesDirectory = System.getProperty("os.name").startsWith("Windows")
+	private static File shapesDirectory = System.getProperty("os.name").startsWith("Windows")
 					? new File(new File(System.getenv("APPDATA")), "SaveAsDAISY")
 					: new File("/shapes");
-			File shapeFile = new File(shapesDirectory, fileName);
-			if (shapeFile.exists()) {
+	private static File tempPath = System.getProperty("os.name").startsWith("Windows")
+					? new File(new File(System.getenv("APPDATA")), "Local/Temp")
+					: new File("/tmp");
+
+	/**
+	 * Check if the a file corresponding the shape id has been already exported and copies back the image in the output folder
+	 * @param id The shape id to check and copy if necessary. This id is made from docPr/@id prefixed by "Shape" (for anchored shapes) or "InlineShape" (for inlined shapes)
+	 */
+	public String CheckShapeId(String id) throws IOException {
+		String shapefileName = inputName + "-" + id + ".png";
+		shapeIsExported = false;
+		File shapeFile = new File(shapesDirectory, shapefileName);
+		File tempShapeFile = new File(tempPath, shapefileName);
+		File expectedShapeFile = new File(outputFilename, shapefileName);
+		if (!expectedShapeFile.exists()) {
+			if(shapeFile.exists()){
 				shapeIsExported = true;
 				Files.copy(shapeFile.toPath(), expectedShapeFile.toPath());
 				shapeFile.delete();
-			} else {
-				File tempPath = System.getProperty("os.name").startsWith("Windows")
-						? new File(new File(System.getenv("APPDATA")), "Local/Temp")
-						: new File("/tmp");
-				shapeFile = new File(tempPath, fileName);
-				if (shapeFile.exists()) {
-					shapeIsExported = true;
-					Files.copy(shapeFile.toPath(), expectedShapeFile.toPath());
-					shapeFile.delete();
-				}
+			} else if(tempShapeFile.exists()){
+				shapeIsExported = true;
+				Files.copy(tempShapeFile.toPath(), expectedShapeFile.toPath());
+				tempShapeFile.delete();
 			}
+		} else { // shapes pre extracted in output
+			shapeIsExported = true;
 		}
 		if(!shapeIsExported){
-			LOGGER.warn(fileName + " shape was not exported - manual conversion to an image is required");
+			LOGGER.warn("shape " + id + " was not exported - manual conversion to an image is required");
 		}
 		id = id.replace(" ", "_");
 		return id;
