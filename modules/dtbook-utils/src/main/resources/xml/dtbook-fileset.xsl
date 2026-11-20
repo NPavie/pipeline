@@ -26,6 +26,10 @@
 			<xsl:for-each select="//dtb:link[@rel='pronunciation']/@href[normalize-space()]">
 				<xsl:sequence select="f:fileset-entry(.,../@type)"/>
 			</xsl:for-each>
+			<!-- NP 2026/11 : using a link with rel='cover-image' to forward a cover image for epub conversions -->
+			<xsl:for-each select="//dtb:link[@rel='cover-image']/@href[normalize-space()]">
+				<xsl:sequence select="f:fileset-entry(.,../@type)"/>
+			</xsl:for-each>
 			<xsl:for-each select="//dtb:*/@src">
 				<xsl:sequence select="f:fileset-entry(.,())"/>
 			</xsl:for-each>
