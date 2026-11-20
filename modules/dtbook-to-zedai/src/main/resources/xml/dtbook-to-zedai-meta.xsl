@@ -59,6 +59,13 @@
                 </xsl:when>
             </xsl:choose>
         </xsl:for-each>
+        <xsl:for-each select="dtb:link">
+            <xsl:if test="@rel='cover-image' and normalize-space(@href) and normalize-space(@type)">
+                <meta rel="z3998:cover-image" resource="{@href}">
+                    <meta property="z3998:cover-image-type" content="{@type}" about="{@href}" />
+                </meta>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
 </xsl:stylesheet>

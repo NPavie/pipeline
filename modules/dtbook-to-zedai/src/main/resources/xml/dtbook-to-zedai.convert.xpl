@@ -573,7 +573,7 @@
                 is the union of "implicit-output-prefixes" and EPUB's reserved prefixes.
             -->
         </px:epub3-merge-prefix>
-        <p:delete match="z:head/z:meta[empty(@property)]"/>
+        <p:delete match="z:head/z:meta[empty(@property) and not(@rel='z3998:cover-image')]"/>
     </p:group>
 
     <p:documentation>Create a meta element for the MODS file reference and insert it into the head
