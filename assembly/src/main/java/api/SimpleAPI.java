@@ -306,15 +306,32 @@ public class SimpleAPI {
 
 	/**
 	 * Get the singleton {@link SimpleAPI} instance.
+	 *
+	 * Settable with -Dorg.daisy.pipeline.cli.timing=true: prints the instantiation time of
+	 * each CreateOnStart provider (including its service wiring), to profile the engine start.
 	 */
 	public static SimpleAPI getInstance() {
 		if (INSTANCE == null) {
-			for (CreateOnStart o : ServiceLoader.load(CreateOnStart.class))
+			boolean timing = Boolean.getBoolean("org.daisy.pipeline.cli.timing");
+			java.util.Iterator<CreateOnStart> providers = ServiceLoader.load(CreateOnStart.class).iterator();
+			long start = System.currentTimeMillis();
+			while (providers.hasNext()) {
+				long t0 = System.currentTimeMillis();
+				CreateOnStart o = providers.next();
+				long t1 = System.currentTimeMillis();
 				if (INSTANCE == null && o instanceof SimpleAPI)
 					INSTANCE = (SimpleAPI)o;
+				if (timing)
+					System.out.println(dateFormat.format(new java.util.Date())
+						+ " : [timing] CreateOnStart provider " + o.getClass().getName()
+						+ " instantiated in " + (t1 - t0) + " ms");
+			}
 			if (INSTANCE == null)
 				throw new IllegalStateException();
-			//System.out.println(dateFormat.format(new java.util.Date()) + " : SimpleAPI instance created");
+			if (timing)
+				System.out.println(dateFormat.format(new java.util.Date())
+						+ " : [timing] all CreateOnStart providers instantiated in "
+						+ (System.currentTimeMillis() - start) + " ms");
 		}
 		return INSTANCE;
 	}

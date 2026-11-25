@@ -58,3 +58,22 @@ le fichier `assembly/improvedui.md` a été **complété** pour servir de plan d
 
 Aucun code source n'a été modifié : seuls des documents Markdown (`assembly/improvedui.md` et le
 présent `AGENTS.md`) ont changé.
+
+## Modifications du 2025 (branche `embedded-ui`) — instrumentation du démarrage CLI
+
+Commit type `perf(assembly)` :
+
+- `assembly/src/main/java/api/SimpleAPI.java` : `getInstance()` instrumenté — itération manuelle
+  des providers `CreateOnStart` avec mesure du temps d'instanciation de chacun, activée par
+  `-Dorg.daisy.pipeline.cli.timing=true` (défaut désactivé, aucun comportement changé sinon).
+  Sert à profiler le stage « Starting the embedded pipeline API ... » signalé lent sous Windows.
+- `assembly/startup-optimization-plan.md` : plan d'analyse et d'optimisation détaillé :
+  - diagnostic statique : le goulot n'est pas la recherche du script (`ConcurrentHashMap`) mais la
+    construction complète du moteur — scan `META-INF/services` de tous les jars du classpath pour
+    chaque interface de service, parse de tous les `module.xml` (`DefaultModuleRegistry`),
+    enregistrement des packages XSLT (`SaxonConfigurator.setModuleRegistry`), datatypes ;
+    amplificateurs Windows (Defender, `checkJavaVersion.bat` multi-spawns `java -version`, jabswitch) ;
+  - méthode de profiling sur machine cible (flag timing, `-Xlog:class+load`, JFR) ;
+  - 5 options de réduction : exclusion AV + JRE récent, AppCDS, lanceur .bat optimisé,
+    démarrage paresseux du moteur dans `SimpleAPI`, daemon webservice ;
+  - séquencement recommandé et critères d'acceptation.
