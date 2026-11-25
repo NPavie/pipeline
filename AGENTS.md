@@ -77,3 +77,11 @@ Commit type `perf(assembly)` :
   - 5 options de réduction : exclusion AV + JRE récent, AppCDS, lanceur .bat optimisé,
     démarrage paresseux du moteur dans `SimpleAPI`, daemon webservice ;
   - séquencement recommandé et critères d'acceptation.
+
+Précision apportée après retour utilisateur : le package final embarque un **JRE Temurin 17 (jlink)** —
+le comportement lent est observé sous Java 17. Le plan (`assembly/startup-optimization-plan.md`) a été
+corrigé en conséquence : le rescan de `META-INF/services` par interface est déjà amorti par le cache
+`ServicesCatalog` du JDK 9+ ; les coûts restants sous Java 17 sont le premier balayage complet des
+~200 jars du classpath, la construction avide du moteur (module.xml, packages XSLT Saxon, datatypes)
+et les amplificateurs Windows (antivirus, lanceur .bat). Le levier JRE « passer à Java 17 » est retiré
+des options ; AppCDS et démarrage paresseux restent pertinents.

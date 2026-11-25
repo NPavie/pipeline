@@ -17,9 +17,12 @@ The message is printed by the `SimpleAPI` constructor
    optionally `system\persistence\*`. Each **distinct service interface** loaded later (ScriptRegistry,
    DatatypeRegistry, JobFactory, ScriptService, …) triggers a **new scan of every jar** on the classpath
    (`framework/…/ds-to-spi` generates one `META-INF/services` entry per OSGi component).
-   The custom loader caches per class-loader, but on Java 8 the JDK loader re-reads jar directories;
-   on Java 9+ per-jar `services` files are cached by the JVM, which is why the cost is lower on Linux/macOS
-   distributions bundling a newer JRE.
+   The distribution bundles a **Java 17 Temurin JRE built with jlink**, so the JDK already caches each
+   jar's `services` directory after it has been read once (`ServicesCatalog`): repeated
+   `ServiceLoader.load` calls for different interfaces are cheap **after** the first sweep, but that
+   first sweep still has to open and read the central directory of every one of the ~200 classpath jars
+   (on Java 8, which re-reads jar directories per lookup, this stage is significantly worse — that is
+   the classic Linux/macOS-vs-Windows gap when running an old system JVM).
 2. **Recursive service wiring**: instantiating a provider instantiates its `@Reference` graph
    (generated SPI classes in `ds-to-spi`):
    - `DefaultModuleRegistry` parses **every** `module.xml` of all ~45 modules eagerly
@@ -67,7 +70,8 @@ and Saxon/Catalog initialization.
 Same machine quick A/B tests to isolate environmental factors:
 - add the installation directory to Defender exclusions and re-run;
 - run twice in a row (warm) vs. after reboot (cold);
-- run with `pipeline2` on Java 8 vs a Java 17+ JRE if available.
+- confirm the same behavior in a Linux VM with the identical bundled JRE: if Linux is fast there,
+  the extra seconds on Windows are environmental (AV / disk), not JVM version related.
 
 Expected findings on Windows: warm run after Defender exclusion typically drops from several seconds
 to well under a second for the whole engine-start stage; the remaining time is dominated by
@@ -80,15 +84,17 @@ The options below are ordered by expected effort/risk; they are independent and 
 ### Option 1 — Runtime/OS level, no code change (quick win, do first)
 - Document and/or automate (installer task) **Windows Defender exclusions** for the install dir
   and `%APPDATA%\DAISY Pipeline 2`.
-- Ship/bundle a **current Java runtime** (`jre/` module already uses jlink; consider Java 17+
-  if the supported baseline allows): the JDK ServiceLoader caches services directories per jar,
-  removing most of the per-service rescan cost; CDS (below) also requires 10+.
-- Zero risk to code, potentially the largest single win on Windows.
+- The bundled Java 17 jlink JRE already benefits from per-jar `services` caching (no JDK-version
+  work needed; keep the JRE current for further classloading improvements).
+- Zero risk to code, potentially the largest single win on Windows — the eager engine
+  construction (Option 4) is the only code-side lever that can match it.
 
 ### Option 2 — CDS / startup flags (low risk, no API change)
-- Train an **AppCDS archive** at install time (or first run) on the target machine:
-  `java -Xshare:dump -XX:SharedArchiveFile=...\app.jsa -XX:SharedClassListFile=... -cp <same classpath> ...`,
-  then run with `-XX:SharedArchiveFile`. Typically removes 30–50 % of classloading time.
+- Train an **AppCDS archive** at install time (or first run) on the target machine (the bundled
+  Java 17 JRE fully supports this):
+  `java -XX:ArchiveClassesAtExit=...\app.jsa -cp <same classpath> ...` (or the classic
+  `-Xshare:dump` + class list), then run with `-XX:SharedArchiveFile`. Typically removes
+  30–50 % of classloading time and also speeds up JAR descriptor verification.
   Must be created on the same machine & classpath (Windows path/casing aware); regenerate on update.
 - Optionally add `-XX:TieredStopAtLevel=1` for the CLI-only process (faster JIT warmup, converts
   only at interpreter/C1 speed — jobs are mostly XML processing that still benefits from C2; measure first).
